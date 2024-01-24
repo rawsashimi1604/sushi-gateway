@@ -10,10 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "c3": "^0.7.20",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "react-router-dom": "^6.21.3",
+    "use-react-router-breadcrumbs": "^4.0.1"
   },
   "devDependencies": {
+    "@types/c3": "^0.7.11",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
