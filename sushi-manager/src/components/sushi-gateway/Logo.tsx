@@ -2,7 +2,7 @@ import { ReactComponent as LogoSvg } from "../../assets/sushi.svg";
 
 function Logo() {
   return (
-    <div className="flex flex-row justify-center items-center font-light text-2xl font-sans gap-4">
+    <div className="flex flex-row justify-center items-center font-light text-xl font-sans gap-4">
       <LogoSvg className="w-16 h-16" />
       <div className="relative">
         <h1 className="-mt-2 font-lora font-ligh tracking-widest">

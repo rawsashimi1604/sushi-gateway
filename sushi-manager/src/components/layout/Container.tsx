@@ -9,11 +9,11 @@ interface ContainerProps {
 
 function Container({ children }: ContainerProps) {
   return (
-    <div className="flex h-screen w-screen ">
+    <div className="flex w-screen h-screen fixed ">
       <div className="min-w-[300px]">
         <Sidebar />
       </div>
-      <main className="flex-grow p-6">
+      <main className="flex-grow p-6 flex flex-col h-full">
         <Navbar />
         <div className="mt-3 overflow-y-scroll">{children}</div>
         {/* <Footer /> */}

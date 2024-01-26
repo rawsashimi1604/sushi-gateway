@@ -23,7 +23,7 @@ function Sidebar() {
 
         <div className="border-b border-gray-200 pb-5">
           {/* Reverse proxy name */}
-          <GatewayInfo gateway="Sushi Gateway" user="admin" />
+          <GatewayInfo gateway="gateway-sg" user="admin" />
         </div>
         {/* Services, Routes */}
         <div className="mt-4">
