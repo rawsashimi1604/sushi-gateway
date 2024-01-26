@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:1.24-alpine
+    ports:
+      - "8090:80"
+      - "8091:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+
+  haproxy:
+    image: haproxy:2.9.3
+    ports:
+      - "8092:80"
+      - "8093:443"
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
