@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  nginx:
-    image: nginx:1.24-alpine
-    ports:
-      - "8090:80"
-      - "8091:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  # nginx:
+  #   image: nginx:1.24-alpine
+  #   ports:
+  #     - "8090:80"
+  #     - "8091:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
 
   haproxy:
     image: haproxy:2.9.3
@@ -16,3 +16,17 @@ services:
       - "8093:443"
     volumes:
       - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: sushi-db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: changeme
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
