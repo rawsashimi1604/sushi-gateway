@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-import GatewayLogo from "../sashimi-gateway/GatewayLogo";
-import Logo from "../sashimi-gateway/Logo";
+import GatewayInfo from "../sushi-gateway/GatewayInfo";
+import Logo from "../sushi-gateway/Logo";
 import SidebarItem from "./SidebarItem";
 
 function Sidebar() {
@@ -23,7 +23,7 @@ function Sidebar() {
 
         <div className="border-b border-gray-200 pb-5">
           {/* Reverse proxy name */}
-          <GatewayLogo gateway="Sushi Gateway" user="admin" />
+          <GatewayInfo gateway="Sushi Gateway" user="admin" />
         </div>
         {/* Services, Routes */}
         <div className="mt-4">

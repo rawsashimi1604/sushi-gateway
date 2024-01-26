@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/bitter": "^5.0.9",
+    "@fontsource-variable/cabin": "^5.0.9",
+    "@fontsource-variable/lora": "^5.0.9",
     "c3": "^0.7.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -21,9 +24,11 @@
     "@types/c3": "^0.7.11",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
+    "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "@svgr/rollup": "^8.1.0",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",

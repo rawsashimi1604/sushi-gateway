@@ -1,7 +1,11 @@
-import React from "react";
+import Container from "../../components/layout/Container";
 
 function IndexModule() {
-  return <div>index</div>;
+  return (
+    <Container>
+      <div>index</div>
+    </Container>
+  );
 }
 
 export default IndexModule;
