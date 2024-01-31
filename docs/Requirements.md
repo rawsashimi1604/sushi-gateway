@@ -18,6 +18,8 @@
 - Service Registry: Maintain a catalog of all available services.
 - Service Modification: Add, update, or remove upstream API services.
 - Support for service versioning.
+- Support for Open API Spec upload / validation.
+
 
 # Route Management
 
