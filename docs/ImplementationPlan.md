@@ -1,8 +1,17 @@
 # Implementation Plan
 
 - Develop proxy and routing capabilities
-  - Deploy HA Proxy
-  - Configure HA Proxy
-  - Load balancing
-  - Enable runtime api
-  - Setup test servers to take in app id
+
+  - (DONE) Deploy HA Proxy
+  - (DONE) Configure HA Proxy
+  - (DONE) Load balancing
+  - Enable data plane api, in docker compose
+  - (DONE) Setup test servers to take in app id
+
+- Ingress
+
+  - Send req to HA Proxy
+  - Retrieve res from HA Proxy
+  - Send back to client
+
+- Sushi Manager
