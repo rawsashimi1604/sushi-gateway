@@ -5,3 +5,5 @@
 ```
 APP_ID=<enter app id here>
 ```
+
+## Building docker image, and pushing to dockerhub

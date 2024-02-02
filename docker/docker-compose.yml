@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # nginx:
@@ -32,11 +32,15 @@ services:
     image: rawsashimi/express-sushi-app
     ports:
       - "8001:3000"
-  
+    environment:
+      - APP_ID=8001
+
   sushi-svc-2:
     image: rawsashimi/express-sushi-app
     ports:
       - "8002:3000"
+    environment:
+      - APP_ID=8002
 
 volumes:
   postgres_data:
