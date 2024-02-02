@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const app = express();
 const port = 3000;
 
@@ -19,12 +20,12 @@ const restaurantData = [
 
 // GET /v1/sushi
 app.get("/v1/sushi", (req, res) => {
-  res.json(sushiData);
+  res.json({ app_id: process.env.APP_ID, data: sushiData });
 });
 
 // GET /v1/sushi/restaurant
 app.get("/v1/sushi/restaurant", (req, res) => {
-  res.json(restaurantData);
+  res.json({ app_id: process.env.APP_ID, data: restaurantData });
 });
 
 app.listen(port, () => {

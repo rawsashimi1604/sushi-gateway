@@ -20,7 +20,6 @@
 - Support for service versioning.
 - Support for Open API Spec upload / validation.
 
-
 # Route Management
 
 - Route Registry: Maintain a catalog of all available routes.
