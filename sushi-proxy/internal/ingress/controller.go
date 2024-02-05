@@ -18,7 +18,7 @@ func (c *Controller) RegisterRoutes(router *mux.Router) {
 func (c *Controller) RouteRequest() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Handing some route request.")
-		w.Header().Add("Content-Type", "application/json")
+		w.Header().Add("Content-Type", "application/json; charset=UTF-8")
 		data, err := json.Marshal(map[string]interface{}{
 			"message": "some route request",
 		})
@@ -28,6 +28,9 @@ func (c *Controller) RouteRequest() http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write(data)
+		if _, err := w.Write(data); err != nil {
+			slog.Info("Something went wrong writing json response.")
+			slog.Info(err.Error())
+		}
 	}
 }
