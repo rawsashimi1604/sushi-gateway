@@ -1,34 +1,43 @@
 package internal
 
 import (
-	"errors"
+	"log/slog"
 	"os"
 
 	"github.com/joho/godotenv"
 )
 
 type AppConfig struct {
-	REVERSE_PROXY_HTTP_URL  string
-	REVERSE_PROXY_HTTPS_URL string
+	ReverseProxyHttpUrl  string
+	ReverseProxyHttpsUrl string
 }
 
-func LoadConfig() (*AppConfig, error) {
+func LoadConfig() *AppConfig {
+	slog.Info("Loading configurations from environment")
 	godotenv.Load()
 
+	errors := make([]string, 0)
 	revProxyHttpUrl := os.Getenv("REVERSE_PROXY_HTTP_URL")
 	if revProxyHttpUrl == "" {
-		return nil, errors.New("REVERSE_PROXY_HTTP_URL is required")
+		errors = append(errors, "REVERSE_PROXY_HTTP_URL is required.")
 	}
 
 	revProxyHttpsUrl := os.Getenv("REVERSE_PROXY_HTTPS_URL")
 	if revProxyHttpsUrl == "" {
-		return nil, errors.New("REVERSE_PROXY_HTTPS_URL is required")
+		errors = append(errors, "REVERSE_PROXY_HTTPS_URL is required.")
 	}
 
 	config := &AppConfig{
-		REVERSE_PROXY_HTTP_URL:  revProxyHttpUrl,
-		REVERSE_PROXY_HTTPS_URL: revProxyHttpsUrl,
+		ReverseProxyHttpUrl:  revProxyHttpUrl,
+		ReverseProxyHttpsUrl: revProxyHttpsUrl,
 	}
 
-	return config, nil
+	if len(errors) > 0 {
+		for _, err := range errors {
+			slog.Error(err)
+		}
+		panic("Errors detected when loading environment configuration...")
+	}
+
+	return config
 }

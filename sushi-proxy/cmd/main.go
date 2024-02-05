@@ -13,8 +13,7 @@ func main() {
 	// Run through auth
 	// Delegate to plugin runner
 	// Run through other plugins
-
-	slog.Info("Hello from main function")
+	internal.LoadConfig()
 	router := internal.NewRouter()
 	slog.Info("Started sushi-proxy service!")
 	log.Fatal(http.ListenAndServe(":8008", router))
