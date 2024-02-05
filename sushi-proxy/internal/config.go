@@ -1,4 +1,4 @@
-package config
+package internal
 
 import (
 	"errors"
@@ -11,7 +11,7 @@ type AppConfig struct {
 	REVERSE_PROXY_HTTP_URL  string
 	REVERSE_PROXY_HTTPS_URL string
 }
-s
+
 func LoadConfig() (*AppConfig, error) {
 	godotenv.Load()
 

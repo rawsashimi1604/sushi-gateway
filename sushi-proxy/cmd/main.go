@@ -1,16 +1,21 @@
 package main
 
-import "fmt"
+import (
+	"github.com/rawsashimi1604/sushi-gateway/internal"
+	"log"
+	"log/slog"
+	"net/http"
+)
 
 func main() {
 
 	// Run checks to see if api req is present in ingress
-
 	// Run through auth
-
 	// Delegate to plugin runner
-
 	// Run through other plugins
 
-	fmt.Println("hello world!")
+	slog.Info("Hello from main function")
+	router := internal.NewRouter()
+	slog.Info("Started sushi-proxy service!")
+	log.Fatal(http.ListenAndServe(":8008", router))
 }
