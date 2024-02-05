@@ -2,6 +2,9 @@ package ingress
 
 type ApiRouter struct{}
 
-// Check if consumer exists
+// Receive API request from ingress
 // Check if service exists
 // Check if route exists
+// Check if consumer exists
+// Check plugins...
+// Run the plugins in order

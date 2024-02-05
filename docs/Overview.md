@@ -6,6 +6,17 @@
 
 ![High Level Design](./images/design.png)
 
-## API request lifecycle
+## API Request lifecycle
 
-![API Request Lifecycle](./docs/images/api-request-lifecycle.png)
+- Receive request from API client
+- Forward to INGRESS HAProxy
+  - Perform basic rate limiting
+- INGRESS forward to sushi-proxy
+  - Check service
+  - Check route
+  - Check consumer
+  - Run plugins in configured order
+    - get plugin priority
+    - run the request into plugin
+- Send request to EGRESS HAProxy
+
