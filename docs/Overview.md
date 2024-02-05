@@ -16,7 +16,8 @@
   - Check route
   - Check consumer
   - Run plugins in configured order
-    - get plugin priority
+    - get plugin priority (each plugin has preconfigured static priority)
+      - https://docs.konghq.com/konnect/reference/plugins/
     - run the request into plugin
 - Send request to EGRESS HAProxy
 
