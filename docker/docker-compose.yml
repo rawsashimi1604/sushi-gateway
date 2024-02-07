@@ -9,8 +9,6 @@ services:
   #   volumes:
   #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
 
-  # TODO: add ingress for haproxy
-
   egress:
     image: haproxy:2.9.3
     ports:

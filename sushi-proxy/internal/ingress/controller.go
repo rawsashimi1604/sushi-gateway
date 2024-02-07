@@ -12,7 +12,7 @@ type Controller struct {
 }
 
 func (c *Controller) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/route", c.RouteRequest()).Methods(http.MethodGet)
+	router.HandleFunc("/", c.RouteRequest()).Methods(http.MethodGet)
 }
 
 func (c *Controller) RouteRequest() http.HandlerFunc {
@@ -28,9 +28,6 @@ func (c *Controller) RouteRequest() http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		if _, err := w.Write(data); err != nil {
-			slog.Info("Something went wrong writing json response.")
-			slog.Info(err.Error())
-		}
+		w.Write(data)
 	}
 }
