@@ -19,15 +19,18 @@ func NewEgressService(haProxyURL string) *EgressService {
 	}
 }
 
-func (p *EgressService) ForwardRequest(req *http.Request) ([]byte, int, error) {
+func (s *EgressService) ForwardRequest(req *http.Request) ([]byte, int, *EgressError) {
 	client := &http.Client{}
 
 	// Parse the HAProxy URL
-	parsedURL, err := url.Parse(p.HAProxyURL)
+	parsedURL, err := url.Parse(s.HAProxyURL)
 	if err != nil {
-		slog.Error("Error parsing HAProxy URL: ", err)
-		return nil, 0, err
+		return nil, 0, &EgressError{
+			Code:    constant.PARSE_HAPROXY_URL_ERROR_CODE,
+			Message: fmt.Sprint(constant.PARSE_HAPROXY_URL_ERROR, err),
+		}
 	}
+	parsedURL = parsedURL.JoinPath(req.URL.Path)
 
 	// Create a new request to send to HAProxy
 	proxyReq, err := http.NewRequest(req.Method, parsedURL.String(), req.Body)

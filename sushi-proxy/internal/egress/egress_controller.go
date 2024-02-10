@@ -1,7 +1,9 @@
 package egress
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/rawsashimi1604/sushi-gateway/internal/constant"
 	"log/slog"
 	"net/http"
 )
@@ -17,16 +19,25 @@ func NewEgressController(ps *EgressService) *EgressController {
 }
 
 func (c *EgressController) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/", c.RouteRequest()).Methods(http.MethodGet)
+	router.PathPrefix("/").HandlerFunc(c.RouteRequest())
 }
 
 func (c *EgressController) RouteRequest() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		slog.Info("Handing some route request.")
+		slog.Info("Handing request: " + r.URL.Path)
 		w.Header().Add("Content-Type", "application/json; charset=UTF-8")
+
 		body, code, err := c.proxyService.ForwardRequest(r)
 		if err != nil {
-			switch
+			slog.Info("Handle some error here...")
+			if err.Code == constant.READ_HAPROXY_RESPONSE_BODY_ERROR_CODE {
+				w.WriteHeader(err.HttpCode)
+				jsonData, _ := json.Marshal(err)
+				w.Write(jsonData)
+			}
 		}
+
+		w.WriteHeader(code)
+		w.Write(body)
 	}
 }
