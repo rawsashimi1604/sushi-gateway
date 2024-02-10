@@ -1,4 +1,4 @@
-package internal
+package config
 
 import (
 	"log/slog"
@@ -11,6 +11,8 @@ type AppConfig struct {
 	ReverseProxyHttpUrl  string
 	ReverseProxyHttpsUrl string
 }
+
+var Config *AppConfig
 
 func LoadConfig() *AppConfig {
 	slog.Info("Loading configurations from environment")

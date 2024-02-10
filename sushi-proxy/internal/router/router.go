@@ -1,6 +1,7 @@
-package internal
+package router
 
 import (
+	"github.com/rawsashimi1604/sushi-gateway/internal/config"
 	"log/slog"
 
 	"github.com/rawsashimi1604/sushi-gateway/internal/egress"
@@ -12,8 +13,8 @@ func NewRouter() *mux.Router {
 	slog.Info("Creating new router...")
 	router := mux.NewRouter()
 
-	proxyService := egress.NewProxyService("http://localhost:8080")
-	egressController := egress.NewEgressController(proxyService)
+	egressService := egress.NewEgressService(config.Config.ReverseProxyHttpUrl)
+	egressController := egress.NewEgressController(egressService)
 	egressController.RegisterRoutes(router)
 
 	slog.Info("Successfully created router...")
