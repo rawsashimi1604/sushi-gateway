@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	// Run checks to see if api req is present in ingress
+	// Run checks to see if api req is present in egress
 	// Run through auth
 	// Delegate to plugin runner
 	// Run through other plugins
