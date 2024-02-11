@@ -8,17 +8,23 @@ import (
 )
 
 type AppConfig struct {
+	ProxyPort            string
 	ReverseProxyHttpUrl  string
 	ReverseProxyHttpsUrl string
 }
 
-var Config *AppConfig
+var GlobalAppConfig *AppConfig
 
 func LoadConfig() *AppConfig {
 	slog.Info("Loading configurations from environment")
 	godotenv.Load()
 
 	errors := make([]string, 0)
+	proxyPort := os.Getenv("PROXY_PORT")
+	if proxyPort == "" {
+		errors = append(errors, "PROXY_PORT is required.")
+	}
+
 	revProxyHttpUrl := os.Getenv("REVERSE_PROXY_HTTP_URL")
 	if revProxyHttpUrl == "" {
 		errors = append(errors, "REVERSE_PROXY_HTTP_URL is required.")
@@ -30,6 +36,7 @@ func LoadConfig() *AppConfig {
 	}
 
 	config := &AppConfig{
+		ProxyPort:            proxyPort,
 		ReverseProxyHttpUrl:  revProxyHttpUrl,
 		ReverseProxyHttpsUrl: revProxyHttpsUrl,
 	}

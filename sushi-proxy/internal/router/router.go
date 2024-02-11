@@ -13,7 +13,7 @@ func NewRouter() *mux.Router {
 	slog.Info("Creating new router...")
 	router := mux.NewRouter()
 
-	egressService := egress.NewEgressService(config.Config.ReverseProxyHttpUrl)
+	egressService := egress.NewEgressService(config.GlobalAppConfig.ReverseProxyHttpUrl)
 	egressController := egress.NewEgressController(egressService)
 	egressController.RegisterRoutes(router)
 
