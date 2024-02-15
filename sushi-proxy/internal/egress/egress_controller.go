@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/plugins/rate_limit"
 	"log/slog"
 	"net/http"
 )
@@ -26,6 +28,12 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Handing request: " + r.URL.Path)
 		w.Header().Add("Content-Type", "application/json; charset=UTF-8")
+
+		// Configure plugins...
+		pluginManager := plugins.NewPluginManager()
+		pluginManager.RegisterPlugin(&rate_limit.RateLimitPlugin)
+
+		c.proxyService.ExecutePlugins(r, pluginManager)
 
 		body, code, err := c.proxyService.ForwardRequest(r)
 		if err != nil {
