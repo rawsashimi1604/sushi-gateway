@@ -36,7 +36,6 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 				w.Write(jsonData)
 			}
 		}
-
 		w.WriteHeader(code)
 		w.Write(body)
 	}
