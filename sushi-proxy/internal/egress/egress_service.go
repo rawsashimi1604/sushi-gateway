@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/internal/constant"
 	"io"
-	"log/slog"
 	"net/http"
 	"net/url"
 )
@@ -57,7 +56,6 @@ func (s *EgressService) ForwardRequest(req *http.Request) ([]byte, int, *EgressE
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		slog.Error("Error reading response body from HAProxy: ", err)
 		return nil, resp.StatusCode, &EgressError{
 			Code:    constant.READ_HAPROXY_RESPONSE_BODY_ERROR_CODE,
 			Message: constant.READ_HAPROXY_RESPONSE_BODY_ERROR,

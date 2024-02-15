@@ -9,8 +9,8 @@ import (
 )
 
 func main() {
-	config.Config = config.LoadConfig()
+	config.GlobalAppConfig = config.LoadConfig()
 	appRouter := router.NewRouter()
-	slog.Info("Started sushi-proxy service!")
-	log.Fatal(http.ListenAndServe(":8008", appRouter))
+	slog.Info("Started sushi-proxy service on port: " + config.GlobalAppConfig.ProxyPort)
+	log.Fatal(http.ListenAndServe(":"+config.GlobalAppConfig.ProxyPort, appRouter))
 }
