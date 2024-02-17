@@ -5,7 +5,9 @@
   - (DONE) Deploy HA Proxy
   - (DONE) Configure HA Proxy
   - (DONE) Load balancing
-  - Enable data plane api, in docker compose
+  - (DONE) Enable data plane api, in docker compose
+    - https://www.haproxy.com/documentation/haproxy-data-plane-api/installation/install-on-haproxy/
+    - To test: `curl -X GET --user admin:adminpwd http://localhost:5555/v2/info | jq`
   - (DONE) Setup test servers to take in app id
 
 - Ingress
