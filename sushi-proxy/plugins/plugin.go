@@ -3,7 +3,7 @@ package plugins
 import "net/http"
 
 type PluginExecutor interface {
-	Execute(req *http.Request)
+	Execute(next http.Handler) http.Handler
 }
 
 type Plugin struct {

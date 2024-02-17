@@ -1,5 +1,10 @@
 package plugins
 
+import (
+	"net/http"
+	"sort"
+)
+
 type PluginManager struct {
 	plugins []*Plugin
 }
@@ -11,8 +16,27 @@ func NewPluginManager() *PluginManager {
 }
 
 func (pm *PluginManager) RegisterPlugin(plugin *Plugin) {
-	// TODO: sort when adding in place...
+	// TODO: probably add error handling, if plugin already exists, throw error...
+	// Add the plugin
 	pm.plugins = append(pm.plugins, plugin)
+
+	// Sort the plugins by priority
+	// Higher priority executes first
+	sort.Slice(pm.plugins, func(i, j int) bool {
+		return pm.plugins[i].Priority < pm.plugins[j].Priority
+	})
+}
+
+// ExecutePlugins chains the plugins and returns a single http.Handler
+// finalHandler is the application's main handler that should execute after all plugins
+func (pm *PluginManager) ExecutePlugins(finalHandler http.Handler) http.Handler {
+
+	// Chain the plugins order to ensure the correct execution sequence
+	for _, plugin := range pm.plugins {
+		finalHandler = plugin.Handler.Execute(finalHandler)
+	}
+
+	return finalHandler
 }
 
 func (pm *PluginManager) GetPlugins() []*Plugin {

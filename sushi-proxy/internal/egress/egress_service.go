@@ -3,9 +3,7 @@ package egress
 import (
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/plugins"
 	"io"
-	"log/slog"
 	"net/http"
 	"net/url"
 )
@@ -17,15 +15,6 @@ type EgressService struct {
 func NewEgressService(haProxyURL string) *EgressService {
 	return &EgressService{
 		HAProxyURL: haProxyURL,
-	}
-}
-
-func (s *EgressService) ExecutePlugins(req *http.Request, pluginManager *plugins.PluginManager) {
-	slog.Info("Executing plugins...")
-
-	for _, plugin := range pluginManager.GetPlugins() {
-		slog.Info(fmt.Sprintf("Plugin: %s is executing...", plugin.Name))
-		plugin.Handler.Execute(req)
 	}
 }
 

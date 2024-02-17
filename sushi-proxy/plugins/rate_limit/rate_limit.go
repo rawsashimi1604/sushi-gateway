@@ -10,9 +10,13 @@ type RateLimitPlugin struct{}
 
 var Plugin = NewRateLimitPlugin()
 
-func (plugin RateLimitPlugin) Execute(req *http.Request) {
-	slog.Info("Executing rate limit function...")
-	// Add your rate limit logic here
+func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		slog.Info("Executing rate limit function...")
+
+		// call the next plugin.
+		next.ServeHTTP(w, r)
+	})
 }
 
 func NewRateLimitPlugin() *plugins.Plugin {
