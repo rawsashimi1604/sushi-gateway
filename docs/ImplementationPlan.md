@@ -19,5 +19,12 @@
 - Plugin architecture
   - (DONE) Create simple plugin to append hello world to request
   - (DONE) Load plugin dynamically.
+  - Add auth plugins
+    - Basic auth
+    - Sym JWT
+    - Asym JWT
+    - OAuth2
+  - Add logs / analytics plugin
+  - Add ratelimit
 
 - Sushi Manager
