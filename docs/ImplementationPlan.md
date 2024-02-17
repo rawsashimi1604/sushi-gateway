@@ -16,6 +16,10 @@
   - (DONE) Retrieve res from HA Proxy
   - (DONE) Send back to client
 
+- Crud functionality
+  - Add Apis, routes
+  - Attach plugins to apis, routes
+
 - Plugin architecture
   - (DONE) Create simple plugin to append hello world to request
   - (DONE) Load plugin dynamically.
