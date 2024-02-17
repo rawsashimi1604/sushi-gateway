@@ -8,15 +8,16 @@
   - (DONE) Enable data plane api, in docker compose
     - https://www.haproxy.com/documentation/haproxy-data-plane-api/installation/install-on-haproxy/
     - To test: `curl -X GET --user admin:adminpwd http://localhost:5555/v2/info | jq`
+    - docs: https://www.haproxy.com/documentation/dataplaneapi/community/
   - (DONE) Setup test servers to take in app id
 
 - Ingress
-  - Send req to HA Proxy
-  - Retrieve res from HA Proxy
-  - Send back to client
+  - (DONE) Send req to HA Proxy
+  - (DONE) Retrieve res from HA Proxy
+  - (DONE) Send back to client
 
 - Plugin architecture
-  - Create simple plugin to append hello world to request
-  - Load plugin dynamically.
+  - (DONE) Create simple plugin to append hello world to request
+  - (DONE) Load plugin dynamically.
 
 - Sushi Manager
