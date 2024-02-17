@@ -54,7 +54,7 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 			w.Write(body)
 		}))
 
-		// Execute the chained handler.
+		// Execute the request (plugins + proxying).
 		chainedHandler.ServeHTTP(w, r)
 	}
 }
