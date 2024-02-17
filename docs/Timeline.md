@@ -1,5 +1,6 @@
 # Timeline
 
-- End of feb finalize requirements/design
-- End of apr finish rev proxy / admin-api
-- Finish development by oct.
+- Timeline
+    - Q1 : Get basic gateway up
+    - Q2 : Get llama up
+    - Q3 : integrate

@@ -22,10 +22,10 @@ func NewEgressService(haProxyURL string) *EgressService {
 
 func (s *EgressService) ExecutePlugins(req *http.Request, pluginManager *plugins.PluginManager) {
 	slog.Info("Executing plugins...")
-	// Sort the priority
 
 	for _, plugin := range pluginManager.GetPlugins() {
 		slog.Info(fmt.Sprintf("Plugin: %s is executing...", plugin.Name))
+		plugin.Handler.Execute(req)
 	}
 }
 

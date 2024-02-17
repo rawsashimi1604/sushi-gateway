@@ -11,6 +11,7 @@ func NewPluginManager() *PluginManager {
 }
 
 func (pm *PluginManager) RegisterPlugin(plugin *Plugin) {
+	// TODO: sort when adding in place...
 	pm.plugins = append(pm.plugins, plugin)
 }
 

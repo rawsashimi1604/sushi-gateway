@@ -6,14 +6,19 @@ import (
 	"net/http"
 )
 
-var RateLimitPlugin = plugins.Plugin{
-	Name:     "rate_limit",
-	Priority: 10,
-	Handler:  execute(),
+type RateLimitPlugin struct{}
+
+var Plugin = NewRateLimitPlugin()
+
+func (plugin RateLimitPlugin) Execute(req *http.Request) {
+	slog.Info("Executing rate limit function...")
+	// Add your rate limit logic here
 }
 
-func execute() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		slog.Info("Executing rate limit function...")
+func NewRateLimitPlugin() *plugins.Plugin {
+	return &plugins.Plugin{
+		Name:     "rate_limit",
+		Priority: 10,
+		Handler:  RateLimitPlugin{},
 	}
 }

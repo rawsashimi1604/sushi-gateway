@@ -31,7 +31,7 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 
 		// Configure plugins...
 		pluginManager := plugins.NewPluginManager()
-		pluginManager.RegisterPlugin(&rate_limit.RateLimitPlugin)
+		pluginManager.RegisterPlugin(rate_limit.Plugin)
 
 		c.proxyService.ExecutePlugins(r, pluginManager)
 
