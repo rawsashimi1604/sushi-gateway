@@ -41,8 +41,7 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 			// After executing all the plugins, handle the end result here.
 			body, code, err := c.proxyService.ForwardRequest(r)
 			if err != nil {
-				// Handle errors specifically.
-				slog.Info("Handle some error here...")
+				slog.Info("Handle some HaProxy error here...")
 				if err.Code == constant.READ_HAPROXY_RESPONSE_BODY_ERROR_CODE {
 					w.WriteHeader(err.HttpCode)
 					jsonData, _ := json.Marshal(err)
