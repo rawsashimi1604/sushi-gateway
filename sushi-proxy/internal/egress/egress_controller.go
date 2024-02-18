@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/plugins"
-	"github.com/rawsashimi1604/sushi-gateway/plugins/analytics"
-	"github.com/rawsashimi1604/sushi-gateway/plugins/rate_limit"
+	"github.com/rawsashimi1604/sushi-gateway/internal/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/internal/plugins/analytics"
+	"github.com/rawsashimi1604/sushi-gateway/internal/plugins/rate_limit"
 	"log/slog"
 	"net/http"
 )

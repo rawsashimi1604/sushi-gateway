@@ -1,7 +1,7 @@
 package analytics
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/internal/plugins"
 	"log/slog"
 	"net/http"
 )

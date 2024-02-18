@@ -1,7 +1,7 @@
 package rate_limit
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/plugins"
+	plugins2 "github.com/rawsashimi1604/sushi-gateway/internal/plugins"
 	"log/slog"
 	"net/http"
 )
@@ -15,7 +15,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		slog.Info("Executing rate limit function...")
 
 		slog.Info("Too many requests!!! Rate limit reached!!!")
-		pluginErr := plugins.NewPluginError(http.StatusBadRequest, "RATE_LIMIT_MOCK_ERROR", "rate limit reached!")
+		pluginErr := plugins2.NewPluginError(http.StatusBadRequest, "RATE_LIMIT_MOCK_ERROR", "rate limit reached!")
 		pluginErr.WriteJSONResponse(w)
 		return
 
@@ -24,8 +24,8 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 	})
 }
 
-func NewRateLimitPlugin() *plugins.Plugin {
-	return &plugins.Plugin{
+func NewRateLimitPlugin() *plugins2.Plugin {
+	return &plugins2.Plugin{
 		Name:     "rate_limit",
 		Priority: 10,
 		Handler:  RateLimitPlugin{},
