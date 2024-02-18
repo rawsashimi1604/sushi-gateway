@@ -13,7 +13,6 @@ var Plugin = NewRateLimitPlugin()
 func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing rate limit function...")
-
 		slog.Info("Too many requests!!! Rate limit reached!!!")
 		pluginErr := plugins2.NewPluginError(http.StatusBadRequest, "RATE_LIMIT_MOCK_ERROR", "rate limit reached!")
 		pluginErr.WriteJSONResponse(w)
