@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/rawsashimi1604/sushi-gateway/admin-api/internal/config"
 	"github.com/rawsashimi1604/sushi-gateway/admin-api/internal/router"
 	"log"
 	"log/slog"
@@ -8,6 +9,7 @@ import (
 )
 
 func main() {
+	config.GlobalAppConfig = config.LoadConfig()
 	slog.Info("cmd:: Hello from admin api.")
 	appRouter := router.NewRouter()
 	slog.Info("Started admin-api service on port: 8081")
