@@ -1,4 +1,3 @@
 package constant
 
-type Constant struct {
-}
+const UTF_8 = "UTF-8"

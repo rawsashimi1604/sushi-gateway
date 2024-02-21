@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/internal/cache"
+	"github.com/rawsashimi1604/sushi-gateway/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/internal/plugins"
 	"log/slog"
 	"net/http"
@@ -22,14 +23,24 @@ func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 
 		username, password, err := verifyAndParseAuthHeader(r)
 		if err != nil {
+			writeWWWAuthenticateHeader(w)
 			err.WriteJSONResponse(w)
 			return
 		}
 
-		slog.Info(fmt.Sprintf("username: %s, password: %s", username, password))
+		slog.Info(fmt.Sprintf("basicAuth:: username: %s, password: %s", username, password))
 
-		// Add WWW Authenticate Header
 		// Compare password...
+		mockUser := "admin"
+		mockPw := "changeme"
+		if username != mockUser || password != mockPw {
+			slog.Info("invalid credentials")
+			writeWWWAuthenticateHeader(w)
+			err = plugins.NewPluginError(http.StatusUnauthorized, "INVALID_CREDENTIALS",
+				"invalid credentials, please try again.")
+			err.WriteJSONResponse(w)
+			return
+		}
 
 		next.ServeHTTP(w, r)
 	})
@@ -43,6 +54,11 @@ func NewBasicAuthPlugin() *plugins.Plugin {
 	}
 }
 
+func writeWWWAuthenticateHeader(w http.ResponseWriter) {
+	w.Header().Set("WWW-Authenticate",
+		fmt.Sprintf("Basic realm=\"%s\", charset=%s", "Access to sushi gateway", constant.UTF_8))
+}
+
 func verifyAndParseAuthHeader(r *http.Request) (username string, password string, error *plugins.PluginError) {
 	authHeader := r.Header.Get("Authorization")
 
@@ -51,6 +67,7 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 	// valid format : Basic user:pass(base64 encoded)
 	isValidAuthFormat := authHeader != "" && len(bits) == 2
 	if !isValidAuthFormat {
+		slog.Info("Invalid basic auth format passed in.")
 		return "", "", plugins.NewPluginError(http.StatusUnauthorized,
 			"MALFORMED_AUTH_HEADER", "Invalid basic auth format passed in.")
 	}
@@ -58,12 +75,14 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 	// Decode the base64 string
 	decoded, err := base64.StdEncoding.DecodeString(bits[1])
 	if err != nil {
+		slog.Info("Unable to decode base64 token.")
 		return "", "", plugins.NewPluginError(http.StatusUnauthorized,
 			"DECODE_TOKEN_ERROR", "Unable to decode base64 token.")
 	}
 
 	tokenVals := strings.Split(string(decoded), ":")
 	if len(tokenVals) != 2 {
+		slog.Info("Invalid basic auth format passed in.")
 		return "", "", plugins.NewPluginError(http.StatusUnauthorized,
 			"MALFORMED_AUTH_HEADER", "Invalid basic auth format passed in.")
 	}
