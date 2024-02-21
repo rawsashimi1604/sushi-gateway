@@ -2,7 +2,7 @@ package egress
 
 import (
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"io"
 	"net/http"
 	"net/url"

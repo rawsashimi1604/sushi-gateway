@@ -1,7 +1,7 @@
 package rate_limit
 
 import (
-	plugins2 "github.com/rawsashimi1604/sushi-gateway/internal/plugins"
+	plugins2 "github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
 	"log/slog"
 	"net/http"
 )

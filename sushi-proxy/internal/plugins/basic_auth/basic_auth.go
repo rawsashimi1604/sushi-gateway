@@ -3,9 +3,9 @@ package basic_auth
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/internal/cache"
-	"github.com/rawsashimi1604/sushi-gateway/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/internal/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/cache"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -16,6 +16,9 @@ type BasicAuthPlugin struct{}
 var Plugin = NewBasicAuthPlugin()
 
 var BasicAuthCache = cache.New(5, 100)
+
+// TODO: add credentials in db...
+// TODO: add caching mechanisms, persist between page views, per realm
 
 func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -1,10 +1,10 @@
 package router
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/internal/config"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"log/slog"
 
-	"github.com/rawsashimi1604/sushi-gateway/internal/egress"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/egress"
 
 	"github.com/gorilla/mux"
 )

@@ -1,4 +1,4 @@
-module github.com/rawsashimi1604/sushi-gateway
+module github.com/rawsashimi1604/sushi-gateway/sushi-proxy
 
 go 1.20
 

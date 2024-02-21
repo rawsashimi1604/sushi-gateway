@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/internal/config"
-	"github.com/rawsashimi1604/sushi-gateway/internal/router"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/router"
 	"log"
 	"log/slog"
 	"net/http"

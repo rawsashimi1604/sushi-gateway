@@ -3,11 +3,11 @@ package egress
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/rawsashimi1604/sushi-gateway/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/internal/plugins"
-	"github.com/rawsashimi1604/sushi-gateway/internal/plugins/analytics"
-	"github.com/rawsashimi1604/sushi-gateway/internal/plugins/basic_auth"
-	"github.com/rawsashimi1604/sushi-gateway/internal/plugins/rate_limit"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/analytics"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/basic_auth"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/rate_limit"
 	"log/slog"
 	"net/http"
 )
