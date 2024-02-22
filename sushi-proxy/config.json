@@ -3,7 +3,7 @@
     "name": "sushi-gateway-1",
     "plugins": []
   },
-  "upstreams": [
+  "services": [
     {
       "name": "sushi-svc-1",
       "host": "localhost",

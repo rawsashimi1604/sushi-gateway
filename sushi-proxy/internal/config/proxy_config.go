@@ -16,7 +16,7 @@ type ProxyConfig struct {
 		Name    string        `json:"name"`
 		Plugins []interface{} `json:"plugins"` // If you have a specific plugin struct, replace interface{} with that
 	} `json:"global"`
-	Upstreams []struct {
+	Services []struct {
 		Name    string        `json:"name"`
 		Host    string        `json:"host"`
 		Port    int           `json:"port"`
@@ -26,7 +26,7 @@ type ProxyConfig struct {
 			Upstream string        `json:"upstream"`
 			Plugins  []interface{} `json:"plugins"` // If you have a specific plugin struct, replace interface{} with that
 		} `json:"routes"`
-	} `json:"upstreams"`
+	} `json:"services"`
 }
 
 var GlobalProxyConfig ProxyConfig
