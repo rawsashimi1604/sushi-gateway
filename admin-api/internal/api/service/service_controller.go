@@ -14,11 +14,12 @@ func NewServiceController() *ServiceController {
 }
 
 func (c *ServiceController) RegisterRoutes(router *mux.Router) {
-	router.PathPrefix("/api/v1/service").HandlerFunc(c.HandleIndex())
+	router.PathPrefix("/api/v1/service").Methods("GET").HandlerFunc(c.HandleIndex())
 }
 
 func (c *ServiceController) HandleIndex() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("hello world from index.")
+		
 	}
 }
