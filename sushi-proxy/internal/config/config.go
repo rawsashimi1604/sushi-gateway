@@ -15,8 +15,8 @@ type AppConfig struct {
 
 var GlobalAppConfig *AppConfig
 
-func LoadConfig() *AppConfig {
-	slog.Info("Loading configurations from environment")
+func LoadGlobalConfig() *AppConfig {
+	slog.Info("Loading global app config")
 	godotenv.Load()
 
 	errors := make([]string, 0)

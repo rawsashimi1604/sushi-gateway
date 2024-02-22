@@ -1,0 +1,21 @@
+{
+  "global": {
+    "name": "sushi-gateway-1",
+    "plugins": []
+  },
+  "upstreams": [
+    {
+      "name": "sushi-svc-1",
+      "host": "localhost",
+      "port": 8001,
+      "plugins": [],
+      "routes": [
+        {
+          "path": "/service1",
+          "upstream": "http://localhost:8001",
+          "plugins": []
+        }
+      ]
+    }
+  ]
+}
