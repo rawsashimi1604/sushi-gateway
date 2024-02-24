@@ -1,18 +1,6 @@
 version: "3.8"
 
 services:
-  haproxy:
-    container_name: haproxy-egress
-    build:
-      context: ./
-      dockerfile: haproxy.Dockerfile
-    ports:
-      - "8092:80"
-      - "8093:443"
-      - "5555:5555"
-#    volumes:
-#      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-
   postgres:
     image: postgres:15.4
     depends_on:
