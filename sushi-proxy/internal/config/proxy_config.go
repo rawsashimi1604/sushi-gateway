@@ -11,22 +11,35 @@ import (
 // TODO: refactor errors
 // TODO: add global param for config file path
 // Reads from config.json file from root directory...
+// Define plugin structs as needed
+type PluginConfig map[string]interface{}
+
+type Upstream struct {
+	Host string `json:"host"`
+	Port int    `json:"port"`
+}
+
+type Route struct {
+	Path    string         `json:"path"`
+	Methods []string       `json:"methods"`
+	Plugins []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
+}
+
+type Service struct {
+	Name      string         `json:"name"`
+	BasePath  string         `json:"base_path"`
+	Protocol  string         `json:"protocol"`
+	Upstreams []Upstream     `json:"upstreams"`
+	Plugins   []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
+	Routes    []Route        `json:"routes"`
+}
+
 type ProxyConfig struct {
 	Global struct {
-		Name    string        `json:"name"`
-		Plugins []interface{} `json:"plugins"` // If you have a specific plugin struct, replace interface{} with that
+		Name    string         `json:"name"`
+		Plugins []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
 	} `json:"global"`
-	Services []struct {
-		Name    string        `json:"name"`
-		Host    string        `json:"host"`
-		Port    int           `json:"port"`
-		Plugins []interface{} `json:"plugins"` // If you have a specific plugin struct, replace interface{} with that
-		Routes  []struct {
-			Path     string        `json:"path"`
-			Upstream string        `json:"upstream"`
-			Plugins  []interface{} `json:"plugins"` // If you have a specific plugin struct, replace interface{} with that
-		} `json:"routes"`
-	} `json:"services"`
+	Services []Service `json:"services"`
 }
 
 var GlobalProxyConfig ProxyConfig
@@ -74,7 +87,7 @@ func WatchConfigFile(filePath string) {
 				if !ok {
 					return
 				}
-				slog.Info("Filesystem watcher error: %v", err)
+				slog.Info("Filesystem watcher error: " + err.Error())
 				panic("Filesystem watcher error")
 			}
 		}
@@ -85,7 +98,7 @@ func WatchConfigFile(filePath string) {
 		slog.Info("Error adding watcher to file: %v", err)
 		panic("Error adding watcher to file")
 	}
-	slog.Info("Started watching config file:", filePath)
+	slog.Info("Started watching config file: " + filePath)
 
 	<-done
 }

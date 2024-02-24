@@ -5,14 +5,23 @@
   },
   "services": [
     {
-      "name": "sushi-svc-1",
-      "host": "localhost",
-      "port": 8001,
+      "name": "sushi-svc",
+      "base_path": "/sushi",
+      "protocol": "http",
+      "upstreams": [
+        { "host": "localhost", "port": 8001 },
+        { "host": "localhost", "port": 8002 }
+      ],
       "plugins": [],
       "routes": [
         {
-          "path": "/service1",
-          "upstream": "http://localhost:8001",
+          "path": "/v1/sushi",
+          "methods": ["GET"],
+          "plugins": []
+        },
+        {
+          "path": "/v1/sushi/restaurant",
+          "methods": ["GET"],
           "plugins": []
         }
       ]
