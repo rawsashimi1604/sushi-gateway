@@ -8,9 +8,7 @@ import (
 )
 
 type AppConfig struct {
-	ProxyPort            string
-	ReverseProxyHttpUrl  string
-	ReverseProxyHttpsUrl string
+	ProxyPort string
 }
 
 var GlobalAppConfig *AppConfig
@@ -25,20 +23,8 @@ func LoadGlobalConfig() *AppConfig {
 		errors = append(errors, "PROXY_PORT is required.")
 	}
 
-	revProxyHttpUrl := os.Getenv("REVERSE_PROXY_HTTP_URL")
-	if revProxyHttpUrl == "" {
-		errors = append(errors, "REVERSE_PROXY_HTTP_URL is required.")
-	}
-
-	revProxyHttpsUrl := os.Getenv("REVERSE_PROXY_HTTPS_URL")
-	if revProxyHttpsUrl == "" {
-		errors = append(errors, "REVERSE_PROXY_HTTPS_URL is required.")
-	}
-
 	config := &AppConfig{
-		ProxyPort:            proxyPort,
-		ReverseProxyHttpUrl:  revProxyHttpUrl,
-		ReverseProxyHttpsUrl: revProxyHttpsUrl,
+		ProxyPort: proxyPort,
 	}
 
 	if len(errors) > 0 {
