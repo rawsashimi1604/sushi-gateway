@@ -1,18 +1,16 @@
 version: "3.8"
 
 services:
-  postgres:
-    image: postgres:15.4
-    depends_on:
-      - haproxy
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: sushi-db
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: changeme
-    volumes:
-      - ./sql-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+#  postgres:
+#    image: postgres:15.4
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      POSTGRES_DB: sushi-db
+#      POSTGRES_USER: admin
+#      POSTGRES_PASSWORD: changeme
+#    volumes:
+#      - ./sql-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   sushi-svc-1:
     image: rawsashimi/express-sushi-app

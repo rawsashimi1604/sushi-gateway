@@ -46,7 +46,7 @@ var GlobalProxyConfig ProxyConfig
 var configLock = &sync.RWMutex{}
 
 func LoadProxyConfig(filePath string) {
-	slog.Info("Loading proxy config")
+	slog.Info("Loading proxy_pass config")
 	configFile, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		slog.Info("Error reading config file", err)

@@ -17,6 +17,6 @@ func main() {
 	go config.WatchConfigFile(configPath)
 
 	appRouter := router.NewRouter()
-	slog.Info("Started sushi-proxy service on port: " + config.GlobalAppConfig.ProxyPort)
+	slog.Info("Started sushi-proxy_pass service on port: " + config.GlobalAppConfig.ProxyPort)
 	log.Fatal(http.ListenAndServe(":"+config.GlobalAppConfig.ProxyPort, appRouter))
 }

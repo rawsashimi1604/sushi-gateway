@@ -1,9 +1,7 @@
 package egress
 
 import (
-	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/analytics"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/basic_auth"
@@ -27,8 +25,8 @@ func (c *EgressController) RegisterRoutes(router *mux.Router) {
 }
 
 func (c *EgressController) RouteRequest() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		slog.Info("Handing request: " + r.URL.Path)
+	return func(w http.ResponseWriter, req *http.Request) {
+		slog.Info("Handing request: " + req.URL.Path)
 		w.Header().Add("Content-Type", "application/json; charset=UTF-8")
 
 		// Configure, register new plugins...
@@ -43,22 +41,15 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 			slog.Info("Forwarding request...")
 
 			// After executing all the plugins, handle the end result here.
-			body, code, err := c.proxyService.ForwardRequest(r)
+			body, _, err := c.proxyService.HandleProxyPass(w, r)
 			if err != nil {
-				slog.Info("Handle some HaProxy error here...")
-				if err.Code == constant.READ_HAPROXY_RESPONSE_BODY_ERROR_CODE {
-					w.WriteHeader(err.HttpCode)
-					jsonData, _ := json.Marshal(err)
-					w.Write(jsonData)
-					return // Ensure to return here to prevent further execution after writing the error response.
-				}
+				slog.Info("Handle some error here...")
 			}
 
-			w.WriteHeader(code)
 			w.Write(body)
 		}))
 
 		// Execute the request (plugins + proxying).
-		chainedHandler.ServeHTTP(w, r)
+		chainedHandler.ServeHTTP(w, req)
 	}
 }
