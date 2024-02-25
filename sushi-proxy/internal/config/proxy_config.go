@@ -9,10 +9,9 @@ import (
 	"sync"
 )
 
-// TODO: refactor errors
+// TODO: refactor errors, add error codes.
 // TODO: add global param for config file path
 // Reads from config.json file from root directory...
-// Define plugin structs as needed
 
 type ProxyConfig struct {
 	Global struct {

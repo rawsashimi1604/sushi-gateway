@@ -43,6 +43,7 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 			// After executing all the plugins, handle the end result here.
 			body, _, err := c.proxyService.HandleProxyPass(w, r)
 			if err != nil {
+				slog.Info(err.Error())
 				slog.Info("Handle some error here...")
 			}
 

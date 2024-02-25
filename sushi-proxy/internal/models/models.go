@@ -14,10 +14,16 @@ type Route struct {
 }
 
 type Service struct {
-	Name      string         `json:"name"`
-	BasePath  string         `json:"base_path"`
-	Protocol  string         `json:"protocol"`
-	Upstreams []Upstream     `json:"upstreams"`
-	Plugins   []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
-	Routes    []Route        `json:"routes"`
+	Name        string         `json:"name"`
+	BasePath    string         `json:"base_path"`
+	Protocol    string         `json:"protocol"`
+	Upstreams   []Upstream     `json:"upstreams"`
+	Credentials []Credentials  `json:"credentials"`
+	Plugins     []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
+	Routes      []Route        `json:"routes"`
+}
+
+type Credentials struct {
+	Plugin string                 `json:"plugin"`
+	Data   map[string]interface{} `json:"data"`
 }

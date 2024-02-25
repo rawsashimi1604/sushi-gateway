@@ -6,11 +6,20 @@
   "services": [
     {
       "name": "sushi-svc",
-      "base_path": "/sushi",
+      "base_path": "/sushi-service",
       "protocol": "http",
       "upstreams": [
         { "host": "localhost", "port": 8001 },
         { "host": "localhost", "port": 8002 }
+      ],
+      "credentials": [
+        {
+          "plugin": "basic_auth",
+          "data": {
+            "username": "admin",
+            "password": "changeme"
+          }
+        }
       ],
       "plugins": [],
       "routes": [
