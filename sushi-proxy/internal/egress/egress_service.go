@@ -50,15 +50,20 @@ func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request
 	proxy := httputil.NewSingleHostReverseProxy(target)
 	captureWriter := newCaptureResponseWriter(w)
 
-	req.URL.Path = target.Path
-	req.URL.Host = target.Host
-	req.URL.Scheme = target.Scheme
-	req.RequestURI = target.RequestURI()
+	// Customize the Director to modify request before forwarding
+	originalDirector := proxy.Director
+	proxy.Director = func(req *http.Request) {
+		// Call the original Director to preserve other behaviors
+		originalDirector(req)
 
-	// Set the X-Forwarded-For header to the original request IP
-	req.Header.Set("X-Forwarded-Host", req.Header.Get("Host"))
-	req.Header.Set("X-Forwarded-For", req.RemoteAddr)
-	req.Host = target.Host
+		// Now adjust req.URL.Path here as needed
+		req.URL.Path = target.Path
+		req.URL.Scheme = target.Scheme
+		req.URL.Host = target.Host
+		req.Header.Set("X-Forwarded-Host", req.Header.Get("Host"))
+		req.Header.Set("X-Forwarded-For", req.RemoteAddr)
+		req.Host = target.Host
+	}
 
 	// Serve the proxy and capture the response
 	proxy.ServeHTTP(captureWriter, req)
