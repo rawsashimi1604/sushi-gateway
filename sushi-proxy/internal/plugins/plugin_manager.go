@@ -15,9 +15,16 @@ func NewPluginManager() *PluginManager {
 	}
 }
 
+func NewPluginManagerFromConfig() *PluginManager {
+	// Load the plugin configuration from the config file
+	// TODO: add this functionality
+	return &PluginManager{
+		plugins: make([]*Plugin, 0),
+	}
+}
+
 func (pm *PluginManager) RegisterPlugin(plugin *Plugin) {
 	// TODO: probably add error handling, if plugin already exists, throw error...
-	// Add the plugin
 	pm.plugins = append(pm.plugins, plugin)
 
 	// Sort the plugins by priority
