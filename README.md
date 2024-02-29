@@ -5,7 +5,7 @@
 ## Plugins
 - Auth
   - **(DONE)** basic auth
-  - jwt
+  - **(DONE)** jwt
   - oauth2
 - Usage
   - Ratelimit
