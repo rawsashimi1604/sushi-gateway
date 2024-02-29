@@ -58,7 +58,6 @@ func writeWWWAuthenticateHeader(w http.ResponseWriter) {
 
 func verifyAndParseAuthHeader(r *http.Request) (username string, password string, error *errors.HttpError) {
 	authHeader := r.Header.Get("Authorization")
-
 	bits := strings.Split(authHeader, " ")
 
 	// valid format : Basic user:pass(base64 encoded)
@@ -66,7 +65,7 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 	if !isValidAuthFormat {
 		slog.Info("Invalid basic auth format passed in.")
 		return "", "", errors.NewHttpError(http.StatusUnauthorized,
-			"MALFORMED_AUTH_HEADER", "Invalid basic auth format passed in.")
+			"MALFORMED_AUTH_HEADER", "Invalid auth format passed in.")
 	}
 
 	decoded, err := base64.StdEncoding.DecodeString(bits[1])
@@ -94,15 +93,9 @@ func authorize(username string, password string, r *http.Request) *errors.HttpEr
 
 	for _, cred := range service.Credentials {
 		if cred.Plugin == "basic_auth" {
-			// Get from cred map
-			usernameRaw, okUser := cred.Data["username"]
-			passwordRaw, okPass := cred.Data["password"]
-			if !okUser || !okPass {
-				return errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
-			}
-			// Assert string type
-			usernameFromCred, okUser := usernameRaw.(string)
-			passwordFromCred, okPass := passwordRaw.(string)
+			// Assert string type and get from cred map
+			usernameFromCred, okUser := cred.Data["username"].(string)
+			passwordFromCred, okPass := cred.Data["password"].(string)
 			if !okUser || !okPass {
 				return errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
 			}

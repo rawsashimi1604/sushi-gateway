@@ -24,7 +24,8 @@
           "plugin": "jwt",
           "data": {
             "alg": "HS256",
-            "secret": "123secret",
+            "iss": "someIssuerKey",
+            "secret": "123secret456",
             "token_life": 3600
           }
         }
