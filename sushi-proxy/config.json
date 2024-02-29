@@ -16,7 +16,7 @@
         {
           "plugin": "basic_auth",
           "data": {
-            "username": "admin",
+            "username": "admin123",
             "password": "changeme"
           }
         }

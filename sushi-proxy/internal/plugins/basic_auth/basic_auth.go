@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/cache"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -32,15 +34,9 @@ func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 		}
 
 		slog.Info(fmt.Sprintf("basicAuth:: username: %s, password: %s", username, password))
-
-		// Compare password...
-		mockUser := "admin"
-		mockPw := "changeme"
-		if username != mockUser || password != mockPw {
-			slog.Info("invalid credentials")
+		err = authorize(username, password, r)
+		if err != nil {
 			writeWWWAuthenticateHeader(w)
-			err = plugins.NewPluginError(http.StatusUnauthorized, "INVALID_CREDENTIALS",
-				"invalid credentials, please try again.")
 			err.WriteJSONResponse(w)
 			return
 		}
@@ -62,7 +58,7 @@ func writeWWWAuthenticateHeader(w http.ResponseWriter) {
 		fmt.Sprintf("Basic realm=\"%s\", charset=%s", "Access to sushi gateway", constant.UTF_8))
 }
 
-func verifyAndParseAuthHeader(r *http.Request) (username string, password string, error *plugins.PluginError) {
+func verifyAndParseAuthHeader(r *http.Request) (username string, password string, error *errors.HttpError) {
 	authHeader := r.Header.Get("Authorization")
 
 	bits := strings.Split(authHeader, " ")
@@ -71,7 +67,7 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 	isValidAuthFormat := authHeader != "" && len(bits) == 2
 	if !isValidAuthFormat {
 		slog.Info("Invalid basic auth format passed in.")
-		return "", "", plugins.NewPluginError(http.StatusUnauthorized,
+		return "", "", errors.NewHttpError(http.StatusUnauthorized,
 			"MALFORMED_AUTH_HEADER", "Invalid basic auth format passed in.")
 	}
 
@@ -79,16 +75,44 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 	decoded, err := base64.StdEncoding.DecodeString(bits[1])
 	if err != nil {
 		slog.Info("Unable to decode base64 token.")
-		return "", "", plugins.NewPluginError(http.StatusUnauthorized,
+		return "", "", errors.NewHttpError(http.StatusUnauthorized,
 			"DECODE_TOKEN_ERROR", "Unable to decode base64 token.")
 	}
 
 	tokenVals := strings.Split(string(decoded), ":")
 	if len(tokenVals) != 2 {
 		slog.Info("Invalid basic auth format passed in.")
-		return "", "", plugins.NewPluginError(http.StatusUnauthorized,
+		return "", "", errors.NewHttpError(http.StatusUnauthorized,
 			"MALFORMED_AUTH_HEADER", "Invalid basic auth format passed in.")
 	}
 
 	return tokenVals[0], tokenVals[1], nil
+}
+
+func authorize(username string, password string, r *http.Request) *errors.HttpError {
+	service, _, err := util.GetServiceAndRouteFromRequest(r)
+	if err != nil {
+		return err
+	}
+
+	for _, cred := range service.Credentials {
+		if cred.Plugin == "basic_auth" {
+			// Get from cred map
+			usernameRaw, okUser := cred.Data["username"]
+			passwordRaw, okPass := cred.Data["password"]
+			if !okUser || !okPass {
+				return errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
+			}
+			// Assert string type
+			usernameFromCred, okUser := usernameRaw.(string)
+			passwordFromCred, okPass := passwordRaw.(string)
+			if !okUser || !okPass {
+				return errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
+			}
+			if username == usernameFromCred && password == passwordFromCred {
+				return nil
+			}
+		}
+	}
+	return errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
 }
