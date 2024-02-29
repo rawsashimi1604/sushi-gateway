@@ -1,5 +1,8 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
+
 require("dotenv").config();
+
 const app = express();
 const port = 3000;
 
@@ -26,6 +29,18 @@ app.get("/v1/sushi", (req, res) => {
 // GET /v1/sushi/restaurant
 app.get("/v1/sushi/restaurant", (req, res) => {
   res.json({ app_id: process.env.APP_ID, data: restaurantData });
+});
+
+app.get("/v1/token", (req, res) => {
+  const payload = {
+    app_id: process.env.APP_ID,
+    iss: process.env.JWT_ISSUER,
+  };
+  const secretKey = process.env.JWT_SECRET;
+  const token = jwt.sign(payload, secretKey, {
+    expiresIn: "1h", 
+  });
+  res.json({ token });
 });
 
 app.listen(port, () => {
