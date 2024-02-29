@@ -4,7 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/analytics"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/basic_auth"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/jwt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/rate_limit"
 	"log/slog"
 	"net/http"
@@ -34,7 +34,8 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 		pluginManager := plugins.NewPluginManager()
 		pluginManager.RegisterPlugin(rate_limit.Plugin)
 		pluginManager.RegisterPlugin(analytics.Plugin)
-		pluginManager.RegisterPlugin(basic_auth.Plugin)
+		//pluginManager.RegisterPlugin(basic_auth.Plugin)
+		pluginManager.RegisterPlugin(jwt.Plugin)
 
 		// Chain the plugins with the final handler where the request is forwarded.
 		chainedHandler := pluginManager.ExecutePlugins(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

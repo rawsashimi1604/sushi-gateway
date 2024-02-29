@@ -40,6 +40,11 @@
           "path": "/v1/sushi/restaurant",
           "methods": ["GET"],
           "plugins": []
+        },
+        {
+          "path": "/v1/token",
+          "methods": ["GET"],
+          "plugins": []
         }
       ]
     }
