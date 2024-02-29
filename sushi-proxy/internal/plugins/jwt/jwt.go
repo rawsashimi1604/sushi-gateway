@@ -3,7 +3,6 @@ package jwt
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/cache"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
@@ -22,9 +21,6 @@ type JwtCredentials struct {
 }
 
 var Plugin = NewJwtPlugin()
-
-// JwtCache TODO: add caching mechanisms, persist between page views, per realm
-var JwtCache = cache.New(5, 100)
 
 func (plugin JwtPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
