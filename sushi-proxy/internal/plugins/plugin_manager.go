@@ -15,8 +15,10 @@ func NewPluginManager() *PluginManager {
 	}
 }
 
-func NewPluginManagerFromConfig() *PluginManager {
+func NewPluginManagerFromConfig(req *http.Request) *PluginManager {
 	// Load the plugin configuration from the config file
+	// Based on the plugins loaded from http request
+
 	// TODO: add this functionality
 	return &PluginManager{
 		plugins: make([]*Plugin, 0),

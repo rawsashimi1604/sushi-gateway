@@ -3,12 +3,12 @@ package egress
 import (
 	"bytes"
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"strings"
 )
 
 type EgressService struct {
@@ -30,7 +30,7 @@ func newCaptureResponseWriter(w http.ResponseWriter) *captureResponseWriter {
 	return &captureResponseWriter{ResponseWriter: w, statusCode: http.StatusOK}
 }
 
-func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request) ([]byte, int, *EgressError) {
+func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request) ([]byte, int, *errors.HttpError) {
 
 	path, convertErr := s.convertPathToProxyPassUrl(req)
 	if convertErr != nil {
@@ -40,7 +40,7 @@ func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request
 	slog.Info("path: " + path)
 	target, err := url.Parse(path)
 	if err != nil {
-		return nil, 0, &EgressError{
+		return nil, 0, &errors.HttpError{
 			Code:     "ERROR_PARSING_PROXY_URL",
 			Message:  "Error parsing URL when creating proxy_pass",
 			HttpCode: http.StatusInternalServerError,
@@ -71,71 +71,23 @@ func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request
 	return captureWriter.body.Bytes(), captureWriter.statusCode, nil
 }
 
-func (s *EgressService) convertPathToProxyPassUrl(req *http.Request) (string, *EgressError) {
-	// Split the path to get the service base path
-	path := req.URL.Path
+func (s *EgressService) convertPathToProxyPassUrl(req *http.Request) (string, *errors.HttpError) {
+	matchedService, matchedRoute, err := util.GetServiceAndRouteFromRequest(req)
+	if err != nil {
+		return "", err
+	}
 
-	// Ensure there's at least a base path segment following the initial slash
-	parts := strings.Split(path, "/")
-	if len(parts) < 3 {
-		return "", &EgressError{
-			Code:     "INVALID_PATH",
-			Message:  "Invalid path format, needs at least /service_base_path/...",
-			HttpCode: http.StatusBadRequest,
+	// Assuming the use of the first upstream for simplicity
+	if len(matchedService.Upstreams) == 0 {
+		return "", &errors.HttpError{
+			Code:     "NO_UPSTREAMS",
+			Message:  "No upstreams found for the matched service",
+			HttpCode: http.StatusInternalServerError,
 		}
 	}
 
-	serviceBasePath := "/" + parts[1]
-
-	// Search proxy config json file to find a matching base_path
-	for _, service := range config.GlobalProxyConfig.Services {
-		if service.BasePath == serviceBasePath {
-			// For simplicity, just use the first upstream as the proxy target
-			// TODO: add load balancing logic.
-			if len(service.Upstreams) > 0 {
-				upstream := service.Upstreams[0]
-				// Check for route match
-				route := "/" + strings.Join(parts[2:], "/")
-				for _, r := range service.Routes {
-					if r.Path == route && checkMethodMatch(req.Method, r.Methods) {
-						// Success service and route matched!
-						proxyURL := fmt.Sprintf("%s://%s:%d%s", service.Protocol, upstream.Host, upstream.Port, route)
-						return proxyURL, nil
-					}
-				}
-
-				return "", &EgressError{
-					Code:     "ROUTE_NOT_FOUND",
-					Message:  "Route not found",
-					HttpCode: http.StatusNotFound,
-				}
-			}
-
-			return "", &EgressError{
-				Code:     "NO_UPSTREAMS",
-				Message:  "No upstreams found for service, needs at least 1 upstream",
-				HttpCode: http.StatusInternalServerError,
-			}
-		}
-	}
-
-	return "", &EgressError{
-		Code:     "SERVICE_NOT_FOUND",
-		Message:  "Service not found",
-		HttpCode: http.StatusNotFound,
-	}
-}
-
-func checkMethodMatch(requestMethod string, allowedMethods []string) bool {
-	if len(allowedMethods) == 0 {
-		// If no methods are specified, assume all methods are allowed
-		return true
-	}
-
-	for _, method := range allowedMethods {
-		if requestMethod == method {
-			return true
-		}
-	}
-	return false
+	// Use first upstream for now, configure load balancing next time.
+	upstream := matchedService.Upstreams[0]
+	proxyURL := fmt.Sprintf("%s://%s:%d%s", matchedService.Protocol, upstream.Host, upstream.Port, matchedRoute.Path)
+	return proxyURL, nil
 }
