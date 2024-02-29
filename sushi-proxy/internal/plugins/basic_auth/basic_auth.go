@@ -17,10 +17,8 @@ type BasicAuthPlugin struct{}
 
 var Plugin = NewBasicAuthPlugin()
 
+// BasicAuthCache TODO: add caching mechanisms, persist between page views, per realm
 var BasicAuthCache = cache.New(5, 100)
-
-// TODO: add credentials in db...
-// TODO: add caching mechanisms, persist between page views, per realm
 
 func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +69,6 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 			"MALFORMED_AUTH_HEADER", "Invalid basic auth format passed in.")
 	}
 
-	// Decode the base64 string
 	decoded, err := base64.StdEncoding.DecodeString(bits[1])
 	if err != nil {
 		slog.Info("Unable to decode base64 token.")

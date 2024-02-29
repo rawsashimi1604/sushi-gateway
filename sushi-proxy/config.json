@@ -19,6 +19,14 @@
             "username": "admin123",
             "password": "changeme"
           }
+        },
+        {
+          "plugin": "jwt",
+          "data": {
+            "alg": "HS256",
+            "secret": "123secret",
+            "token_life": 3600
+          }
         }
       ],
       "plugins": [],
