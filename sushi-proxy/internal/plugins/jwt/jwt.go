@@ -16,10 +16,9 @@ import (
 type JwtPlugin struct{}
 
 type JwtCredentials struct {
-	alg       string `json:"alg"`
-	iss       string `json:"iss"`
-	secret    string `json:"secret"`
-	tokenLife uint   `json:"token_life"`
+	alg    string `json:"alg"`
+	iss    string `json:"iss"`
+	secret string `json:"secret"`
 }
 
 var Plugin = NewJwtPlugin()
@@ -98,15 +97,13 @@ func loadCredentialsFromReq(req *http.Request) (*JwtCredentials, *errors.HttpErr
 			alg, ok := cred.Data["alg"].(string)
 			iss, ok := cred.Data["iss"].(string)
 			secret, ok := cred.Data["secret"].(string)
-			tokenLife, ok := cred.Data["token_life"].(uint)
 			if !ok {
 				return nil, errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
 			}
 			return &JwtCredentials{
-				alg:       alg,
-				iss:       iss,
-				secret:    secret,
-				tokenLife: tokenLife,
+				alg:    alg,
+				iss:    iss,
+				secret: secret,
 			}, nil
 		}
 	}

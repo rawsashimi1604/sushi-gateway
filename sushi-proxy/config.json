@@ -25,8 +25,7 @@
           "data": {
             "alg": "HS256",
             "iss": "someIssuerKey",
-            "secret": "123secret456",
-            "token_life": 3600
+            "secret": "123secret456"
           }
         }
       ],

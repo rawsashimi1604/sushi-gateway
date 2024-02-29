@@ -18,6 +18,8 @@ services:
       - "8001:3000"
     environment:
       - APP_ID=8001
+      - JWT_ISSUER=someIssuerKey
+      - JWT_SECRET=123secret456
 
   sushi-svc-2:
     image: rawsashimi/express-sushi-app
@@ -25,3 +27,5 @@ services:
       - "8002:3000"
     environment:
       - APP_ID=8002
+      - JWT_ISSUER=someIssuerKey
+      - JWT_SECRET=123secret456
