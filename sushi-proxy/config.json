@@ -27,6 +27,12 @@
             "iss": "someIssuerKey",
             "secret": "123secret456"
           }
+        },
+        {
+          "plugin": "key_auth",
+          "data": {
+            "key": "someKeyToAccessApi"
+          }
         }
       ],
       "plugins": [],
