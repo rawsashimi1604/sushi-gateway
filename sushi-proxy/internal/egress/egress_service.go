@@ -3,6 +3,7 @@ package egress
 import (
 	"bytes"
 	"fmt"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
@@ -60,8 +61,8 @@ func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request
 		req.URL.Path = target.Path
 		req.URL.Scheme = target.Scheme
 		req.URL.Host = target.Host
-		req.Header.Set("X-Forwarded-Host", req.Header.Get("Host"))
-		req.Header.Set("X-Forwarded-For", req.RemoteAddr)
+		req.Header.Set(constant.X_FORWARDED_HOST, req.Header.Get("Host"))
+		req.Header.Set(constant.X_FORWARDED_FOR, req.RemoteAddr)
 		req.Host = target.Host
 	}
 
