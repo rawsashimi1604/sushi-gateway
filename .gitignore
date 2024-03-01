@@ -12,6 +12,9 @@
 *.so
 *.dylib
 
+# Certificate files
+*.pem
+
 # Test binary, built with `go test -c`
 *.test
 

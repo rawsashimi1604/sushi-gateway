@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/router"
-	"log"
 	"log/slog"
 	"net/http"
 )
@@ -17,6 +16,25 @@ func main() {
 	go config.WatchConfigFile(configPath)
 
 	appRouter := router.NewRouter()
-	slog.Info("Started sushi-proxy_pass service on port: " + config.GlobalAppConfig.ProxyPort)
-	log.Fatal(http.ListenAndServe(":"+config.GlobalAppConfig.ProxyPort, appRouter))
+
+	// Setup http server
+	go func() {
+		slog.Info("Started sushi-proxy_pass http server on port: " + config.GlobalAppConfig.ProxyPortHttp)
+		if err := http.ListenAndServe(":"+config.GlobalAppConfig.ProxyPortHttp, appRouter); err != nil {
+			slog.Info("Failed to start HTTP server: %v", err)
+			panic(err)
+		}
+	}()
+
+	// Setup https server
+	go func() {
+		slog.Info("Started sushi-proxy_pass https server on port: " + config.GlobalAppConfig.ProxyPortHttps)
+		if err := http.ListenAndServeTLS(":"+config.GlobalAppConfig.ProxyPortHttps, "./cert.pem", "./key.pem", appRouter); err != nil {
+			slog.Info("Failed to start HTTP server: %v", err)
+			panic(err)
+		}
+	}()
+
+	// Block forever
+	select {}
 }
