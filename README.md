@@ -11,6 +11,12 @@ https/tls support has been added to the proxy, add cert and key into environment
   - **(DONE)** jwt
   - **(DONE)** key auth
   - oauth2
-- Usage
-  - Ratelimit
+- Security
+  - **(DONE)** bot_protection
+  - cors
+- Traffic Control
+  - acl
+  - rate limit
+  - request size limit
+
     
