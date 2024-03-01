@@ -6,6 +6,7 @@
 - Auth
   - **(DONE)** basic auth
   - **(DONE)** jwt
+  - **(DONE)** key auth
   - oauth2
 - Usage
   - Ratelimit
