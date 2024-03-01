@@ -12,6 +12,7 @@ type BotProtectionPlugin struct{}
 
 var Plugin = NewBotProtectionPlugin()
 
+// TODO: externalize this list to config file
 var blacklist = []string{"googlebot", "yahoobot", "bingbot"}
 
 func NewBotProtectionPlugin() *plugins.Plugin {

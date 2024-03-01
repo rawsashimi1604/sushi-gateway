@@ -108,6 +108,8 @@ func loadCredentialsFromReq(req *http.Request) (*JwtCredentials, *errors.HttpErr
 }
 
 func validateToken(credentials *JwtCredentials, token string) (*jwt.Token, *errors.HttpError) {
+	tokenInvalidErr := errors.NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
+
 	jwtToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		// TODO: do for other alg types (RSA 256)
 		if credentials.alg == constant.HS_256 {
@@ -120,11 +122,11 @@ func validateToken(credentials *JwtCredentials, token string) (*jwt.Token, *erro
 
 	if err != nil {
 		slog.Info("Error parsing token: ", err.Error())
-		return nil, errors.NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
+		return nil, tokenInvalidErr
 	}
 
 	if !jwtToken.Valid {
-		return nil, errors.NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
+		return nil, tokenInvalidErr
 	}
 
 	// Check claims if iss is valid from the token
@@ -135,10 +137,10 @@ func validateToken(credentials *JwtCredentials, token string) (*jwt.Token, *erro
 				return jwtToken, nil
 			} else {
 				slog.Info(fmt.Sprintf("Invalid JWT issuer: %s", iss))
-				return nil, errors.NewHttpError(http.StatusUnauthorized, "INVALID_ISSUER", "The token is not valid.")
+				return nil, tokenInvalidErr
 			}
 		}
 	}
 
-	return nil, errors.NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
+	return nil, tokenInvalidErr
 }
