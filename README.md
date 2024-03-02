@@ -6,6 +6,7 @@
 https/tls support has been added to the proxy, add cert and key into environment variables to use.
 
 ## Plugins
+- TODO: need to externalize plugin configurations
 - Auth
   - **(DONE)** basic auth
   - **(DONE)** jwt (only Hs256, Rs256 tbd)
@@ -17,6 +18,6 @@ https/tls support has been added to the proxy, add cert and key into environment
 - Traffic Control
   - acl
   - rate limit
-  - request size limit
+  - **(DONE)** request size limit
 
     

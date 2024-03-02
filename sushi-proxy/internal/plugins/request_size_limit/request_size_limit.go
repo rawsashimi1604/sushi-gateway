@@ -12,6 +12,7 @@ type RequestSizeLimitPlugin struct{}
 
 var Plugin = NewRequestSizeLimitPlugin()
 
+// TODO: externalize this to config file
 // In bytes
 const maxRequestSize = 10
 
