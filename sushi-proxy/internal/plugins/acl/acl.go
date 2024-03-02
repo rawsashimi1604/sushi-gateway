@@ -2,6 +2,8 @@ package acl
 
 import (
 	"fmt"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
 	"log/slog"
 	"net/http"
@@ -27,20 +29,31 @@ func (plugin AclPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing acl function...")
 
-		// Note: In a real-world scenario,
-		// you might need to parse X-Forwarded-For header instead
+		// Check both forwarded ip and client ip
 		clientIP := r.RemoteAddr
+		forwardedIP := r.Header.Get(constant.X_FORWARDED_FOR)
+		slog.Info("clientIP: " + clientIP)
+		slog.Info("forwardedIP: " + forwardedIP)
 
 		// Check if the IP is in the whitelist
-		if isWhitelisted(clientIP) {
+		if isWhitelisted(clientIP) || isWhitelisted(forwardedIP) {
 			next.ServeHTTP(w, r)
 			return
 		}
 
-		// Check if the IP is in the blacklist
 		if isBlacklisted(clientIP) {
 			slog.Info(fmt.Sprintf("IP %s is blacklisted", clientIP))
-			http.Error(w, "Access Denied", http.StatusForbidden)
+			err := errors.NewHttpError(http.StatusForbidden,
+				"ACCESS_DENIED", "Access Denied")
+			err.WriteJSONResponse(w)
+			return
+		}
+
+		if isBlacklisted(forwardedIP) {
+			slog.Info(fmt.Sprintf("IP %s is blacklisted", clientIP))
+			err := errors.NewHttpError(http.StatusForbidden,
+				"ACCESS_DENIED", "Access Denied")
+			err.WriteJSONResponse(w)
 			return
 		}
 

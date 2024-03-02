@@ -3,10 +3,10 @@ package egress
 import (
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/acl"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/analytics"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/bot_protection"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/rate_limit"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/request_size_limit"
 	"log/slog"
 	"net/http"
 )
@@ -39,7 +39,8 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 		//pluginManager.RegisterPlugin(jwt.Plugin)
 		//pluginManager.RegisterPlugin(key_auth.Plugin)
 		pluginManager.RegisterPlugin(bot_protection.Plugin)
-		pluginManager.RegisterPlugin(request_size_limit.Plugin)
+		//pluginManager.RegisterPlugin(request_size_limit.Plugin)
+		pluginManager.RegisterPlugin(acl.Plugin)
 
 		// Chain the plugins with the final handler where the request is forwarded.
 		chainedHandler := pluginManager.ExecutePlugins(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

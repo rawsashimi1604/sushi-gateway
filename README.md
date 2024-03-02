@@ -16,7 +16,7 @@ https/tls support has been added to the proxy, add cert and key into environment
   - **(DONE)** bot_protection
   - cors
 - Traffic Control
-  - acl
+  - **(DONE)** acl
   - rate limit
   - **(DONE)** request size limit
 
