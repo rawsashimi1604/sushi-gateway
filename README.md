@@ -8,7 +8,7 @@ https/tls support has been added to the proxy, add cert and key into environment
 ## Plugins
 - Auth
   - **(DONE)** basic auth
-  - **(DONE)** jwt
+  - **(DONE)** jwt (only Hs256, Rs256 tbd)
   - **(DONE)** key auth
   - oauth2
 - Security
