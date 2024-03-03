@@ -1,6 +1,7 @@
 package acl
 
 import (
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,8 +16,22 @@ func TestWhitelistedIPs(t *testing.T) {
 	// Simulate a request from a whitelisted IP
 	req.RemoteAddr = "127.0.0.1"
 
+	// Convert the input to how we would expect it to be in the config file
+	config, err := util.CreatePluginConfigJsonInput(map[string]interface{}{
+		"data": map[string]interface{}{
+			"whitelist": []string{"127.0.0.1"},
+			"blacklist": []string{},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a new instance of the plugin
+	plugin := NewAclPlugin(config)
+
 	rr := httptest.NewRecorder()
-	handler := Plugin.Handler.Execute(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := plugin.Handler.Execute(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
@@ -37,8 +52,20 @@ func TestBlacklistedIPs(t *testing.T) {
 	// Simulate a request from a blacklisted IP
 	req.RemoteAddr = "192.168.1.1"
 
+	config, err := util.CreatePluginConfigJsonInput(map[string]interface{}{
+		"data": map[string]interface{}{
+			"whitelist": []string{},
+			"blacklist": []string{"192.168.1.1"},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	plugin := NewAclPlugin(config)
+
 	rr := httptest.NewRecorder()
-	handler := Plugin.Handler.Execute(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
+	handler := plugin.Handler.Execute(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
 
 	handler.ServeHTTP(rr, req)
 
