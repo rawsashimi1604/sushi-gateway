@@ -47,14 +47,6 @@
         { "host": "localhost", "port": 8001 },
         { "host": "localhost", "port": 8002 }
       ],
-      "credentials": [
-        {
-          "plugin": "key_auth",
-          "data": {
-            "key": "someKeyToAccessApi"
-          }
-        }
-      ],
       "plugins": [
         {
           "name": "basic_auth",
