@@ -6,6 +6,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/acl"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/basic_auth"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"net/http"
@@ -70,6 +71,8 @@ func (pm *PluginManager) loadConfig(pc models.PluginConfig) *errors.HttpError {
 	switch name {
 	case constant.PLUGIN_BASIC_AUTH:
 		pm.RegisterPlugin(basic_auth.NewBasicAuthPlugin(pc))
+	case constant.PLUGIN_ACL:
+		pm.RegisterPlugin(acl.NewAclPlugin(pc))
 	}
 	return nil
 }

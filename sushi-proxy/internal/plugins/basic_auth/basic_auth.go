@@ -19,6 +19,16 @@ type BasicAuthPlugin struct {
 // BasicAuthCache TODO: add caching mechanisms, persist between page views, per realm
 var BasicAuthCache = cache.New(5, 100)
 
+func NewBasicAuthPlugin(config map[string]interface{}) *plugins.Plugin {
+	return &plugins.Plugin{
+		Name:     constant.PLUGIN_BASIC_AUTH,
+		Priority: 15,
+		Handler: BasicAuthPlugin{
+			config: config,
+		},
+	}
+}
+
 func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing basic auth function...")
@@ -41,16 +51,6 @@ func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
-}
-
-func NewBasicAuthPlugin(config map[string]interface{}) *plugins.Plugin {
-	return &plugins.Plugin{
-		Name:     constant.PLUGIN_BASIC_AUTH,
-		Priority: 15,
-		Handler: BasicAuthPlugin{
-			config: config,
-		},
-	}
 }
 
 func writeWWWAuthenticateHeader(w http.ResponseWriter) {
