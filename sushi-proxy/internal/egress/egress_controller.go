@@ -26,7 +26,6 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 		slog.Info("Handing request: " + req.URL.Path)
 		w.Header().Add("Content-Type", "application/json; charset=UTF-8")
 
-		// TODO: load plugin configuration from config file.
 		// Configure, register new plugins...
 		pluginManager, err := plugin_manager.NewPluginManagerFromConfig(req)
 		if err != nil {

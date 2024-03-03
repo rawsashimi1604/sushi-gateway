@@ -31,9 +31,7 @@ func (plugin AclPlugin) Execute(next http.Handler) http.Handler {
 		// Check both forwarded ip and client ip
 		clientIP := r.RemoteAddr
 		forwardedIP := r.Header.Get(constant.X_FORWARDED_FOR)
-		slog.Info("clientIP: " + clientIP)
-		slog.Info("forwardedIP: " + forwardedIP)
-
+		
 		// Check if the IP is in the whitelist
 		if plugin.isWhitelisted(clientIP) || plugin.isWhitelisted(forwardedIP) {
 			next.ServeHTTP(w, r)

@@ -32,7 +32,6 @@ func NewBasicAuthPlugin(config map[string]interface{}) *plugins.Plugin {
 func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing basic auth function...")
-		slog.Info(fmt.Sprintf("%v", plugin.config))
 
 		username, password, err := verifyAndParseAuthHeader(r)
 		if err != nil {
@@ -41,8 +40,7 @@ func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 			return
 		}
 
-		slog.Info(fmt.Sprintf("basicAuth:: username: %s, password: %s", username, password))
-		err = plugin.authorize(username, password, r)
+		err = plugin.authorize(username, password)
 		if err != nil {
 			writeWWWAuthenticateHeader(w)
 			err.WriteJSONResponse(w)
@@ -88,7 +86,7 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 }
 
 // Get from configurations
-func (plugin BasicAuthPlugin) authorize(username string, password string, r *http.Request) *errors.HttpError {
+func (plugin BasicAuthPlugin) authorize(username string, password string) *errors.HttpError {
 
 	invalidCredsErr := errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
 

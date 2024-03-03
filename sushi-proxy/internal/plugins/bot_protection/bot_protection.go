@@ -1,6 +1,7 @@
 package bot_protection
 
 import (
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
 	"log/slog"
@@ -8,18 +9,17 @@ import (
 	"strings"
 )
 
-type BotProtectionPlugin struct{}
+type BotProtectionPlugin struct {
+	config map[string]interface{}
+}
 
-var Plugin = NewBotProtectionPlugin()
-
-// TODO: externalize this list to config file
-var blacklist = []string{"googlebot", "yahoobot", "bingbot"}
-
-func NewBotProtectionPlugin() *plugins.Plugin {
+func NewBotProtectionPlugin(config map[string]interface{}) *plugins.Plugin {
 	return &plugins.Plugin{
-		Name:     "bot_protection",
+		Name:     constant.PLUGIN_BOT_PROTECTION,
 		Priority: 10,
-		Handler:  BotProtectionPlugin{},
+		Handler: BotProtectionPlugin{
+			config: config,
+		},
 	}
 }
 
@@ -28,7 +28,7 @@ func (plugin BotProtectionPlugin) Execute(next http.Handler) http.Handler {
 		slog.Info("Executing bot protection function...")
 
 		userAgent := r.Header.Get("User-Agent")
-		err := verifyIsBot(userAgent)
+		err := plugin.verifyIsBot(userAgent)
 		if err != nil {
 			err.WriteJSONResponse(w)
 			return
@@ -38,7 +38,17 @@ func (plugin BotProtectionPlugin) Execute(next http.Handler) http.Handler {
 	})
 }
 
-func verifyIsBot(userAgent string) *errors.HttpError {
+func (plugin BotProtectionPlugin) verifyIsBot(userAgent string) *errors.HttpError {
+	// TODO: add validation for this plugin in the config file
+	data := plugin.config["data"].(map[string]interface{})
+	blacklistInterface := data["blacklist"].([]interface{}) // Assert to []interface{} first
+
+	var blacklist []string
+	for _, w := range blacklistInterface {
+		ipStr := w.(string)
+		blacklist = append(blacklist, ipStr)
+	}
+
 	for _, bot := range blacklist {
 		if strings.Contains(userAgent, bot) {
 			slog.Info("Bot detected: " + userAgent)

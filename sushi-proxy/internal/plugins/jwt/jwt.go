@@ -6,13 +6,14 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"strings"
 )
 
-type JwtPlugin struct{}
+type JwtPlugin struct {
+	config map[string]interface{}
+}
 
 type JwtCredentials struct {
 	alg    string `json:"alg"`
@@ -20,18 +21,19 @@ type JwtCredentials struct {
 	secret string `json:"secret"`
 }
 
-var Plugin = NewJwtPlugin()
+func NewJwtPlugin(config map[string]interface{}) *plugins.Plugin {
+	return &plugins.Plugin{
+		Name:     constant.PLUGIN_JWT,
+		Priority: 200,
+		Handler: JwtPlugin{
+			config: config,
+		},
+	}
+}
 
 func (plugin JwtPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing jwt auth function...")
-
-		creds, err := loadCredentialsFromReq(r)
-		if err != nil {
-			writeWWWAuthenticateHeader(w)
-			err.WriteJSONResponse(w)
-			return
-		}
 
 		tokenString, err := verifyAndParseAuthHeader(r)
 		if err != nil {
@@ -40,7 +42,7 @@ func (plugin JwtPlugin) Execute(next http.Handler) http.Handler {
 			return
 		}
 
-		_, err = validateToken(creds, tokenString)
+		_, err = plugin.validateToken(tokenString)
 		if err != nil {
 			writeWWWAuthenticateHeader(w)
 			err.WriteJSONResponse(w)
@@ -49,14 +51,6 @@ func (plugin JwtPlugin) Execute(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
-}
-
-func NewJwtPlugin() *plugins.Plugin {
-	return &plugins.Plugin{
-		Name:     "jwt",
-		Priority: 15,
-		Handler:  JwtPlugin{},
-	}
 }
 
 func writeWWWAuthenticateHeader(w http.ResponseWriter) {
@@ -81,34 +75,15 @@ func verifyAndParseAuthHeader(req *http.Request) (string, *errors.HttpError) {
 	return bits[1], nil
 }
 
-func loadCredentialsFromReq(req *http.Request) (*JwtCredentials, *errors.HttpError) {
-	service, _, err := util.GetServiceAndRouteFromRequest(req)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, cred := range service.Credentials {
-		if cred.Plugin == "jwt" {
-			// Get from cred map
-			alg, ok := cred.Data["alg"].(string)
-			iss, ok := cred.Data["iss"].(string)
-			secret, ok := cred.Data["secret"].(string)
-			if !ok {
-				return nil, errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
-			}
-			return &JwtCredentials{
-				alg:    alg,
-				iss:    iss,
-				secret: secret,
-			}, nil
-		}
-	}
-
-	return nil, errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
-}
-
-func validateToken(credentials *JwtCredentials, token string) (*jwt.Token, *errors.HttpError) {
+func (plugin JwtPlugin) validateToken(token string) (*jwt.Token, *errors.HttpError) {
 	tokenInvalidErr := errors.NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
+
+	data := plugin.config["data"].(map[string]interface{})
+	credentials := JwtCredentials{
+		alg:    data["alg"].(string),
+		iss:    data["iss"].(string),
+		secret: data["secret"].(string),
+	}
 
 	jwtToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		// TODO: do for other alg types (RSA 256)
