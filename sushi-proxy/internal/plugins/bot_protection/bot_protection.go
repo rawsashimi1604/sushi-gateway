@@ -28,6 +28,10 @@ func (plugin BotProtectionPlugin) Execute(next http.Handler) http.Handler {
 		slog.Info("Executing bot protection function...")
 
 		userAgent := r.Header.Get("User-Agent")
+		if userAgent == "" {
+			next.ServeHTTP(w, r)
+		}
+
 		err := plugin.verifyIsBot(userAgent)
 		if err != nil {
 			err.WriteJSONResponse(w)
