@@ -121,7 +121,7 @@ func validateToken(credentials *JwtCredentials, token string) (*jwt.Token, *erro
 	})
 
 	if err != nil {
-		slog.Info("Error parsing token: ", err.Error())
+		slog.Info("Error parsing token: " + err.Error())
 		return nil, tokenInvalidErr
 	}
 

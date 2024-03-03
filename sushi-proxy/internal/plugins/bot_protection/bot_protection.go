@@ -41,7 +41,7 @@ func (plugin BotProtectionPlugin) Execute(next http.Handler) http.Handler {
 func verifyIsBot(userAgent string) *errors.HttpError {
 	for _, bot := range blacklist {
 		if strings.Contains(userAgent, bot) {
-			slog.Info("Bot detected: ", userAgent)
+			slog.Info("Bot detected: " + userAgent)
 			return errors.NewHttpError(http.StatusForbidden, "BOT_DETECTED", "Bot detected.")
 		}
 	}
