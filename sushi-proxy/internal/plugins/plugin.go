@@ -1,6 +1,8 @@
 package plugins
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type PluginExecutor interface {
 	Execute(next http.Handler) http.Handler

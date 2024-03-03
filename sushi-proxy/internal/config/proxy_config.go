@@ -11,8 +11,8 @@ import (
 
 // TODO: refactor errors, add error codes.
 // TODO: add global param for config file path
+// TODO: add validation for config file
 // Reads from config.json file from root directory...
-
 type ProxyConfig struct {
 	Global struct {
 		Name    string                `json:"name"`

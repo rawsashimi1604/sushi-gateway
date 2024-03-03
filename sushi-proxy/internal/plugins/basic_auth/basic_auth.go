@@ -7,15 +7,14 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"strings"
 )
 
-type BasicAuthPlugin struct{}
-
-var Plugin = NewBasicAuthPlugin()
+type BasicAuthPlugin struct {
+	config map[string]interface{}
+}
 
 // BasicAuthCache TODO: add caching mechanisms, persist between page views, per realm
 var BasicAuthCache = cache.New(5, 100)
@@ -23,6 +22,7 @@ var BasicAuthCache = cache.New(5, 100)
 func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing basic auth function...")
+		slog.Info(fmt.Sprintf("%v", plugin.config))
 
 		username, password, err := verifyAndParseAuthHeader(r)
 		if err != nil {
@@ -32,7 +32,7 @@ func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 		}
 
 		slog.Info(fmt.Sprintf("basicAuth:: username: %s, password: %s", username, password))
-		err = authorize(username, password, r)
+		err = plugin.authorize(username, password, r)
 		if err != nil {
 			writeWWWAuthenticateHeader(w)
 			err.WriteJSONResponse(w)
@@ -43,11 +43,13 @@ func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 	})
 }
 
-func NewBasicAuthPlugin() *plugins.Plugin {
+func NewBasicAuthPlugin(config map[string]interface{}) *plugins.Plugin {
 	return &plugins.Plugin{
-		Name:     "basic_auth",
+		Name:     constant.PLUGIN_BASIC_AUTH,
 		Priority: 15,
-		Handler:  BasicAuthPlugin{},
+		Handler: BasicAuthPlugin{
+			config: config,
+		},
 	}
 }
 
@@ -85,24 +87,27 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 	return tokenVals[0], tokenVals[1], nil
 }
 
-func authorize(username string, password string, r *http.Request) *errors.HttpError {
-	service, _, err := util.GetServiceAndRouteFromRequest(r)
-	if err != nil {
-		return err
+// Get from configurations
+func (plugin BasicAuthPlugin) authorize(username string, password string, r *http.Request) *errors.HttpError {
+
+	invalidCredsErr := errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
+
+	data, ok := plugin.config["data"].(map[string]interface{})
+	if !ok {
+		return invalidCredsErr
 	}
 
-	for _, cred := range service.Credentials {
-		if cred.Plugin == "basic_auth" {
-			// Assert string type and get from cred map
-			usernameFromCred, okUser := cred.Data["username"].(string)
-			passwordFromCred, okPass := cred.Data["password"].(string)
-			if !okUser || !okPass {
-				return errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
-			}
-			if username == usernameFromCred && password == passwordFromCred {
-				return nil
-			}
-		}
+	usernameFromConfig, okUser := data["username"].(string)
+	passwordFromConfig, okPass := data["password"].(string)
+
+	// Invalid configuration
+	// TODO: handle this better, do validation in the config file
+	if !okUser || !okPass {
+		return invalidCredsErr
 	}
-	return errors.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
+
+	if username == usernameFromConfig && password == passwordFromConfig {
+		return nil
+	}
+	return invalidCredsErr
 }

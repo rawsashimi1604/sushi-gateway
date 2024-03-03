@@ -2,11 +2,7 @@ package egress
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/acl"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/analytics"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/bot_protection"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/rate_limit"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/plugin_manager"
 	"log/slog"
 	"net/http"
 )
@@ -32,15 +28,12 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 
 		// TODO: load plugin configuration from config file.
 		// Configure, register new plugins...
-		pluginManager := plugins.NewPluginManager()
-		pluginManager.RegisterPlugin(rate_limit.Plugin)
-		pluginManager.RegisterPlugin(analytics.Plugin)
-		//pluginManager.RegisterPlugin(basic_auth.Plugin)
-		//pluginManager.RegisterPlugin(jwt.Plugin)
-		//pluginManager.RegisterPlugin(key_auth.Plugin)
-		pluginManager.RegisterPlugin(bot_protection.Plugin)
-		//pluginManager.RegisterPlugin(request_size_limit.Plugin)
-		pluginManager.RegisterPlugin(acl.Plugin)
+		pluginManager, err := plugin_manager.NewPluginManagerFromConfig(req)
+		if err != nil {
+			slog.Info(err.Error())
+			err.WriteJSONResponse(w)
+			return
+		}
 
 		// Chain the plugins with the final handler where the request is forwarded.
 		chainedHandler := pluginManager.ExecutePlugins(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
