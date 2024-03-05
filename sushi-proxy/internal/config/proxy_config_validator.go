@@ -89,28 +89,33 @@ func validateServices(config *models.ProxyConfig) error {
 	var availableProtocols = []string{"http", "https"}
 
 	for _, service := range config.Services {
+		// Name
 		if util.SliceContainsString(serviceNames, service.Name) {
-			return fmt.Errorf("service name must be unique")
+			return fmt.Errorf("service name: %s must be unique", service.Name)
 		}
 
+		// Path
 		if util.SliceContainsString(servicePaths, service.BasePath) {
-			return fmt.Errorf("service path must be unique")
+			return fmt.Errorf("service path: %s must be unique", service.BasePath)
 		}
 
 		if !strings.HasPrefix(service.BasePath, "/") {
-			return fmt.Errorf("service path must start with /")
+			return fmt.Errorf("service path: %s must start with /", service.BasePath)
 		}
 
 		if strings.HasSuffix(service.BasePath, "/") {
-			return fmt.Errorf("service path must not end with /")
+			return fmt.Errorf("service path: %s must not end with /", service.BasePath)
 		}
 
+		// Protocol
 		if !util.SliceContainsString(availableProtocols, service.Protocol) {
-			return fmt.Errorf("service protocol is invalid, only http and https supported")
+			return fmt.Errorf("service protocol: %s is invalid, "+
+				"only http and https supported", service.Protocol)
 		}
 
+		// Upstreams
 		if len(service.Upstreams) == 0 {
-			return fmt.Errorf("service must have at least one upstream")
+			return fmt.Errorf("service :%s must have at least one upstream", service.Name)
 		}
 
 		serviceNames = append(serviceNames, service.Name)
@@ -120,6 +125,7 @@ func validateServices(config *models.ProxyConfig) error {
 }
 
 func validateRoutes(config *models.ProxyConfig) error {
+
 	var validMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"}
 
 	for _, service := range config.Services {
@@ -127,15 +133,15 @@ func validateRoutes(config *models.ProxyConfig) error {
 		for _, route := range service.Routes {
 			// Path
 			if util.SliceContainsString(routeNames, route.Path) {
-				return fmt.Errorf("route path must be unique")
+				return fmt.Errorf("route path: %s must be unique", route.Path)
 			}
 
 			if !strings.HasPrefix(route.Path, "/") {
-				return fmt.Errorf("route path must start with /")
+				return fmt.Errorf("route path: %s must start with /", route.Path)
 			}
 
 			if strings.HasSuffix(route.Path, "/") {
-				return fmt.Errorf("route path must not end with /")
+				return fmt.Errorf("route path: %s must not end with /", route.Path)
 			}
 
 			// Methods
@@ -145,7 +151,7 @@ func validateRoutes(config *models.ProxyConfig) error {
 
 			for _, method := range route.Methods {
 				if !util.SliceContainsString(validMethods, method) {
-					return fmt.Errorf("route method is invalid")
+					return fmt.Errorf("route method: %s is invalid", method)
 				}
 			}
 
