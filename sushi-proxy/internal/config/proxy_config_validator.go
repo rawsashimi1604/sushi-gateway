@@ -23,6 +23,8 @@ func ValidateAndParseSchema(raw []byte) (*models.ProxyConfig, error) {
 func ValidateConfig(config *models.ProxyConfig) error {
 	err := validateGeneralConfigs(config)
 	err = validatePlugins(config)
+	err = validateServices(config)
+	err = validateRoutes(config)
 	return err
 }
 
