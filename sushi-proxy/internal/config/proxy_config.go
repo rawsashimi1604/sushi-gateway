@@ -37,6 +37,14 @@ func LoadProxyConfig(filePath string) {
 	if err != nil {
 		panic("Error parsing config file")
 	}
+
+	err = validateConfig(config)
+	if err != nil {
+		panic("Error validating config file")
+	}
+
+	slog.Info("Config file loaded successfully")
+	// Validations passed
 	GlobalProxyConfig = *config
 	configLock.Unlock()
 
