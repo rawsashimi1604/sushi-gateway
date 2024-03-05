@@ -31,7 +31,7 @@ func main() {
 		slog.Info("Started sushi-proxy_pass https server on port: " + config.GlobalAppConfig.ProxyPortHttps)
 		if err := http.ListenAndServeTLS(":"+config.GlobalAppConfig.ProxyPortHttps,
 			config.GlobalAppConfig.TLSCertPath, config.GlobalAppConfig.TLSKeyPath, appRouter); err != nil {
-			slog.Info("Failed to start HTTP server: %v", err)
+			slog.Info("Failed to start HTTPS server: %v", err)
 			panic(err)
 		}
 	}()
