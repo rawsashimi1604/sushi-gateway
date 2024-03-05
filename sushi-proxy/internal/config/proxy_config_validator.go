@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
@@ -21,11 +22,23 @@ func ValidateAndParseSchema(raw []byte) (*models.ProxyConfig, error) {
 }
 
 func ValidateConfig(config *models.ProxyConfig) error {
-	err := validateGeneralConfigs(config)
-	err = validatePlugins(config)
-	err = validateServices(config)
-	err = validateRoutes(config)
-	return err
+	if err := validateGeneralConfigs(config); err != nil {
+		return err
+	}
+
+	if err := validatePlugins(config); err != nil {
+		return err
+	}
+
+	if err := validateServices(config); err != nil {
+		return err
+	}
+
+	if err := validateRoutes(config); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func validateGeneralConfigs(config *models.ProxyConfig) error {
@@ -36,8 +49,9 @@ func validateGeneralConfigs(config *models.ProxyConfig) error {
 }
 
 func validatePlugins(config *models.ProxyConfig) error {
-	// Get all plugins in the config
+	// Aggregate plugins in the config
 	var plugins []models.PluginConfig
+
 	for _, globalPlugin := range config.Global.Plugins {
 		plugins = append(plugins, globalPlugin)
 	}
@@ -59,6 +73,11 @@ func validatePlugins(config *models.ProxyConfig) error {
 		if !nameOk || name == "" {
 			return fmt.Errorf("plugin name is required")
 		}
+
+		if !util.SliceContainsString(constant.AVAILABLE_PLUGINS, name) {
+			return fmt.Errorf("plugin name is invalid. "+
+				"Available plugins: %v", constant.AVAILABLE_PLUGINS)
+		}
 	}
 
 	return nil
@@ -67,6 +86,8 @@ func validatePlugins(config *models.ProxyConfig) error {
 func validateServices(config *models.ProxyConfig) error {
 	var serviceNames []string
 	var servicePaths []string
+	var availableProtocols = []string{"http", "https"}
+
 	for _, service := range config.Services {
 		if util.SliceContainsString(serviceNames, service.Name) {
 			return fmt.Errorf("service name must be unique")
@@ -84,6 +105,14 @@ func validateServices(config *models.ProxyConfig) error {
 			return fmt.Errorf("service path must not end with /")
 		}
 
+		if !util.SliceContainsString(availableProtocols, service.Protocol) {
+			return fmt.Errorf("service protocol is invalid, only http and https supported")
+		}
+
+		if len(service.Upstreams) == 0 {
+			return fmt.Errorf("service must have at least one upstream")
+		}
+
 		serviceNames = append(serviceNames, service.Name)
 		servicePaths = append(servicePaths, service.BasePath)
 	}
@@ -91,15 +120,14 @@ func validateServices(config *models.ProxyConfig) error {
 }
 
 func validateRoutes(config *models.ProxyConfig) error {
+	var validMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"}
+
 	for _, service := range config.Services {
 		var routeNames []string
 		for _, route := range service.Routes {
+			// Path
 			if util.SliceContainsString(routeNames, route.Path) {
-				return fmt.Errorf("route name must be unique")
-			}
-
-			if len(route.Methods) == 0 {
-				return fmt.Errorf("route methods must be specified")
+				return fmt.Errorf("route path must be unique")
 			}
 
 			if !strings.HasPrefix(route.Path, "/") {
@@ -108,6 +136,17 @@ func validateRoutes(config *models.ProxyConfig) error {
 
 			if strings.HasSuffix(route.Path, "/") {
 				return fmt.Errorf("route path must not end with /")
+			}
+
+			// Methods
+			if len(route.Methods) == 0 {
+				return fmt.Errorf("route methods must be specified")
+			}
+
+			for _, method := range route.Methods {
+				if !util.SliceContainsString(validMethods, method) {
+					return fmt.Errorf("route method is invalid")
+				}
 			}
 
 			routeNames = append(routeNames, route.Path)
