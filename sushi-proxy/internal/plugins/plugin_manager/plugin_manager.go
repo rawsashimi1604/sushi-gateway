@@ -44,7 +44,7 @@ func NewPluginManagerFromConfig(req *http.Request) (*PluginManager, *errors.Http
 	}
 
 	// Search for service.plugins and route.plugins
-	service, route, err := util.GetServiceAndRouteFromRequest(req)
+	service, route, err := util.GetServiceAndRouteFromRequest(&config.GlobalProxyConfig, req)
 	if err != nil {
 		return nil, err
 	}

@@ -3,6 +3,7 @@ package egress
 import (
 	"bytes"
 	"fmt"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
@@ -73,7 +74,7 @@ func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request
 }
 
 func (s *EgressService) convertPathToProxyPassUrl(req *http.Request) (string, *errors.HttpError) {
-	matchedService, matchedRoute, err := util.GetServiceAndRouteFromRequest(req)
+	matchedService, matchedRoute, err := util.GetServiceAndRouteFromRequest(&config.GlobalProxyConfig, req)
 	if err != nil {
 		return "", err
 	}

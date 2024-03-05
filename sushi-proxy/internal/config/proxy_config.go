@@ -12,15 +12,8 @@ import (
 // TODO: add global param for config file path
 // TODO: add validation for config file
 // Reads from config.json file from root directory...
-type ProxyConfig struct {
-	Global struct {
-		Name    string                `json:"name"`
-		Plugins []models.PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
-	} `json:"global"`
-	Services []models.Service `json:"services"`
-}
 
-var GlobalProxyConfig ProxyConfig
+var GlobalProxyConfig models.ProxyConfig
 var configLock = &sync.RWMutex{}
 
 func LoadProxyConfig(filePath string) {
@@ -33,12 +26,12 @@ func LoadProxyConfig(filePath string) {
 
 	// Validate the config file, if valid -> assign to GlobalProxyConfig
 	configLock.Lock()
-	config, err := validateAndParseSchema(configFile)
+	config, err := ValidateAndParseSchema(configFile)
 	if err != nil {
 		panic("Error parsing config file")
 	}
 
-	err = validateConfig(config)
+	err = ValidateConfig(config)
 	if err != nil {
 		panic("Error validating config file")
 	}

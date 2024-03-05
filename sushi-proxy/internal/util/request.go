@@ -1,14 +1,13 @@
 package util
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
 	"net/http"
 	"strings"
 )
 
-func GetServiceAndRouteFromRequest(req *http.Request) (*models.Service, *models.Route, *errors.HttpError) {
+func GetServiceAndRouteFromRequest(proxyConfig *models.ProxyConfig, req *http.Request) (*models.Service, *models.Route, *errors.HttpError) {
 	path := req.URL.Path
 	parts := strings.Split(path, "/")
 	if len(parts) < 3 {
@@ -22,10 +21,10 @@ func GetServiceAndRouteFromRequest(req *http.Request) (*models.Service, *models.
 	serviceBasePath := "/" + parts[1]
 	routePath := "/" + strings.Join(parts[2:], "/")
 
-	for _, service := range config.GlobalProxyConfig.Services {
+	for _, service := range proxyConfig.Services {
 		if service.BasePath == serviceBasePath {
 			for _, route := range service.Routes {
-				if strings.HasPrefix(routePath, route.Path) && checkMethodMatch(req.Method, route.Methods) {
+				if strings.HasPrefix(routePath, route.Path) && SliceContainsString(route.Methods, req.Method) {
 					return &service, &route, nil
 				}
 			}
@@ -42,18 +41,4 @@ func GetServiceAndRouteFromRequest(req *http.Request) (*models.Service, *models.
 		Message:  "Service not found",
 		HttpCode: http.StatusNotFound,
 	}
-}
-
-func checkMethodMatch(requestMethod string, allowedMethods []string) bool {
-	if len(allowedMethods) == 0 {
-		// If no methods are specified, assume all methods are allowed
-		return true
-	}
-
-	for _, method := range allowedMethods {
-		if requestMethod == method {
-			return true
-		}
-	}
-	return false
 }

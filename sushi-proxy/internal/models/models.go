@@ -1,5 +1,13 @@
 package models
 
+type ProxyConfig struct {
+	Global struct {
+		Name    string         `json:"name"`
+		Plugins []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
+	} `json:"global"`
+	Services []Service `json:"services"`
+}
+
 type PluginConfig map[string]interface{}
 
 type Upstream struct {
