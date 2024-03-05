@@ -1,7 +1,6 @@
 package config
 
 import (
-	"encoding/json"
 	"github.com/fsnotify/fsnotify"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
 	"io/ioutil"
@@ -32,14 +31,15 @@ func LoadProxyConfig(filePath string) {
 		panic("Error reading config file")
 	}
 
+	// Validate the config file, if valid -> assign to GlobalProxyConfig
 	configLock.Lock()
-	err = json.Unmarshal(configFile, &GlobalProxyConfig)
-	configLock.Unlock()
-
+	config, err := validateAndParseSchema(configFile)
 	if err != nil {
-		slog.Info("Error parsing config file", err)
 		panic("Error parsing config file")
 	}
+	GlobalProxyConfig = *config
+	configLock.Unlock()
+
 }
 
 func WatchConfigFile(filePath string) {
