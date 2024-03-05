@@ -55,6 +55,7 @@ func validatePlugins(config *models.ProxyConfig) error {
 	for _, globalPlugin := range config.Global.Plugins {
 		plugins = append(plugins, globalPlugin)
 	}
+
 	for _, service := range config.Services {
 		for _, servicePlugin := range service.Plugins {
 			plugins = append(plugins, servicePlugin)
@@ -78,6 +79,8 @@ func validatePlugins(config *models.ProxyConfig) error {
 			return fmt.Errorf("plugin name is invalid. "+
 				"Available plugins: %v", constant.AVAILABLE_PLUGINS)
 		}
+
+		// TODO: validate each plugin data/config schema
 	}
 
 	return nil
