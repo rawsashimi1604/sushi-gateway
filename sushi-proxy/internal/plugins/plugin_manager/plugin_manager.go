@@ -99,7 +99,7 @@ func (pm *PluginManager) loadConfig(pc models.PluginConfig) *errors.HttpError {
 }
 
 func (pm *PluginManager) RegisterPlugin(plugin *plugins.Plugin) {
-	// If plugins already exists replcae
+	// If plugins already exists replace
 	exists := false
 	for i, p := range pm.plugins {
 		if p.Name == plugin.Name {
@@ -110,7 +110,6 @@ func (pm *PluginManager) RegisterPlugin(plugin *plugins.Plugin) {
 	}
 
 	if !exists {
-		// Append the new plugin
 		pm.plugins = append(pm.plugins, plugin)
 	}
 
@@ -123,12 +122,9 @@ func (pm *PluginManager) RegisterPlugin(plugin *plugins.Plugin) {
 // ExecutePlugins chains the plugins and returns a single http.Handler
 // finalHandler is the application's main handler that should execute after all plugins
 func (pm *PluginManager) ExecutePlugins(finalHandler http.Handler) http.Handler {
-
-	// Chain the plugins order to ensure the correct execution sequence
 	for _, plugin := range pm.plugins {
 		finalHandler = plugin.Handler.Execute(finalHandler)
 	}
-
 	return finalHandler
 }
 
