@@ -14,6 +14,7 @@ var AVAILABLE_PLUGINS = []string{
 	PLUGIN_REQUEST_SIZE_LIMIT,
 	PLUGIN_JWT,
 	PLUGIN_KEY_AUTH,
+	PLUGIN_MTLS,
 }
 
 const PLUGIN_BASIC_AUTH = "basic_auth"
@@ -27,3 +28,4 @@ const PLUGIN_RATE_LIMIT = "rate_limit"
 const PLUGIN_REQUEST_SIZE_LIMIT = "request_size_limit"
 const PLUGIN_JWT = "jwt"
 const PLUGIN_KEY_AUTH = "key_auth"
+const PLUGIN_MTLS = "mtls"

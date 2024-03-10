@@ -12,6 +12,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/bot_protection"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/jwt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/key_auth"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/mtls"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/rate_limit"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/request_size_limit"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
@@ -91,6 +92,8 @@ func (pm *PluginManager) loadConfig(pc models.PluginConfig) *errors.HttpError {
 		pm.RegisterPlugin(request_size_limit.NewRequestSizeLimitPlugin(pc))
 	case constant.PLUGIN_JWT:
 		pm.RegisterPlugin(jwt.NewJwtPlugin(pc))
+	case constant.PLUGIN_MTLS:
+		pm.RegisterPlugin(mtls.NewMtlsPlugin())
 	}
 	return nil
 }
