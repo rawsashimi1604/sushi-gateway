@@ -11,5 +11,3 @@ openssl req -new -x509 -key key.pem -out cert.pem -days 365
 ```
 - Set env variables to point to cert private key and cert path.
 
-
-
