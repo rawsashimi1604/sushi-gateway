@@ -1,6 +1,6 @@
 # Sushi Proxy
 
-## Setting up TLS server
+## Setting up TLS server for local development
 
 - Install OpenSSL
 - Generate the CA private key and certificate
@@ -22,7 +22,7 @@
 - Create Server certificate signed by your CA
 ```bash
 openssl x509 -req -days 365 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt \
--extensions req_ext -extfile <(printf "[req_ext]\nsubjectAltName=DNS:yourservername.com")
+-extensions req_ext -extfile <(printf "[req_ext]\nsubjectAltName=DNS:localhost")
 ```
 
 - Verify certs
