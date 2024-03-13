@@ -11,7 +11,7 @@ type MtlsPlugin struct{}
 
 func NewMtlsPlugin() *plugins.Plugin {
 	return &plugins.Plugin{
-		Name:     constant.PLUGIN_ANALYTICS,
+		Name:     constant.PLUGIN_MTLS,
 		Priority: 12,
 		Handler:  MtlsPlugin{},
 	}
