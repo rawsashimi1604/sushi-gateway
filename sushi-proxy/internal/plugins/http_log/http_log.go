@@ -11,6 +11,17 @@ type HttpLogPlugin struct {
 	config map[string]interface{}
 }
 
+type HttpLogConfig struct {
+	httpEndpoint  string
+	method        string
+	contentType   string
+	timeout       uint
+	retryCount    int
+	queueSize     int
+	flushInterval int
+	headers       map[string]interface{}
+}
+
 func NewHttpLogPlugin(config map[string]interface{}) *plugins.Plugin {
 	return &plugins.Plugin{
 		Name:     constant.PLUGIN_HTTP_LOG,

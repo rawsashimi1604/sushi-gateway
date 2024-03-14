@@ -32,6 +32,7 @@ type Service struct {
 }
 
 type Credentials struct {
-	Plugin string                 `json:"plugin"`
-	Data   map[string]interface{} `json:"data"`
+	Plugin  string                 `json:"plugin"`
+	Enabled bool                   `json:"enabled"`
+	Data    map[string]interface{} `json:"data"`
 }

@@ -8,11 +8,7 @@ import (
 	"sync"
 )
 
-// TODO: refactor errors, add error codes.
-// TODO: add global param for config file path
-// TODO: add validation for config file
 // Reads from config.json file from root directory...
-
 var GlobalProxyConfig models.ProxyConfig
 var configLock = &sync.RWMutex{}
 

@@ -76,6 +76,17 @@ func (pm *PluginManager) loadConfig(pc models.PluginConfig) *errors.HttpError {
 			"Plugin name not found")
 	}
 
+	enabled, enabledOk := pc["enabled"].(bool)
+	if !enabledOk {
+		return errors.NewHttpError(http.StatusInternalServerError, "PLUGIN_CONFIG_ERROR",
+			"Plugin enabled flag not found")
+	}
+
+	// Skip as not enabled.
+	if !enabled {
+		return nil
+	}
+
 	switch name {
 	case constant.PLUGIN_BASIC_AUTH:
 		pm.RegisterPlugin(basic_auth.NewBasicAuthPlugin(pc))
