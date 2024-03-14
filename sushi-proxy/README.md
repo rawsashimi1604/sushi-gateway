@@ -12,6 +12,7 @@
 ```
 
 - Generate a server private key and certificate signing request (CSR)
+- create challenge password: `123456`
 ```bash
     # Generate server private key
     openssl genrsa -out server.key 2048
@@ -31,4 +32,21 @@ openssl verify -CAfile ca.crt server.crt
 ```
 
 - Set env variables in `.env` file`...
+
+## Creating client certificate for MTLS
+- Generate the Client Key and CSR 
+```
+openssl genrsa -out client.key 2048
+openssl req -new -key client.key -out client.csr
+```
+
+- Sign the client CSR with the CA
+```
+openssl x509 -req -days 365 -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt
+```
+
+- Verify the client cert
+```
+openssl verify -CAfile ca.crt client.crt
+```
 

@@ -2,21 +2,7 @@
   "global": {
     "name": "sushi-gateway-1",
     "plugins": [
-      {
-        "name": "jwt",
-        "data": {
-          "alg": "HS256",
-          "iss": "someIssuerKey",
-          "secret": "123secret456"
-        }
-      },
-      {
-        "name": "basic_auth",
-        "data": {
-          "username": "admin123",
-          "password": "changeme"
-        }
-      },
+
       {
         "name": "acl",
         "data": {
@@ -48,13 +34,7 @@
         { "host": "localhost", "port": 8002 }
       ],
       "plugins": [
-        {
-          "name": "basic_auth",
-          "data": {
-            "username": "otherAdmin",
-            "password": "changeme"
-          }
-        }
+
       ],
       "routes": [
         {

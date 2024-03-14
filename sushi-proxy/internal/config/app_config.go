@@ -10,8 +10,9 @@ import (
 type AppConfig struct {
 	ProxyPortHttp  string
 	ProxyPortHttps string
-	TLSCertPath    string
-	TLSKeyPath     string
+	ServerCertPath string
+	ServerKeyPath  string
+	CACertPath     string
 }
 
 var GlobalAppConfig *AppConfig
@@ -31,21 +32,27 @@ func LoadGlobalConfig() *AppConfig {
 		errors = append(errors, "PROXY_PORT_HTTPS is required.")
 	}
 
-	tlsCertPath := os.Getenv("TLS_CERT_PATH")
-	if tlsCertPath == "" {
-		errors = append(errors, "TLS_CERT_PATH is required.")
+	serverCertPath := os.Getenv("SERVER_CERT_PATH")
+	if serverCertPath == "" {
+		errors = append(errors, "SERVER_CERT_PATH is required.")
 	}
 
-	tlsKeyPath := os.Getenv("TLS_KEY_PATH")
-	if tlsKeyPath == "" {
-		errors = append(errors, "TLS_KEY_PATH is required.")
+	serverKeyPath := os.Getenv("SERVER_KEY_PATH")
+	if serverKeyPath == "" {
+		errors = append(errors, "SERVER_KEY_PATH is required.")
+	}
+
+	caCertPath := os.Getenv("CA_CERT_PATH")
+	if caCertPath == "" {
+		errors = append(errors, "CA_CERT_PATH is required.")
 	}
 
 	config := &AppConfig{
 		ProxyPortHttp:  proxyPortHttp,
 		ProxyPortHttps: proxyPortHttps,
-		TLSCertPath:    tlsCertPath,
-		TLSKeyPath:     tlsKeyPath,
+		ServerCertPath: serverCertPath,
+		ServerKeyPath:  serverKeyPath,
+		CACertPath:     caCertPath,
 	}
 
 	if len(errors) > 0 {
