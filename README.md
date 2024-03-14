@@ -23,7 +23,7 @@ https/tls support has been added to the proxy, add cert and key into environment
   - **(DONE)** jwt (only Hs256, Rs256 tbd)
   - **(DONE)** key auth
     - oauth2
-  - mtls
+  - **(DONE)** mtls 
 - Security
   - **(DONE)** bot_protection
   - cors

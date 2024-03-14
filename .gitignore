@@ -14,6 +14,10 @@
 
 # Certificate files
 *.pem
+*.crt
+*.csr
+*.key
+*.srl
 
 # Test binary, built with `go test -c`
 *.test
