@@ -2,7 +2,11 @@
   "global": {
     "name": "sushi-gateway-1",
     "plugins": [
-
+      {
+        "name": "mtls",
+        "data": {
+        }
+      },
       {
         "name": "acl",
         "data": {

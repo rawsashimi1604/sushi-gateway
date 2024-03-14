@@ -10,6 +10,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/analytics"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/basic_auth"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/bot_protection"
+	http_log "github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/http_log"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/jwt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/key_auth"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/mtls"
@@ -94,6 +95,8 @@ func (pm *PluginManager) loadConfig(pc models.PluginConfig) *errors.HttpError {
 		pm.RegisterPlugin(jwt.NewJwtPlugin(pc))
 	case constant.PLUGIN_MTLS:
 		pm.RegisterPlugin(mtls.NewMtlsPlugin())
+	case constant.PLUGIN_HTTP_LOG:
+		pm.RegisterPlugin(http_log.NewHttpLogPlugin(pc))
 	}
 	return nil
 }

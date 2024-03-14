@@ -1,6 +1,7 @@
 package key_auth
 
 import (
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
 	"log/slog"
@@ -13,7 +14,7 @@ type KeyAuthPlugin struct {
 
 func NewKeyAuthPlugin(config map[string]interface{}) *plugins.Plugin {
 	return &plugins.Plugin{
-		Name:     "key_auth",
+		Name:     constant.PLUGIN_KEY_AUTH,
 		Priority: 10,
 		Handler: KeyAuthPlugin{
 			config: config,
