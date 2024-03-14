@@ -4,6 +4,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -41,4 +42,13 @@ func GetServiceAndRouteFromRequest(proxyConfig *models.ProxyConfig, req *http.Re
 		Message:  "Service not found",
 		HttpCode: http.StatusNotFound,
 	}
+}
+
+func ParseContentLength(input string) int64 {
+	if input == "" {
+		return 0
+	}
+
+	conv, _ := strconv.ParseInt(input, 10, 64)
+	return conv
 }

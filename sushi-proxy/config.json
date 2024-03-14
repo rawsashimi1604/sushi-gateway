@@ -6,7 +6,7 @@
         "name": "http_log",
         "enabled": true,
         "data": {
-          "http_endpoint": "www.endpoint.com",
+          "http_endpoint": "http://localhost:8003/v1/log",
           "method": "POST",
           "content_type": "application/json",
           "timeout": 1000,
@@ -19,8 +19,16 @@
       },
       {
         "name": "mtls",
-        "enabled": false,
+        "enabled": true,
         "data": {
+        }
+      },
+      {
+        "name": "basic_auth",
+        "enabled": true,
+        "data": {
+          "username": "admin",
+          "password": "changeme"
         }
       },
       {
