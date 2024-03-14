@@ -17,6 +17,8 @@ type HttpLogPlugin struct {
 	config map[string]interface{}
 }
 
+// TODO: parse log config
+// TODO: send logs in batches (batch processing).
 type HttpLogConfig struct {
 	httpEndpoint  string
 	method        string
@@ -59,6 +61,7 @@ func (plugin HttpLogPlugin) Execute(next http.Handler) http.Handler {
 }
 
 func (plugin HttpLogPlugin) parseConfig(config map[string]interface{}) (*HttpLogConfig, *errors.HttpError) {
+	// TODO: read log config
 	return nil, nil
 }
 
