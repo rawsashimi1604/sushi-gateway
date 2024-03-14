@@ -69,9 +69,8 @@ func (plugin HttpLogPlugin) createLogResponse(r *http.Request) (map[string]inter
 
 	service, route, err := util.GetServiceAndRouteFromRequest(&config.GlobalProxyConfig, r)
 	if err != nil {
-		httperr := errors.NewHttpError(500, "ERR_PARSING_SERVICE_ROUTE",
+		return nil, errors.NewHttpError(500, "ERR_PARSING_SERVICE_ROUTE",
 			"Error parsing service and route from request")
-		return nil, httperr
 	}
 
 	// Map the service and route to log
@@ -87,12 +86,14 @@ func (plugin HttpLogPlugin) createLogResponse(r *http.Request) (map[string]inter
 			"path": route.Path,
 		},
 		"request": map[string]interface{}{
-			"method":  r.Method,
-			"path":    r.URL.Path,
-			"url":     r.URL.String(),
-			"uri":     r.RequestURI,
-			"size":    util.ParseContentLength(r.Header.Get("Content-Length")),
-			"headers": r.Header,
+			"protocol": r.Proto,
+			"tls":      r.TLS != nil,
+			"method":   r.Method,
+			"path":     r.URL.Path,
+			"url":      r.URL.String(),
+			"uri":      r.RequestURI,
+			"size":     util.ParseContentLength(r.Header.Get("Content-Length")),
+			"headers":  r.Header,
 		},
 		"client_ip":  r.RemoteAddr,
 		"started_at": time.Now(),
