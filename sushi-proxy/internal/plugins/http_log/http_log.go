@@ -19,6 +19,7 @@ type HttpLogPlugin struct {
 
 // TODO: parse log config
 // TODO: send logs in batches (batch processing).
+// TODO: log the response as well.
 type HttpLogConfig struct {
 	httpEndpoint  string
 	method        string

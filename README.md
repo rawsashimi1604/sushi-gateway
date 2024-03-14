@@ -31,6 +31,7 @@ https/tls support has been added to the proxy, add cert and key into environment
   - **(DONE)** acl
   - rate limit
   - **(DONE)** request size limit
+  - proxy_buffering
 - Logging and metrics
   - OpenTelemetry
   - http log
