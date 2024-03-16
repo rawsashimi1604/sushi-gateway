@@ -31,10 +31,35 @@ type HttpLogConfig struct {
 	headers       map[string]interface{}
 }
 
+type responseCaptureWriter struct {
+	http.ResponseWriter
+	status int
+	size   int
+	header http.Header
+}
+
+func (w *responseCaptureWriter) WriteHeader(status int) {
+	w.status = status
+	w.ResponseWriter.WriteHeader(status)
+}
+
+func (w *responseCaptureWriter) Header() http.Header {
+	return w.ResponseWriter.Header()
+}
+
+func newResponseCaptureWriter(w http.ResponseWriter) *responseCaptureWriter {
+	return &responseCaptureWriter{
+		ResponseWriter: w,
+		status:         http.StatusOK, // default status
+		size:           0,             // default size
+		header:         w.Header(),
+	}
+}
+
 func NewHttpLogPlugin(config map[string]interface{}) *plugins.Plugin {
 	return &plugins.Plugin{
 		Name:     constant.PLUGIN_HTTP_LOG,
-		Priority: 12,
+		Priority: 1,
 		Handler: HttpLogPlugin{
 			config: config,
 		},
@@ -44,8 +69,10 @@ func NewHttpLogPlugin(config map[string]interface{}) *plugins.Plugin {
 func (plugin HttpLogPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing httplog function...")
+		wrappedWriter := newResponseCaptureWriter(w)
+		next.ServeHTTP(wrappedWriter, r)
 
-		log, err := plugin.createLogResponse(r)
+		log, err := plugin.createLogResponse(wrappedWriter, r)
 		if err != nil {
 			err.WriteJSONResponse(w)
 			return
@@ -56,8 +83,6 @@ func (plugin HttpLogPlugin) Execute(next http.Handler) http.Handler {
 			err.WriteJSONResponse(w)
 			return
 		}
-
-		next.ServeHTTP(w, r)
 	})
 }
 
@@ -66,7 +91,7 @@ func (plugin HttpLogPlugin) parseConfig(config map[string]interface{}) (*HttpLog
 	return nil, nil
 }
 
-func (plugin HttpLogPlugin) createLogResponse(r *http.Request) (map[string]interface{}, *errors.HttpError) {
+func (plugin HttpLogPlugin) createLogResponse(wrappedWriter *responseCaptureWriter, r *http.Request) (map[string]interface{}, *errors.HttpError) {
 
 	service, route, err := util.GetServiceAndRouteFromRequest(&config.GlobalProxyConfig, r)
 	if err != nil {
@@ -95,6 +120,11 @@ func (plugin HttpLogPlugin) createLogResponse(r *http.Request) (map[string]inter
 			"uri":      r.RequestURI,
 			"size":     util.ParseContentLength(r.Header.Get("Content-Length")),
 			"headers":  r.Header,
+		},
+		"response": map[string]interface{}{
+			"status":  wrappedWriter.status,
+			"size":    util.ParseContentLength(wrappedWriter.Header().Get("Content-Length")),
+			"headers": wrappedWriter.Header(),
 		},
 		"client_ip":  r.RemoteAddr,
 		"started_at": time.Now(),

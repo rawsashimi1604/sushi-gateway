@@ -34,7 +34,6 @@ func (plugin MtlsPlugin) Execute(next http.Handler) http.Handler {
 		// Verify the client certificate
 		opts := x509.VerifyOptions{
 			Roots: cert.GlobalCaCertPool.Pool,
-			// TODO: set more options for verification
 		}
 
 		if _, err := r.TLS.PeerCertificates[0].Verify(opts); err != nil {
