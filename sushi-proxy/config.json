@@ -26,6 +26,15 @@
         }
       },
       {
+        "name": "jwt",
+        "enabled": false,
+        "data": {
+          "alg": "HS256",
+          "iss": "someIssuerKey",
+          "secret": "123secret456"
+        }
+      },
+      {
         "name": "acl",
         "enabled": true,
         "data": {
