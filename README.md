@@ -34,7 +34,6 @@ https/tls support has been added to the proxy, add cert and key into environment
   - proxy_buffering
 - Logging and metrics
   - OpenTelemetry
-  - http log
-  - file log
+  - **(DONE)** http log
   - kafka log
     
