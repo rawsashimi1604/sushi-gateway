@@ -21,14 +21,9 @@ type HttpLogPlugin struct {
 // TODO: send logs in batches (batch processing).
 // TODO: log the response as well.
 type HttpLogConfig struct {
-	httpEndpoint  string
-	method        string
-	contentType   string
-	timeout       uint
-	retryCount    int
-	queueSize     int
-	flushInterval int
-	headers       map[string]interface{}
+	httpEndpoint string
+	method       string
+	contentType  string
 }
 
 func NewHttpLogPlugin(config map[string]interface{}) *plugins.Plugin {
@@ -46,13 +41,15 @@ func (plugin HttpLogPlugin) Execute(next http.Handler) http.Handler {
 		slog.Info("Executing httplog function...")
 		next.ServeHTTP(w, r)
 
+		config := plugin.parseConfig()
+
 		log, err := plugin.createLogBody(r)
 		if err != nil {
 			err.WriteJSONResponse(w)
 			return
 		}
 
-		err = plugin.sendLog(log)
+		err = plugin.sendLog(log, config)
 		if err != nil {
 			err.WriteJSONResponse(w)
 			return
@@ -60,9 +57,14 @@ func (plugin HttpLogPlugin) Execute(next http.Handler) http.Handler {
 	})
 }
 
-func (plugin HttpLogPlugin) parseConfig(config map[string]interface{}) (*HttpLogConfig, *errors.HttpError) {
-	// TODO: read log config
-	return nil, nil
+func (plugin HttpLogPlugin) parseConfig() *HttpLogConfig {
+	data := plugin.config["data"].(map[string]interface{})
+
+	return &HttpLogConfig{
+		httpEndpoint: data["http_endpoint"].(string),
+		method:       data["method"].(string),
+		contentType:  data["content_type"].(string),
+	}
 }
 
 func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface{}, *errors.HttpError) {
@@ -102,7 +104,7 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 	return log, nil
 }
 
-func (plugin HttpLogPlugin) sendLog(log map[string]interface{}) *errors.HttpError {
+func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogConfig) *errors.HttpError {
 
 	// Convert the payload to JSON
 	body, err := json.Marshal(log)
@@ -111,13 +113,13 @@ func (plugin HttpLogPlugin) sendLog(log map[string]interface{}) *errors.HttpErro
 	}
 
 	// Create a new request with POST method, URL, and payload
-	req, err := http.NewRequest("POST", "http://localhost:8003/v1/log", bytes.NewBuffer(body))
+	req, err := http.NewRequest(config.method, config.httpEndpoint, bytes.NewBuffer(body))
 	if err != nil {
 		return errors.NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log when creating http request")
 	}
 
 	// Set request headers (optional)
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", config.contentType)
 
 	// Send the request
 	client := &http.Client{}

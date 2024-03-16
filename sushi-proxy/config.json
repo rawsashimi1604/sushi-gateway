@@ -8,13 +8,7 @@
         "data": {
           "http_endpoint": "http://localhost:8003/v1/log",
           "method": "POST",
-          "content_type": "application/json",
-          "timeout": 1000,
-          "retry_count": 3,
-          "queue_size": 1000,
-          "flush_interval": 1000,
-          "headers" : {
-          }
+          "content_type": "application/json"
         }
       },
       {
