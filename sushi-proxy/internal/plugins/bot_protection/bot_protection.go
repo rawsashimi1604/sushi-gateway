@@ -4,6 +4,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -45,13 +46,7 @@ func (plugin BotProtectionPlugin) Execute(next http.Handler) http.Handler {
 func (plugin BotProtectionPlugin) verifyIsBot(userAgent string) *errors.HttpError {
 	// TODO: add validation for this plugin in the config file
 	data := plugin.config["data"].(map[string]interface{})
-	blacklistInterface := data["blacklist"].([]interface{}) // Assert to []interface{} first
-
-	var blacklist []string
-	for _, w := range blacklistInterface {
-		ipStr := w.(string)
-		blacklist = append(blacklist, ipStr)
-	}
+	blacklist := util.ToStringSlice(data["blacklist"].([]interface{}))
 
 	for _, bot := range blacklist {
 		if strings.Contains(userAgent, bot) {

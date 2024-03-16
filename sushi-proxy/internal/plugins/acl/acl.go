@@ -5,6 +5,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 )
@@ -31,7 +32,7 @@ func (plugin AclPlugin) Execute(next http.Handler) http.Handler {
 		// Check both forwarded ip and client ip
 		clientIP := r.RemoteAddr
 		forwardedIP := r.Header.Get(constant.X_FORWARDED_FOR)
-		
+
 		// Check if the IP is in the whitelist
 		if plugin.isWhitelisted(clientIP) || plugin.isWhitelisted(forwardedIP) {
 			next.ServeHTTP(w, r)
@@ -61,13 +62,7 @@ func (plugin AclPlugin) Execute(next http.Handler) http.Handler {
 func (plugin AclPlugin) isWhitelisted(ip string) bool {
 	// TODO: add validation for this plugin in the config file
 	data := plugin.config["data"].(map[string]interface{})
-	whitelistInterface := data["whitelist"].([]interface{}) // Assert to []interface{} first
-
-	var whitelist []string
-	for _, w := range whitelistInterface {
-		ipStr := w.(string)
-		whitelist = append(whitelist, ipStr)
-	}
+	whitelist := util.ToStringSlice(data["whitelist"].([]interface{}))
 
 	for _, whitelistedIP := range whitelist {
 		if ip == whitelistedIP {
@@ -80,13 +75,7 @@ func (plugin AclPlugin) isWhitelisted(ip string) bool {
 func (plugin AclPlugin) isBlacklisted(ip string) bool {
 	// TODO: add validation for this plugin in the config file
 	data := plugin.config["data"].(map[string]interface{})
-	blacklistInterface := data["blacklist"].([]interface{}) // Assert to []interface{} first
-
-	var blacklist []string
-	for _, w := range blacklistInterface {
-		ipStr := w.(string)
-		blacklist = append(blacklist, ipStr)
-	}
+	blacklist := util.ToStringSlice(data["blacklist"].([]interface{}))
 
 	for _, blacklistedIP := range blacklist {
 		if ip == blacklistedIP {

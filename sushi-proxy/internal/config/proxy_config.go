@@ -30,7 +30,6 @@ func LoadProxyConfig(filePath string) {
 	err = ValidateConfig(config)
 	if err != nil {
 		slog.Info(err.Error())
-
 		panic("Error validating config file")
 	}
 

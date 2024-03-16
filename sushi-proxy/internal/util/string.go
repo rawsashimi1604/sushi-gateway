@@ -8,3 +8,12 @@ func SliceContainsString(slice []string, s string) bool {
 	}
 	return false
 }
+
+// toStringSlice converts an []interface{} to a []string.
+func ToStringSlice(i []interface{}) []string {
+	var s []string
+	for _, v := range i {
+		s = append(s, v.(string))
+	}
+	return s
+}

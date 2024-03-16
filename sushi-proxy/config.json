@@ -52,6 +52,20 @@
         "data": {
             "max_payload_size": 10
         }
+      },
+      {
+        "name": "cors",
+        "enabled": true,
+        "data": {
+          "allow_origins": ["*"],
+          "allow_methods": ["GET", "POST"],
+          "allow_headers": ["Authorization", "Content-Type"],
+          "expose_headers": ["Authorization"],
+          "allow_credentials": true,
+          "allow_private_network": false,
+          "preflight_continue": false,
+          "max_age": 3600
+        }
       }
     ]
   },
