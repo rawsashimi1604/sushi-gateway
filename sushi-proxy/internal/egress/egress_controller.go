@@ -1,6 +1,7 @@
 package egress
 
 import (
+	"bytes"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/plugin_manager"
 	"log/slog"
@@ -21,10 +22,36 @@ func (c *EgressController) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/").HandlerFunc(c.RouteRequest())
 }
 
+// captureResponseWriter is used to capture the HTTP response
+type captureResponseWriter struct {
+	http.ResponseWriter
+	statusCode int
+	size       int
+	body       bytes.Buffer
+}
+
+func newCaptureResponseWriter(w http.ResponseWriter) *captureResponseWriter {
+	// Default the status code to 200 in case WriteHeader is not called
+	return &captureResponseWriter{ResponseWriter: w, statusCode: http.StatusOK}
+}
+
+func (w *captureResponseWriter) Write(data []byte) (int, error) {
+	size, err := w.ResponseWriter.Write(data)
+	w.size += size
+	w.Header().Set("Content-Length", string(w.size))
+	return size, err
+}
+
+func (w *captureResponseWriter) Header() http.Header {
+	return w.ResponseWriter.Header()
+}
+
 func (c *EgressController) RouteRequest() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		slog.Info("Handing request: " + req.URL.Path)
+		// TODO: check if necessary to add content-type
 		w.Header().Add("Content-Type", "application/json; charset=UTF-8")
+		captureWriter := newCaptureResponseWriter(w)
 
 		// Configure, register new plugins...
 		pluginManager, err := plugin_manager.NewPluginManagerFromConfig(req)
@@ -37,14 +64,18 @@ func (c *EgressController) RouteRequest() http.HandlerFunc {
 		// Chain the plugins with the final handler where the request is forwarded.
 		chainedHandler := pluginManager.ExecutePlugins(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// After executing all the plugins, handle the end result here.
-			body, _, err := c.proxyService.HandleProxyPass(w, r)
+			err := c.proxyService.HandleProxyPass(w, r)
 			if err != nil {
 				slog.Info(err.Error())
+				err.WriteJSONResponse(w)
+				return
 			}
-			w.Write(body)
 		}))
 
 		// Execute the request (plugins + proxying).
-		chainedHandler.ServeHTTP(w, req)
+		chainedHandler.ServeHTTP(captureWriter, req)
+
+		// After whole request lifecycle.
+		w.Write(captureWriter.body.Bytes())
 	}
 }

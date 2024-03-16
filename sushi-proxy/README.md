@@ -22,8 +22,9 @@
 
 - Create Server certificate signed by your CA
 ```bash
+printf "[req_ext]\nsubjectAltName=DNS:localhost" > extfile.cnf
 openssl x509 -req -days 365 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt \
--extensions req_ext -extfile <(printf "[req_ext]\nsubjectAltName=DNS:localhost")
+-extensions req_ext -extfile extfile.cnf
 ```
 
 - Verify certs

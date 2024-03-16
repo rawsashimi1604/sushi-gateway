@@ -1,7 +1,6 @@
 package egress
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
@@ -20,29 +19,17 @@ func NewEgressService() *EgressService {
 	return &EgressService{}
 }
 
-// captureResponseWriter is used to capture the HTTP response
-type captureResponseWriter struct {
-	http.ResponseWriter
-	statusCode int
-	body       bytes.Buffer
-}
-
-func newCaptureResponseWriter(w http.ResponseWriter) *captureResponseWriter {
-	// Default the status code to 200 in case WriteHeader is not called
-	return &captureResponseWriter{ResponseWriter: w, statusCode: http.StatusOK}
-}
-
-func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request) ([]byte, int, *errors.HttpError) {
+func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request) *errors.HttpError {
 
 	path, convertErr := s.convertPathToProxyPassUrl(req)
 	if convertErr != nil {
-		return nil, 0, convertErr
+		return convertErr
 	}
 
 	slog.Info("path: " + path)
 	target, err := url.Parse(path)
 	if err != nil {
-		return nil, 0, &errors.HttpError{
+		return &errors.HttpError{
 			Code:     "ERROR_PARSING_PROXY_URL",
 			Message:  "Error parsing URL when creating proxy_pass",
 			HttpCode: http.StatusInternalServerError,
@@ -50,7 +37,6 @@ func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(target)
-	captureWriter := newCaptureResponseWriter(w)
 
 	// Customize the Director to modify request before forwarding
 	originalDirector := proxy.Director
@@ -68,9 +54,8 @@ func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request
 	}
 
 	// Serve the proxy and capture the response
-	proxy.ServeHTTP(captureWriter, req)
-
-	return captureWriter.body.Bytes(), captureWriter.statusCode, nil
+	proxy.ServeHTTP(w, req)
+	return nil
 }
 
 func (s *EgressService) convertPathToProxyPassUrl(req *http.Request) (string, *errors.HttpError) {

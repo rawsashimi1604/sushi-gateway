@@ -25,7 +25,7 @@
       },
       {
         "name": "basic_auth",
-        "enabled": true,
+        "enabled": false,
         "data": {
           "username": "admin",
           "password": "changeme"
