@@ -18,8 +18,6 @@ config
 └── config.json    
 ```
 
-- Set env variables as well in `.env` file
-
 - Install OpenSSL
 - Generate the CA private key and certificate
 ```bash
