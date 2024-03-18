@@ -1,7 +1,32 @@
 version: "3.8"
 
+networks:
+  sushi-net:
+
 services:
+  sushi-proxy:
+    networks:
+      - sushi-net
+    container_name: sushi-proxy
+    image: rawsashimi/sushi-proxy:latest
+    ports:
+      - "8008:8008"
+      - "8443:8443"
+    environment:
+      - CONFIG_FILE_PATH=./app/config/config.json
+      - SERVER_CERT_PATH=./app/config/server.crt
+      - SERVER_KEY_PATH=./app/config/server.key
+      - CA_CERT_PATH=./app/config/ca.crt
+    volumes:
+      - ./config/config.json:/app/config/config.json
+      - ./config/server.crt:/app/config/server.crt
+      - ./config/server.key:/app/config/server.key
+      - ./config/ca.crt:/app/config/ca.crt
+
   sushi-svc-1:
+    networks:
+      - sushi-net
+    container_name: sushi-svc-1
     image: rawsashimi/express-sushi-app
     ports:
       - "8001:3000"
@@ -11,6 +36,9 @@ services:
       - JWT_SECRET=123secret456
 
   sushi-svc-2:
+    networks:
+      - sushi-net
+    container_name: sushi-svc-2
     image: rawsashimi/express-sushi-app
     ports:
       - "8002:3000"
@@ -20,6 +48,9 @@ services:
       - JWT_SECRET=123secret456
 
   sushi-http-log-consumer:
+    networks:
+      - sushi-net
+    container_name: sushi-http-log-consumer
     image: rawsashimi/express-sushi-http-consumer
     ports:
       - "8003:3000"

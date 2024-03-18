@@ -16,5 +16,3 @@ services:
       - ./config/server.crt:/app/config/server.crt
       - ./config/server.key:/app/config/server.key
       - ./config/ca.crt:/app/config/ca.crt
-#    entrypoint:
-#      ["ls", "/app/config"]

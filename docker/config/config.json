@@ -1,0 +1,104 @@
+{
+  "global": {
+    "name": "sushi-gateway-1",
+    "plugins": [
+      {
+        "name": "http_log",
+        "enabled": true,
+        "data": {
+          "http_endpoint": "http://sushi-http-log-consumer:3000/v1/log",
+          "method": "POST",
+          "content_type": "application/json"
+        }
+      },
+      {
+        "name": "mtls",
+        "enabled": false,
+        "data": {
+        }
+      },
+      {
+        "name": "basic_auth",
+        "enabled": false,
+        "data": {
+          "username": "admin",
+          "password": "changeme"
+        }
+      },
+      {
+        "name": "jwt",
+        "enabled": false,
+        "data": {
+          "alg": "HS256",
+          "iss": "someIssuerKey",
+          "secret": "123secret456"
+        }
+      },
+      {
+        "name": "acl",
+        "enabled": true,
+        "data": {
+          "whitelist": ["127.0.0.1", "127.0.0.2"],
+          "blacklist": ["192.168.0.1"]
+        }
+      },
+      {
+        "name": "bot_protection",
+        "enabled": true,
+        "data": {
+          "blacklist": ["googlebot", "bingbot", "yahoobot"]
+        }
+      },
+      {
+        "name": "request_size_limit",
+        "enabled": true,
+        "data": {
+            "max_payload_size": 10
+        }
+      },
+      {
+        "name": "cors",
+        "enabled": true,
+        "data": {
+          "allow_origins": ["*"],
+          "allow_methods": ["GET", "POST"],
+          "allow_headers": ["Authorization", "Content-Type"],
+          "expose_headers": ["Authorization"],
+          "allow_credentials": true,
+          "allow_private_network": false,
+          "preflight_continue": false,
+          "max_age": 3600
+        }
+      }
+    ]
+  },
+  "services": [
+    {
+      "name": "sushi-svc",
+      "base_path": "/sushi-service",
+      "protocol": "http",
+      "upstreams": [
+        { "host": "sushi-svc-1", "port": 3000 },
+        { "host": "sushi-svc-2", "port": 3000 }
+      ],
+      "plugins": [],
+      "routes": [
+        {
+          "path": "/v1/sushi",
+          "methods": ["GET"],
+          "plugins": []
+        },
+        {
+          "path": "/v1/sushi/restaurant",
+          "methods": ["GET"],
+          "plugins": []
+        },
+        {
+          "path": "/v1/token",
+          "methods": ["GET"],
+          "plugins": []
+        }
+      ]
+    }
+  ]
+}
