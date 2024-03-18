@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  proxy:
+    image: rawsashimi/sushi-proxy:latest
+    ports:
+      - "8008:8008"
+      - "8443:8443"
+    environment:
+      - SERVER_CERT_PATH="/app/config/server.crt"
+      - SERVER_KEY_PATH="/app/config/server.key"
+      - CA_CERT_PATH="/app/config/ca.crt"
+    volumes:
+      - ./config:/app/config

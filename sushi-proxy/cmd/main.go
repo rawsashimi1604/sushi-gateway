@@ -30,7 +30,7 @@ func main() {
 		}
 	}()
 
-	// Setup https server
+	// Setup https se	rver
 	go func() {
 		// Load global CA Cert Pool
 		certificate.GlobalCaCertPool = certificate.LoadCertPool()
