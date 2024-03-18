@@ -2,6 +2,13 @@
 
 ![High Level Design](./docs/images/design.png)
 
+## GETTING STARTED
+
+### docker-compose
+- Go to `docker` folder
+- Ensure have required TLS certs
+- Run `docker compose up`
+
 ## TODO LIST
 - [ ] Add more tests for each plugin
 - [ ] Finish up plugins
