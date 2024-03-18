@@ -1,5 +1,9 @@
 package constant
 
+// PORTS
+const PORT_HTTP = "8008"
+const PORT_HTTPS = "8443"
+
 // PROTOCOLS
 const UTF_8 = "UTF-8"
 const HS_256 = "HS256"

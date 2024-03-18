@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	certificate "github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/cert"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/router"
 	"log"
 	"log/slog"
@@ -22,8 +23,8 @@ func main() {
 
 	// Setup http server
 	go func() {
-		slog.Info("Started sushi-proxy_pass http server on port: " + config.GlobalAppConfig.ProxyPortHttp)
-		if err := http.ListenAndServe(":"+config.GlobalAppConfig.ProxyPortHttp, appRouter); err != nil {
+		slog.Info("Started sushi-proxy_pass http server on port: " + constant.PORT_HTTP)
+		if err := http.ListenAndServe(":"+constant.PORT_HTTP, appRouter); err != nil {
 			slog.Info("Failed to start HTTP server: %v", err)
 			panic(err)
 		}
@@ -47,11 +48,11 @@ func main() {
 		}
 
 		server := &http.Server{
-			Addr:      ":" + config.GlobalAppConfig.ProxyPortHttps,
+			Addr:      ":" + constant.PORT_HTTPS,
 			Handler:   appRouter,
 			TLSConfig: tlsConfig,
 		}
-		slog.Info("Started sushi-proxy_pass https server on port: " + config.GlobalAppConfig.ProxyPortHttps)
+		slog.Info("Started sushi-proxy_pass https server on port: " + constant.PORT_HTTPS)
 		log.Fatal(server.ListenAndServeTLS("", "")) // Certs loaded from tls config.
 	}()
 

@@ -8,8 +8,6 @@ import (
 )
 
 type AppConfig struct {
-	ProxyPortHttp  string
-	ProxyPortHttps string
 	ServerCertPath string
 	ServerKeyPath  string
 	CACertPath     string
@@ -22,15 +20,6 @@ func LoadGlobalConfig() *AppConfig {
 	godotenv.Load()
 
 	errors := make([]string, 0)
-	proxyPortHttp := os.Getenv("PROXY_PORT_HTTP")
-	if proxyPortHttp == "" {
-		errors = append(errors, "PROXY_PORT_HTTP is required.")
-	}
-
-	proxyPortHttps := os.Getenv("PROXY_PORT_HTTPS")
-	if proxyPortHttps == "" {
-		errors = append(errors, "PROXY_PORT_HTTPS is required.")
-	}
 
 	serverCertPath := os.Getenv("SERVER_CERT_PATH")
 	if serverCertPath == "" {
@@ -48,8 +37,6 @@ func LoadGlobalConfig() *AppConfig {
 	}
 
 	config := &AppConfig{
-		ProxyPortHttp:  proxyPortHttp,
-		ProxyPortHttps: proxyPortHttps,
 		ServerCertPath: serverCertPath,
 		ServerKeyPath:  serverKeyPath,
 		CACertPath:     caCertPath,
