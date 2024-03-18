@@ -1,4 +1,4 @@
-FROM golang:1.22 as builder
+FROM golang:1.22 as build-stage
 
 WORKDIR /app
 
@@ -6,14 +6,21 @@ COPY go.mod ./
 COPY go.sum ./
 RUN go mod download
 
-COPY . ./
+COPY ./ ./
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o proxy ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /proxy /app/cmd
 
-FROM alpine:3.14
-WORKDIR /root/
-COPY --from=builder /app/proxy .
+# Run the tests in the container
+FROM build-stage AS run-test-stage
+RUN go test -v ./...
+
+# Deploy the application binary into a lean image
+FROM gcr.io/distroless/base-debian11 AS build-release-stage
+WORKDIR /
+
+COPY --from=build-stage /proxy /app/proxy
 
 EXPOSE 8008 8443
 
-CMD ["./sushi-proxy"]
+USER nonroot:nonroot
+CMD ["/app/proxy"]

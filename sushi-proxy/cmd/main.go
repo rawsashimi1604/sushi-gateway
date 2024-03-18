@@ -13,7 +13,7 @@ import (
 
 func main() {
 	// Load configs
-	configPath := "./config.json"
+	configPath := "./config/config.json"
 	config.GlobalAppConfig = config.LoadGlobalConfig()
 	config.LoadProxyConfig(configPath)
 
