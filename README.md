@@ -8,7 +8,7 @@
 - [x] Add "enabled" field to plugins (common middleware for all plugins)
 - [ ] Add validation schema for each plugin, that is validated at config file load time
 - [ ] Add more tests for the proxy
-- [ ] Dockerizing proxy
+- [x] Dockerizing proxy
 - [ ] Create kube deployment (helm)
 - [ ] Admin API development and design
 - [ ] UI Portal development and design
