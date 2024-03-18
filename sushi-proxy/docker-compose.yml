@@ -7,8 +7,11 @@ services:
       - "8008:8008"
       - "8443:8443"
     environment:
-      - SERVER_CERT_PATH="/app/config/server.crt"
-      - SERVER_KEY_PATH="/app/config/server.key"
-      - CA_CERT_PATH="/app/config/ca.crt"
+      - CONFIG_FILE_PATH="./app/config/config.json"
+      - SERVER_CERT_PATH="./app/config/server.crt"
+      - SERVER_KEY_PATH="./app/config/server.key"
+      - CA_CERT_PATH="./app/config/ca.crt"
     volumes:
-      - ./config:/app/config
+      - ./config/config.json:/app/config/config.json
+#    entrypoint:
+#      ["ls", "/app/config"]

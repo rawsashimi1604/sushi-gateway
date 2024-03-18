@@ -3,8 +3,8 @@ package config
 import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
-	"io/ioutil"
 	"log/slog"
+	"os"
 	"sync"
 )
 
@@ -14,7 +14,7 @@ var configLock = &sync.RWMutex{}
 
 func LoadProxyConfig(filePath string) {
 	slog.Info("Loading proxy_pass config")
-	configFile, err := ioutil.ReadFile(filePath)
+	configFile, err := os.ReadFile(filePath)
 	if err != nil {
 		slog.Info("Error reading config file", err)
 		panic("Error reading config file")

@@ -5,6 +5,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 var GlobalCaCertPool *CertPool
@@ -15,7 +16,7 @@ type CertPool struct {
 
 func LoadCertPool() *CertPool {
 	// Load CA certificate to create a CA pool
-	caCert, err := ioutil.ReadFile(config.GlobalAppConfig.CACertPath)
+	caCert, err := os.ReadFile((config.GlobalAppConfig.CACertPath)
 	if err != nil {
 		log.Fatalf("server: read ca: %s", err)
 	}

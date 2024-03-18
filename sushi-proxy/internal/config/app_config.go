@@ -8,6 +8,7 @@ import (
 )
 
 type AppConfig struct {
+	ConfigFilePath string
 	ServerCertPath string
 	ServerKeyPath  string
 	CACertPath     string
@@ -20,6 +21,11 @@ func LoadGlobalConfig() *AppConfig {
 	godotenv.Load()
 
 	errors := make([]string, 0)
+
+	configFilePath := os.Getenv("CONFIG_FILE_PATH")
+	if configFilePath == "" {
+		errors = append(errors, "CONFIG_FILE_PATH is required.")
+	}
 
 	serverCertPath := os.Getenv("SERVER_CERT_PATH")
 	if serverCertPath == "" {
@@ -37,6 +43,7 @@ func LoadGlobalConfig() *AppConfig {
 	}
 
 	config := &AppConfig{
+		ConfigFilePath: configFilePath,
 		ServerCertPath: serverCertPath,
 		ServerKeyPath:  serverKeyPath,
 		CACertPath:     caCertPath,

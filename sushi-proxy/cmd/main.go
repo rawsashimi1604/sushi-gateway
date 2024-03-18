@@ -12,12 +12,9 @@ import (
 )
 
 func main() {
-	// Load configs
-	configPath := "./config/config.json"
 	config.GlobalAppConfig = config.LoadGlobalConfig()
-	config.LoadProxyConfig(configPath)
-
-	go config.WatchConfigFile(configPath)
+	config.LoadProxyConfig(config.GlobalAppConfig.ConfigFilePath)
+	go config.WatchConfigFile(config.GlobalAppConfig.ConfigFilePath)
 
 	appRouter := router.NewRouter()
 
@@ -30,7 +27,7 @@ func main() {
 		}
 	}()
 
-	// Setup https se	rver
+	// Setup https server
 	go func() {
 		// Load global CA Cert Pool
 		certificate.GlobalCaCertPool = certificate.LoadCertPool()
