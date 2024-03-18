@@ -6,6 +6,21 @@ docker push rawsashimi/sushi-proxy:latest
 
 ## Setting up TLS server for local development
 
+- Please place these files config folder. It should look like this
+```bash
+cd ./sushi-proxy/config 
+config
+├── ca.crt
+├── ca.key
+├── extfile.cnf
+├── server.crt
+├── server.csr
+└── server.key
+└── config.json    
+```
+
+- Set env variables as well in `.env` file
+
 - Install OpenSSL
 - Generate the CA private key and certificate
 ```bash
