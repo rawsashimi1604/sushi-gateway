@@ -21,7 +21,9 @@
         "name": "rate_limit",
         "enabled": true,
         "data": {
-          "limit_second": 5
+          "limit_second": 1,
+          "limit_min": 10,
+          "limit_hour": 100
         }
       },
       {

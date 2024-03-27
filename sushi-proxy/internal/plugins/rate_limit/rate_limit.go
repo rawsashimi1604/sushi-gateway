@@ -1,7 +1,6 @@
 package rate_limit
 
 import (
-	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
@@ -53,10 +52,11 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 
 		clientIp := r.RemoteAddr
 
-		// Enable globally...
-		defaultLimitPerSecond := 1
-		defaultLimitPerMinute := 10
-		defaultLimitPerHour := 20
+		// Get proxy configs
+		data := plugin.config["data"].(map[string]interface{})
+		limitSec := int64(data["limit_second"].(float64))
+		limitMin := int64(data["limit_min"].(float64))
+		limitHour := int64(data["limit_hour"].(float64))
 
 		// Async safe operation
 		globalRateLimitSecStore.mu.Lock()
@@ -112,11 +112,11 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		globalRateLimitMinStore.mu.Unlock()
 		globalRateLimitHourStore.mu.Unlock()
 
-		slog.Info(fmt.Sprintf("secCount: %v", secCount))
-		slog.Info(fmt.Sprintf("minCount: %v", minCount))
-		slog.Info(fmt.Sprintf("hourCount: %v", hourCount))
+		//slog.Info(fmt.Sprintf("secCount: %v", secCount))
+		//slog.Info(fmt.Sprintf("minCount: %v", minCount))
+		//slog.Info(fmt.Sprintf("hourCount: %v", hourCount))
 
-		if secCount > defaultLimitPerSecond {
+		if int64(secCount) > limitSec {
 			err := errors.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_SECOND_EXCEEDED",
 				"Rate limit exceeded.")
@@ -124,7 +124,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 			return
 		}
 
-		if minCount > defaultLimitPerMinute {
+		if int64(minCount) > limitMin {
 			err := errors.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_MINUTE_EXCEEDED",
 				"Rate limit exceeded.")
@@ -132,7 +132,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 			return
 		}
 
-		if hourCount > defaultLimitPerHour {
+		if int64(hourCount) > limitHour {
 			err := errors.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_HOUR_EXCEEDED",
 				"Rate limit exceeded.")
@@ -140,7 +140,6 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 			return
 		}
 
-		// call the next plugin.
 		next.ServeHTTP(w, r)
 	})
 }
