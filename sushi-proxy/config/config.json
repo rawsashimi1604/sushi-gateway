@@ -18,6 +18,13 @@
         }
       },
       {
+        "name": "rate_limit",
+        "enabled": true,
+        "data": {
+          "limit_second": 5,
+        }
+      },
+      {
         "name": "basic_auth",
         "enabled": false,
         "data": {
