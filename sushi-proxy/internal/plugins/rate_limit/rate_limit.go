@@ -11,13 +11,18 @@ import (
 	"time"
 )
 
-// Global rate limit store
+// Global rate limit stores
 var globalRateLimitSecStore = RateLimitStore{
 	mu:    sync.Mutex{},
 	rates: make(map[string]int),
 }
 
 var globalRateLimitMinStore = RateLimitStore{
+	mu:    sync.Mutex{},
+	rates: make(map[string]int),
+}
+
+var globalRateLimitHourStore = RateLimitStore{
 	mu:    sync.Mutex{},
 	rates: make(map[string]int),
 }
@@ -51,10 +56,12 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		// Enable globally...
 		defaultLimitPerSecond := 1
 		defaultLimitPerMinute := 10
+		defaultLimitPerHour := 20
 
 		// Async safe operation
 		globalRateLimitSecStore.mu.Lock()
 		globalRateLimitMinStore.mu.Lock()
+		globalRateLimitHourStore.mu.Lock()
 
 		secCount, secExists := globalRateLimitSecStore.rates[clientIp]
 		if !secExists {
@@ -84,13 +91,30 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 			}()
 		}
 
+		hourCount, hourExists := globalRateLimitHourStore.rates[clientIp]
+		if !hourExists {
+			// If no ip hit, create a new entry.
+			globalRateLimitHourStore.rates[clientIp] = 1
+
+			// Hour counter.
+			go func() {
+				time.Sleep(1 * time.Hour)
+				globalRateLimitHourStore.mu.Lock()
+				delete(globalRateLimitHourStore.rates, clientIp)
+				globalRateLimitHourStore.mu.Unlock()
+			}()
+		}
+
 		globalRateLimitSecStore.rates[clientIp] = secCount + 1
 		globalRateLimitMinStore.rates[clientIp] = minCount + 1
+		globalRateLimitHourStore.rates[clientIp] = hourCount + 1
 		globalRateLimitSecStore.mu.Unlock()
 		globalRateLimitMinStore.mu.Unlock()
+		globalRateLimitHourStore.mu.Unlock()
 
 		slog.Info(fmt.Sprintf("secCount: %v", secCount))
 		slog.Info(fmt.Sprintf("minCount: %v", minCount))
+		slog.Info(fmt.Sprintf("hourCount: %v", hourCount))
 
 		if secCount > defaultLimitPerSecond {
 			err := errors.NewHttpError(http.StatusTooManyRequests,
@@ -103,6 +127,14 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		if minCount > defaultLimitPerMinute {
 			err := errors.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_MINUTE_EXCEEDED",
+				"Rate limit exceeded.")
+			err.WriteJSONResponse(w)
+			return
+		}
+
+		if hourCount > defaultLimitPerHour {
+			err := errors.NewHttpError(http.StatusTooManyRequests,
+				"RATE_LIMIT_HOUR_EXCEEDED",
 				"Rate limit exceeded.")
 			err.WriteJSONResponse(w)
 			return
