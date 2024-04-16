@@ -21,6 +21,10 @@
 - [ ] UI Portal development and design
 - [ ] AI Component development and design
 
+## Llama
+- get the llama model
+
+
 ## TLS
 https/tls support has been added to the proxy, add cert and key into environment variables to use.
 

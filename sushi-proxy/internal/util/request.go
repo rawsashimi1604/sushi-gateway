@@ -3,6 +3,7 @@ package util
 import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -10,6 +11,7 @@ import (
 
 func GetServiceAndRouteFromRequest(proxyConfig *models.ProxyConfig, req *http.Request) (*models.Service, *models.Route, *errors.HttpError) {
 	path := req.URL.Path
+	slog.Info("path received: " + path)
 	parts := strings.Split(path, "/")
 	if len(parts) < 3 {
 		return nil, nil, &errors.HttpError{
@@ -22,6 +24,7 @@ func GetServiceAndRouteFromRequest(proxyConfig *models.ProxyConfig, req *http.Re
 	serviceBasePath := "/" + parts[1]
 	routePath := "/" + strings.Join(parts[2:], "/")
 
+	// TODO: fix routing /v1/sushi/restaurant is redirecting to /v1/sushi
 	for _, service := range proxyConfig.Services {
 		if service.BasePath == serviceBasePath {
 			for _, route := range service.Routes {
@@ -48,7 +51,6 @@ func ParseContentLength(input string) int64 {
 	if input == "" {
 		return 0
 	}
-
 	conv, _ := strconv.ParseInt(input, 10, 64)
 	return conv
 }
