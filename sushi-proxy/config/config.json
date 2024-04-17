@@ -21,8 +21,8 @@
         "name": "rate_limit",
         "enabled": true,
         "data": {
-          "limit_second": 1,
-          "limit_min": 10,
+          "limit_second": 100,
+          "limit_min": 100,
           "limit_hour": 100
         }
       },
@@ -93,16 +93,29 @@
       "plugins": [],
       "routes": [
         {
+          "name": "get-sushi",
           "path": "/v1/sushi",
           "methods": ["GET"],
-          "plugins": []
+          "plugins": [
+            {
+              "name": "rate_limit",
+              "enabled": true,
+              "data": {
+                "limit_second": 10,
+                "limit_min": 10,
+                "limit_hour": 100
+              }
+            }
+          ]
         },
         {
+          "name": "get-sushi-restaurants",
           "path": "/v1/sushi/restaurant",
           "methods": ["GET"],
           "plugins": []
         },
         {
+          "name": "sushi-provision-jwt",
           "path": "/v1/token",
           "methods": ["GET"],
           "plugins": []

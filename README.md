@@ -24,7 +24,6 @@
 ## Llama
 - get the llama model
 
-
 ## TLS
 https/tls support has been added to the proxy, add cert and key into environment variables to use.
 
@@ -40,7 +39,7 @@ https/tls support has been added to the proxy, add cert and key into environment
   - **(DONE)** cors
 - Traffic Control
   - **(DONE)** acl
-  - **(DONE)** rate limit
+  - **(DONE)** rate limit (only at global level)
   - **(DONE)** request size limit
   - proxy_buffering
 - Logging and metrics

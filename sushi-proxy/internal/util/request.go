@@ -3,7 +3,6 @@ package util
 import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
-	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,7 +10,6 @@ import (
 
 func GetServiceAndRouteFromRequest(proxyConfig *models.ProxyConfig, req *http.Request) (*models.Service, *models.Route, *errors.HttpError) {
 	path := req.URL.Path
-	slog.Info("path received: " + path)
 	parts := strings.Split(path, "/")
 	if len(parts) < 3 {
 		return nil, nil, &errors.HttpError{

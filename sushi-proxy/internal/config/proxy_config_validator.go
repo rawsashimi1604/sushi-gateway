@@ -132,11 +132,17 @@ func validateRoutes(config *models.ProxyConfig) error {
 	var validMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"}
 
 	for _, service := range config.Services {
+		var routePaths []string
 		var routeNames []string
 		for _, route := range service.Routes {
 			// Path
-			if util.SliceContainsString(routeNames, route.Path) {
+			if util.SliceContainsString(routePaths, route.Path) {
 				return fmt.Errorf("route path: %s must be unique", route.Path)
+			}
+
+			// Name
+			if util.SliceContainsString(routeNames, route.Name) {
+				return fmt.Errorf("route name: %s must be unique", route.Name)
 			}
 
 			if !strings.HasPrefix(route.Path, "/") {
@@ -158,7 +164,8 @@ func validateRoutes(config *models.ProxyConfig) error {
 				}
 			}
 
-			routeNames = append(routeNames, route.Path)
+			routePaths = append(routePaths, route.Path)
+			routeNames = append(routeNames, route.Name)
 		}
 	}
 

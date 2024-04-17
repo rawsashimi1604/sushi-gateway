@@ -84,16 +84,19 @@
       "plugins": [],
       "routes": [
         {
+          "name": "get-sushi",
           "path": "/v1/sushi",
           "methods": ["GET"],
           "plugins": []
         },
         {
+          "name": "get-sushi-restaurants",
           "path": "/v1/sushi/restaurant",
           "methods": ["GET"],
           "plugins": []
         },
         {
+          "name": "sushi-provision-jwt",
           "path": "/v1/token",
           "methods": ["GET"],
           "plugins": []

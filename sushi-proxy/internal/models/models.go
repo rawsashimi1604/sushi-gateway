@@ -16,6 +16,7 @@ type Upstream struct {
 }
 
 type Route struct {
+	Name    string         `json:"name"`
 	Path    string         `json:"path"`
 	Methods []string       `json:"methods"`
 	Plugins []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
