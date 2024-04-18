@@ -161,10 +161,6 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		globalRateLimitMinStore.mu.Unlock()
 		globalRateLimitHourStore.mu.Unlock()
 
-		slog.Info(fmt.Sprintf("secCount: %v", secCount))
-		slog.Info(fmt.Sprintf("minCount: %v", minCount))
-		slog.Info(fmt.Sprintf("hourCount: %v", hourCount))
-
 		if int64(secCount) > limitSec {
 			err := errors.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_SECOND_EXCEEDED",
