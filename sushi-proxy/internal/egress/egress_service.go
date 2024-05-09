@@ -44,7 +44,6 @@ func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request
 		// Call the original Director to preserve other behaviors
 		originalDirector(req)
 
-		// Now adjust req.URL.Path here as needed
 		req.URL.Path = target.Path
 		req.URL.Scheme = target.Scheme
 		req.URL.Host = target.Host
@@ -52,8 +51,6 @@ func (s *EgressService) HandleProxyPass(w http.ResponseWriter, req *http.Request
 		req.Header.Set(constant.X_FORWARDED_FOR, req.RemoteAddr)
 		req.Host = target.Host
 	}
-
-	// Serve the proxy and capture the response
 	proxy.ServeHTTP(w, req)
 	return nil
 }
@@ -73,7 +70,7 @@ func (s *EgressService) convertPathToProxyPassUrl(req *http.Request) (string, *e
 		}
 	}
 
-	// Use first upstream for now, configure load balancing next time.
+	// TODO: Use first upstream for now, configure load balancing next time.
 	upstream := matchedService.Upstreams[0]
 	proxyURL := fmt.Sprintf("%s://%s:%d%s", matchedService.Protocol, upstream.Host, upstream.Port, matchedRoute.Path)
 	return proxyURL, nil
