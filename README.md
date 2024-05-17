@@ -20,6 +20,7 @@
 - [ ] Admin API development and design
 - [ ] UI Portal development and design
 - [ ] AI Component development and design
+- [ ] Flatten file structure, cyclic imports
 
 ## Llama
 - get the llama model
