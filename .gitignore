@@ -12,6 +12,9 @@
 *.so
 *.dylib
 
+# VS_STORE
+.VS_Store/
+
 # Certificate files
 *.pem
 *.crt
