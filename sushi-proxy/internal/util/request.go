@@ -25,8 +25,8 @@ func GetServiceAndRouteFromRequest(proxyConfig *models.ProxyConfig, req *http.Re
 	for _, service := range proxyConfig.Services {
 		if service.BasePath == serviceBasePath {
 			for _, route := range service.Routes {
-				// TODO: refactor to function (match route)
-				if routePath == route.Path && SliceContainsString(route.Methods, req.Method) {
+				routeContainsMethod := SliceContainsString(route.Methods, req.Method)
+				if MatchRoute(&route, routePath) && routeContainsMethod {
 					return &service, &route, nil
 				}
 			}
@@ -43,6 +43,11 @@ func GetServiceAndRouteFromRequest(proxyConfig *models.ProxyConfig, req *http.Re
 		Message:  "Service not found",
 		HttpCode: http.StatusNotFound,
 	}
+}
+
+func MatchRoute(route *models.Route, path string) bool {
+	// TODO: Add url path params matching as well.
+	return route.Path == path
 }
 
 func ParseContentLength(input string) int64 {
