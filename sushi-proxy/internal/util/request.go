@@ -22,11 +22,11 @@ func GetServiceAndRouteFromRequest(proxyConfig *models.ProxyConfig, req *http.Re
 	serviceBasePath := "/" + parts[1]
 	routePath := "/" + strings.Join(parts[2:], "/")
 
-	// TODO: fix routing /v1/sushi/restaurant is redirecting to /v1/sushi
 	for _, service := range proxyConfig.Services {
 		if service.BasePath == serviceBasePath {
 			for _, route := range service.Routes {
-				if strings.HasPrefix(routePath, route.Path) && SliceContainsString(route.Methods, req.Method) {
+				// TODO: refactor to function (match route)
+				if routePath == route.Path && SliceContainsString(route.Methods, req.Method) {
 					return &service, &route, nil
 				}
 			}
