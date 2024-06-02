@@ -26,9 +26,33 @@ app.get("/v1/sushi", (req, res) => {
   res.json({ app_id: process.env.APP_ID, data: sushiData });
 });
 
+// GET /v1/sushi/:id
+app.get("/v1/sushi/:id", (req, res) => {
+  const sushiId = parseInt(req.params.id);
+  const sushi = sushiData.find((sushi) => sushi.id === sushiId);
+  if (!sushi) {
+    res.status(404).json({ error: "Sushi not found" });
+  } else {
+    res.json({ app_id: process.env.APP_ID, data: sushi });
+  }
+});
+
 // GET /v1/sushi/restaurant
 app.get("/v1/sushi/restaurant", (req, res) => {
   res.json({ app_id: process.env.APP_ID, data: restaurantData });
+});
+
+// GET /v1/sushi/restaurant/:id
+app.get("/v1/sushi/restaurant/:id", (req, res) => {
+  const restaurantId = parseInt(req.params.id);
+  const restaurant = restaurantData.find(
+    (restaurant) => restaurant.id === restaurantId
+  );
+  if (!restaurant) {
+    res.status(404).json({ error: "Restaurant not found" });
+  } else {
+    res.json({ app_id: process.env.APP_ID, data: restaurant });
+  }
 });
 
 app.get("/v1/token", (req, res) => {
@@ -38,7 +62,7 @@ app.get("/v1/token", (req, res) => {
   };
   const secretKey = process.env.JWT_SECRET;
   const token = jwt.sign(payload, secretKey, {
-    expiresIn: "1h", 
+    expiresIn: "1h",
   });
   res.json({ token });
 });
