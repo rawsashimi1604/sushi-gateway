@@ -16,7 +16,15 @@ function Global() {
             <div>
                 <span className="text-sm">plugins:</span>
                 {/* Some dropdown for plugin design */}
-                <PluginDropdown name="basic_auth" data={{}} />
+                <PluginDropdown name="http_log" data={{
+                    "name": "http_log",
+                    "enabled": true,
+                    "data": {
+                        "http_endpoint": "http://localhost:8003/v1/log",
+                        "method": "POST",
+                        "content_type": "application/json"
+                    }
+                }} />
             </div>
 
         </section>

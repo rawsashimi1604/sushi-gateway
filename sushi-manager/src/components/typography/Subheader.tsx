@@ -1,11 +1,12 @@
 type SubheaderProps = {
   text: string;
   align?: "left" | "center" | "right";
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
 };
 
 function Subheader({ text, align = "center", size = "lg" }: SubheaderProps) {
   const sizeMap = {
+    xs: "text-lg",
     sm: "text-xl ",
     md: "text-2xl ",
     lg: "text-3xl ",
