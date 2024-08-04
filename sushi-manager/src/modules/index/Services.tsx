@@ -6,7 +6,6 @@ function Services() {
         <div>
             <Header text="Services" align="left" size="md" />
             <ServiceDropdown />
-
         </div>
     )
 }
