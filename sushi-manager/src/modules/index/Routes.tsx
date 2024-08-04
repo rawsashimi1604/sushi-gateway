@@ -6,7 +6,11 @@ function Routes() {
     return (
         <div>
             <Header text="Routes" align="left" size="md" />
-            <RouteDropdown />
+            <div className='flex flex-col gap-3'>
+                <RouteDropdown />
+                <RouteDropdown />
+                <RouteDropdown />
+            </div>
         </div>
     )
 }

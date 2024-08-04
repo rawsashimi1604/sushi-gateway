@@ -5,7 +5,11 @@ function Services() {
     return (
         <div>
             <Header text="Services" align="left" size="md" />
-            <ServiceDropdown />
+            <div className='flex flex-col gap-3'>
+                <ServiceDropdown />
+                <ServiceDropdown />
+                <ServiceDropdown />
+            </div>
         </div>
     )
 }
