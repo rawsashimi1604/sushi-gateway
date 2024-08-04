@@ -16,7 +16,7 @@ function ServiceDropdown() {
                     className="flex items-center justify-between"
                     onClick={() => setIsClicked((prev) => !prev)}
                 >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mb-2">
                         <h1 className="text-md tracking-wide">service_name</h1>
                         <h1 className="text-xs italic text-neutral-800 mt-0.5">service_name</h1>
                     </div>

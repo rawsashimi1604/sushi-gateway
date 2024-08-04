@@ -9,7 +9,7 @@ function Global() {
             <Header text="Global" align="left" size="md" />
 
             {/* Gateway metadata */}
-            <div className="bg-neutral-200 px-4 py-2 rounded-lg shadow-sm w-[80%]">
+            <div className="bg-neutral-200 px-4 py-4 rounded-lg shadow-sm w-[80%]">
                 <div className="flex items-center gap-2 text-sm">
                     <Tag value="name" />
                     <NormalText text="some-gateway-name" />

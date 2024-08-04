@@ -11,7 +11,7 @@ function IndexModule() {
 
   return (
     <Container>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-6">
         <Global />
         <Services />
         <Routes />
