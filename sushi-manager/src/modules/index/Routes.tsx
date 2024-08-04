@@ -1,8 +1,11 @@
 import React from 'react'
+import Header from '../../components/typography/Header'
 
 function Routes() {
     return (
-        <div>Routes</div>
+        <div>
+            <Header text="Routes" align="left" size="md" />
+        </div>
     )
 }
 
