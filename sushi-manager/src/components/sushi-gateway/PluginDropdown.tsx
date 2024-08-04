@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { plugins } from "../../data/plugins";
-import Subheader from "../typography/Subheader";
 import ReactJson from "react-json-view";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 

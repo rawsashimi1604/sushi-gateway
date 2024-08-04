@@ -1,5 +1,7 @@
 import PluginDropdown from "../../components/sushi-gateway/PluginDropdown";
 import Header from "../../components/typography/Header";
+import Tag from "../../components/typography/Tag";
+import NormalText from "../../components/typography/Text";
 
 function Global() {
     return (
@@ -8,13 +10,16 @@ function Global() {
 
             {/* Gateway metadata */}
             <div className="flex items-center gap-2 text-sm">
-                <span>Name</span>
-                <span>some-gateway-name</span>
+                <Tag value="name" />
+                <NormalText text="some-gateway-name" />
             </div>
 
             {/* Gateway plugins */}
             <div>
-                <span className="text-sm">plugins:</span>
+                <div className="mb-2">
+                    <Tag value="plugins" />
+                </div>
+
                 {/* Some dropdown for plugin design */}
                 <PluginDropdown name="http_log" data={{
                     "name": "http_log",
