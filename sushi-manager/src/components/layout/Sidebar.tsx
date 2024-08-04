@@ -32,20 +32,7 @@ function Sidebar() {
           </h2>
           <ul className="flex flex-col gap-0">
             <SidebarItem item="Home" href="/" />
-            <SidebarItem item="Services" href="/services" />
-            <SidebarItem item="Routes" href="/routes" />
-            <SidebarItem item="Consumers" href="/consumers" />
-            <SidebarItem item="Logs" href="/logs" />
-          </ul>
-        </div>
-        {/* Settings , Logout */}
-        <div className="mt-4">
-          <h2 className="font-bold text-gray-800 tracking-tighter font-lora">
-            account
-          </h2>
-          <ul className="flex flex-col gap-0">
-            <SidebarItem item="Account" href="/account" />
-            <SidebarItem item="Settings" href="/settings" />
+            <SidebarItem item="Sushi AI" href="/sushi-ai" />
           </ul>
         </div>
       </div>
