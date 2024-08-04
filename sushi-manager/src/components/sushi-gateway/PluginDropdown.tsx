@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { plugins } from "../../data/plugins";
 import Subheader from "../typography/Subheader";
 import ReactJson from "react-json-view";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
@@ -17,7 +18,11 @@ function PluginDropdown({ name, data }: PluginDropdownProps) {
                 className="flex items-center justify-between"
                 onClick={() => setIsClicked((prev) => !prev)}
             >
-                <Subheader text={name} align="left" size="xs" />
+                <div className="flex items-center gap-2">
+                    <h1 className="text-md tracking-wide">{plugins[name]}</h1>
+                    <h1 className="text-xs italic text-neutral-800 mt-0.5">{name}</h1>
+                </div>
+
                 {isClicked ? <IoIosArrowUp /> : <IoIosArrowDown />}
             </div>
             {isClicked && (
