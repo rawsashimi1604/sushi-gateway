@@ -12,7 +12,7 @@ function PluginDropdown({ name, data }: PluginDropdownProps) {
     const [isClicked, setIsClicked] = useState(false);
 
     return (
-        <div className="bg-neutral-100 px-4 py-2 rounded-lg shadow-sm w-[80%]">
+        <div className="bg-neutral-100 px-4 py-2 rounded-lg shadow-sm">
             <div
                 className="flex items-center justify-between"
                 onClick={() => setIsClicked((prev) => !prev)}
