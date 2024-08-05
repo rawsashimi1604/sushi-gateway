@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"encoding/base64"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/mux"
@@ -115,4 +116,44 @@ func generateJWT(username string) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func validateJWT(tokenString string) (*Claims, *errors.HttpError) {
+	claims := &Claims{}
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+	if err != nil {
+		return nil, errors.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token")
+	}
+	if !token.Valid {
+		return nil, errors.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token")
+	}
+
+	return claims, nil
+}
+
+func ProtectRouteUsingJWT(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		cookie, err := req.Cookie("token")
+		if err != nil {
+			if err == http.ErrNoCookie {
+				errors.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token").WriteJSONResponse(w)
+				return
+			}
+			errors.NewHttpError(http.StatusBadRequest, "BAD_REQUEST", "Bad Request")
+			return
+		}
+
+		claims, httperr := validateJWT(cookie.Value)
+		if httperr != nil {
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Store the claims in the request context for use in handlers
+		ctx := req.Context()
+		ctx = context.WithValue(ctx, "username", claims.Username)
+		next.ServeHTTP(w, req.WithContext(ctx))
+	})
 }

@@ -16,7 +16,8 @@ func NewGatewayController() *GatewayController {
 }
 
 func (c *GatewayController) RegisterRoutes(router *mux.Router) {
-	router.PathPrefix("/").Methods("GET").HandlerFunc(c.GetGatewayInformation())
+	router.PathPrefix("/").Methods("GET").Handler(
+		ProtectRouteUsingJWT(c.GetGatewayInformation()))
 }
 
 func (c *GatewayController) GetGatewayInformation() http.HandlerFunc {
