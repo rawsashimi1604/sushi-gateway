@@ -12,6 +12,9 @@ func NewAdminApiRouter() *mux.Router {
 	gatewayController := NewGatewayController()
 	gatewayController.RegisterRoutes(router)
 
+	authController := NewAuthController()
+	authController.RegisterRoutes(router)
+
 	slog.Info("Successfully created admin api router...")
 	return router
 }
