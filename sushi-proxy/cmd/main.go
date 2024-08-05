@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/api"
 	"log"
 	"log/slog"
 	"net/http"
@@ -56,16 +57,13 @@ func main() {
 
 	// Setup admin api
 	go func() {
-		anotherRouter := http.NewServeMux()
-		anotherRouter.HandleFunc("/newapi", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("Hello from new API"))
-		})
+		adminApiRouter := api.NewAdminApiRouter()
 
-		newPort := "8082" // Specify your new port here
+		newPort := "8081"
 		slog.Info("Started another API server on port: " + newPort)
-		if err := http.ListenAndServe(":"+newPort, anotherRouter); err != nil {
+		if err := http.ListenAndServe(":"+newPort, adminApiRouter); err != nil {
 			slog.Info("Failed to start new API server: %v", err)
-			panic(err)
+			log.Fatal(err)
 		}
 	}()
 

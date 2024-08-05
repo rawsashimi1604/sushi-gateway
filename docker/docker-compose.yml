@@ -4,24 +4,24 @@ networks:
   sushi-net:
 
 services:
-  sushi-proxy:
-    networks:
-      - sushi-net
-    container_name: sushi-proxy
-    image: rawsashimi/sushi-proxy:latest
-    ports:
-      - "8008:8008"
-      - "8443:8443"
-    environment:
-      - CONFIG_FILE_PATH=./app/config/config.json
-      - SERVER_CERT_PATH=./app/config/server.crt
-      - SERVER_KEY_PATH=./app/config/server.key
-      - CA_CERT_PATH=./app/config/ca.crt
-    volumes:
-      - ./config/config.json:/app/config/config.json
-      - ./config/server.crt:/app/config/server.crt
-      - ./config/server.key:/app/config/server.key
-      - ./config/ca.crt:/app/config/ca.crt
+#  sushi-proxy:
+#    networks:
+#      - sushi-net
+#    container_name: sushi-proxy
+#    image: rawsashimi/sushi-proxy:latest
+#    ports:
+#      - "8008:8008"
+#      - "8443:8443"
+#    environment:
+#      - CONFIG_FILE_PATH=./app/config/config.json
+#      - SERVER_CERT_PATH=./app/config/server.crt
+#      - SERVER_KEY_PATH=./app/config/server.key
+#      - CA_CERT_PATH=./app/config/ca.crt
+#    volumes:
+#      - ./config/config.json:/app/config/config.json
+#      - ./config/server.crt:/app/config/server.crt
+#      - ./config/server.key:/app/config/server.key
+#      - ./config/ca.crt:/app/config/ca.crt
 
   sushi-svc-1:
     networks:
