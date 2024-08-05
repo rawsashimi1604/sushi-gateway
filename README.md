@@ -39,7 +39,6 @@ https/tls support has been added to the proxy, add cert and key into environment
   - **(DONE)** basic auth
   - **(DONE)** jwt (only Hs256, Rs256 tbd)
   - **(DONE)** key auth
-    - oauth2
   - **(DONE)** mtls
 - Security
   - **(DONE)** bot_protection
@@ -50,6 +49,4 @@ https/tls support has been added to the proxy, add cert and key into environment
   - **(DONE)** request size limit
   - proxy_buffering
 - Logging and metrics
-  - OpenTelemetry
   - **(DONE)** http log
-  - kafka log
