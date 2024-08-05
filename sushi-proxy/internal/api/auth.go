@@ -2,12 +2,22 @@ package api
 
 import (
 	"encoding/base64"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"log/slog"
 	"net/http"
 	"strings"
+	"time"
 )
+
+// TODO: externalise this
+var jwtKey = []byte("secret-jwt-key")
+
+type Claims struct {
+	Username string `json:"username"`
+	jwt.RegisteredClaims
+}
 
 type AuthController struct {
 }
@@ -58,11 +68,51 @@ func (c *AuthController) Login() http.HandlerFunc {
 			return
 		}
 
+		tokenString, err := generateJWT("user")
+		if err != nil {
+			errors.NewHttpError(http.StatusInternalServerError, "INTERNAL_SERVER_ERROR",
+				"Error generating JWT token").WriteJSONResponse(w)
+			return
+		}
+
+		// Set JWT in cookie
+		http.SetCookie(w, &http.Cookie{
+			Name:     "token",
+			Value:    tokenString,
+			Expires:  time.Now().Add(24 * time.Hour),
+			HttpOnly: true,
+			Secure:   true, // Set to true in production
+			SameSite: http.SameSiteStrictMode,
+		})
+
 		slog.Info("Login successful for user: " + username)
+		w.WriteHeader(http.StatusOK)
 		return
 	}
 }
 
 func validate(username string, password string) bool {
+	// TODO: externalize this
 	return username == "admin" && password == "changeme"
+}
+
+func generateJWT(username string) (string, error) {
+	// Set expiration time to 24 hours
+	expirationTime := time.Now().Add(24 * time.Hour)
+	claims := &Claims{
+		Username: username,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    "sushi-gateway-admin-api",
+			Audience:  []string{"sushi-gateway-manager"},
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
 }
