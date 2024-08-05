@@ -1,6 +1,7 @@
 package constant
 
 // PORTS
+const PORT_ADMIN_API = "8081"
 const PORT_HTTP = "8008"
 const PORT_HTTPS = "8443"
 

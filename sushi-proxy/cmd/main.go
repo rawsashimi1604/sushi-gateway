@@ -59,9 +59,8 @@ func main() {
 	go func() {
 		adminApiRouter := api.NewAdminApiRouter()
 
-		newPort := "8081"
-		slog.Info("Started another API server on port: " + newPort)
-		if err := http.ListenAndServe(":"+newPort, adminApiRouter); err != nil {
+		slog.Info("Started another API server on port: " + constant.PORT_ADMIN_API)
+		if err := http.ListenAndServe(":"+constant.PORT_ADMIN_API, adminApiRouter); err != nil {
 			slog.Info("Failed to start new API server: %v", err)
 			log.Fatal(err)
 		}
