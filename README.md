@@ -20,7 +20,7 @@
 - [ ] Add more tests for the proxy
 - [x] Dockerizing proxy
 - [ ] Create kube deployment (helm)
-- [ ] Admin API development and design
+- [x] Admin API development and design
 - [ ] Load balancing to upstreams
 - [x] UI Portal development and design
 - [ ] AI Component development and design
