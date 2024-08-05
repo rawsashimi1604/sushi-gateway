@@ -2,13 +2,14 @@ package main
 
 import (
 	"crypto/tls"
+	"log"
+	"log/slog"
+	"net/http"
+
 	certificate "github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/cert"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/router"
-	"log"
-	"log/slog"
-	"net/http"
 )
 
 func main() {
@@ -51,6 +52,21 @@ func main() {
 		}
 		slog.Info("Started sushi-proxy_pass https server on port: " + constant.PORT_HTTPS)
 		log.Fatal(server.ListenAndServeTLS("", "")) // Certs loaded from tls config.
+	}()
+
+	// Setup admin api
+	go func() {
+		anotherRouter := http.NewServeMux()
+		anotherRouter.HandleFunc("/newapi", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("Hello from new API"))
+		})
+
+		newPort := "8082" // Specify your new port here
+		slog.Info("Started another API server on port: " + newPort)
+		if err := http.ListenAndServe(":"+newPort, anotherRouter); err != nil {
+			slog.Info("Failed to start new API server: %v", err)
+			panic(err)
+		}
 	}()
 
 	// Block forever
