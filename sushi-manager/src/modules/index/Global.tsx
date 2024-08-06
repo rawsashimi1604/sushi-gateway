@@ -3,40 +3,36 @@ import Header from "../../components/typography/Header";
 import Tag from "../../components/typography/Tag";
 import NormalText from "../../components/typography/Text";
 
-function Global() {
-    return (
-        <section className="">
-            <Header text="Global" align="left" size="md" />
+interface GlobalProps {
+  data: any;
+}
 
-            {/* Gateway metadata */}
-            <div className="bg-neutral-200 px-4 py-4 rounded-lg shadow-sm w-[80%]">
-                <div className="flex items-center gap-2 text-sm">
-                    <Tag value="name" />
-                    <NormalText text="some-gateway-name" />
-                </div>
+function Global({ data }: GlobalProps) {
+  return (
+    <section className="">
+      <Header text="Global" align="left" size="md" />
 
-                {/* Gateway plugins */}
-                <div>
-                    <div className="mb-2">
-                        <Tag value="plugins" />
-                    </div>
+      {/* Gateway metadata */}
+      <div className="bg-neutral-200 px-4 py-4 rounded-lg shadow-sm w-[80%]">
+        <div className="flex items-center gap-2 text-sm">
+          <Tag value="name" />
+          <NormalText text={data?.name} />
+        </div>
 
-                    {/* Some dropdown for plugin design */}
-                    <PluginDropdown name="http_log" data={{
-                        "name": "http_log",
-                        "enabled": true,
-                        "data": {
-                            "http_endpoint": "http://localhost:8003/v1/log",
-                            "method": "POST",
-                            "content_type": "application/json"
-                        }
-                    }} />
-                </div>
-            </div>
-
-
-        </section>
-    );
+        {/* Gateway plugins */}
+        <div>
+          <div className="mb-2">
+            <Tag value="plugins" />
+          </div>
+          <div className="flex flex-col gap-2">
+            {data?.plugins.map((plugin: any) => {
+              return <PluginDropdown name={plugin?.name} data={plugin} />;
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default Global;

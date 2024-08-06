@@ -13,7 +13,7 @@ import AdminAuth from "../../api/services/admin/AdminAuth";
 function IndexModule() {
   // Get some information from Sushi proxy API, probably from global state.
   const navigate = useNavigate();
-  const [gatewayInfo, setGatewayInfo] = useRecoilState(gatewayState);
+  const [gatewayInfo, setGatewayInfo] = useRecoilState<any>(gatewayState);
 
   useEffect(() => {
     fetchData();
@@ -39,7 +39,7 @@ function IndexModule() {
   return (
     <Container>
       <div className="flex flex-col gap-6">
-        <Global />
+        <Global data={gatewayInfo.global} />
         <Services />
         <Routes />
         <Json />
