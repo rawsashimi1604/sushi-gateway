@@ -120,7 +120,7 @@ function LoginForm() {
 
           <button
             type="submit"
-            className="w-[80px] mt-2 text-xs py-1.5 px-2 pb-2 text-white bg-sashimi-deepblue shadow-md rounded-lg font-sans tracking-wider border-0 duration-300 transition-all hover:-translate-y-1 hover:shadow-lg"
+            className="w-[80px] mt-2 text-xs py-1.5 px-2 pb-2 text-white bg-blue-500 shadow-md rounded-lg font-sans tracking-wider border-0 duration-300 transition-all hover:-translate-y-1 hover:shadow-lg"
           >
             <span>login</span>
           </button>
@@ -129,15 +129,11 @@ function LoginForm() {
             <div className="flex flex-row items-center gap-2 text-sm tracking-wider">
               {loginState.status ? (
                 <React.Fragment>
-                  <span className="text-sashimi-deepgreen">
-                    {loginState?.message}
-                  </span>
+                  <span className="text-green-500">{loginState?.message}</span>
                   <LoadingSpinner size={12} />
                 </React.Fragment>
               ) : (
-                <span className="text-sashimi-deeppink">
-                  {loginState.message}
-                </span>
+                <span className="text-red-500">{loginState.message}</span>
               )}
             </div>
           )}

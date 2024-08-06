@@ -9,6 +9,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/rs/cors v1.11.0
 )
 
 require golang.org/x/sys v0.8.0 // indirect
