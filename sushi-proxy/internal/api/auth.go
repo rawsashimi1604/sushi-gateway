@@ -82,8 +82,8 @@ func (c *AuthController) Login() http.HandlerFunc {
 			Value:    tokenString,
 			Expires:  time.Now().Add(24 * time.Hour),
 			HttpOnly: true,
-			Secure:   true, // Set to true in production
-			SameSite: http.SameSiteStrictMode,
+			Secure:   false,
+			SameSite: http.SameSiteLaxMode,
 		})
 
 		slog.Info("Login successful for user: " + username)

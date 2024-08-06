@@ -8,6 +8,7 @@ function login(username: string, password: string) {
       headers: {
         Authorization: `Basic ${btoa(`${username}:${password}`)}`,
       },
+      withCredentials: true,
     }
   );
 }

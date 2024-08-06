@@ -18,7 +18,7 @@ func NewAdminApiRouter() http.Handler {
 	authController.RegisterRoutes(router)
 
 	corsRouter := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{"http://localhost:5173"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
 		AllowCredentials: true,
