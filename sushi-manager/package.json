@@ -20,7 +20,8 @@
     "react-icons": "^5.0.1",
     "react-json-view": "^1.21.3",
     "react-router-dom": "^6.21.3",
-    "use-react-router-breadcrumbs": "^4.0.1"
+    "use-react-router-breadcrumbs": "^4.0.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@svgr/rollup": "^8.1.0",

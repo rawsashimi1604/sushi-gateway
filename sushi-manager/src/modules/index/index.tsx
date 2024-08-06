@@ -4,10 +4,8 @@ import Json from "./Json";
 import Routes from "./Routes";
 import Services from "./Services";
 
-
 function IndexModule() {
-
-  // Get some information from Sushi proxy API
+  // Get some information from Sushi proxy API, probably from global state.
 
   return (
     <Container>
