@@ -19,21 +19,27 @@ function IndexModule() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(gatewayInfo);
-  }, [gatewayInfo]);
-
   async function fetchData() {
     try {
       const res = await AdminAuth.getGatewayData();
       setGatewayInfo(res.data);
     } catch (err: any) {
-      console.log(err);
-      console.log(err.response.status);
       if (err.response.status === 401) {
         return navigate("/login");
       }
     }
+  }
+
+  function parseRouteData(): any[] {
+    const routes: any[] = [];
+    if (gatewayInfo.services?.length > 0) {
+      gatewayInfo?.services.forEach((service: any) => {
+        service?.routes.forEach((route: any) => {
+          routes.push({ ...route, service: service?.name });
+        });
+      });
+    }
+    return routes;
   }
 
   return (
@@ -41,7 +47,7 @@ function IndexModule() {
       <div className="flex flex-col gap-6">
         <Global data={gatewayInfo?.global} />
         <Services data={gatewayInfo?.services} />
-        <Routes />
+        <Routes data={parseRouteData()} />
         <Json data={gatewayInfo} />
       </div>
     </Container>

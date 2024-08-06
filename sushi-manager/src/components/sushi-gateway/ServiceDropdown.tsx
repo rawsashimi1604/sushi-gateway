@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Tag from "../typography/Tag";
 import NormalText from "../typography/Text";
 import PluginDropdown from "./PluginDropdown";

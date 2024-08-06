@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Tag from "../typography/Tag";
 import NormalText from "../typography/Text";
 import PluginDropdown from "./PluginDropdown";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-function RouteDropdown() {
+interface RouteDropdown {
+  data: any;
+}
+
+function RouteDropdown({ data }: RouteDropdown) {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -16,9 +20,9 @@ function RouteDropdown() {
           onClick={() => setIsClicked((prev) => !prev)}
         >
           <div className="flex items-center gap-2 mb-2">
-            <h1 className="text-md tracking-wide">route_name</h1>
+            <h1 className="text-md tracking-wide">{data?.name}</h1>
             <h1 className="text-xs italic text-neutral-800 mt-0.5">
-              route_name
+              {data?.service}
             </h1>
           </div>
 
@@ -28,24 +32,25 @@ function RouteDropdown() {
           <div className="flex flex-col items-start gap-2 text-sm">
             <div className="flex items-center gap-2 text-sm">
               <Tag value="service" />
-              <NormalText text="some_service_name" />
+              <NormalText text={data?.service} />
             </div>
 
             <div className="flex items-center gap-2 text-sm">
               <Tag value="name" />
-              <NormalText text="some_route_name" />
+              <NormalText text={data?.name} />
             </div>
 
             <div className="flex items-center gap-2 text-sm">
               <Tag value="path" />
-              <NormalText text="/some_base_path" />
+              <NormalText text={data?.path} />
             </div>
 
             <div className="flex flex-col justify-center items-start  text-sm">
               <Tag value="methods" />
               <div className="flex flex-col bg-neutral-100 px-4 py-2 mt-2">
-                <NormalText text="GET" />
-                <NormalText text="POST" />
+                {data?.methods.map((method: any) => {
+                  return <NormalText key={method} text={method} />;
+                })}
               </div>
             </div>
 
@@ -54,19 +59,17 @@ function RouteDropdown() {
                 <Tag value="plugins" />
               </div>
 
-              {/* Some dropdown for plugin design */}
-              <PluginDropdown
-                name="http_log"
-                data={{
-                  name: "http_log",
-                  enabled: true,
-                  data: {
-                    http_endpoint: "http://localhost:8003/v1/log",
-                    method: "POST",
-                    content_type: "application/json",
-                  },
-                }}
-              />
+              <div className="flex flex-col gap-3">
+                {data?.plugins.map((plugin: any) => {
+                  return (
+                    <PluginDropdown
+                      key={plugin?.name}
+                      name={plugin?.name}
+                      data={plugin}
+                    />
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
