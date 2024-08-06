@@ -42,7 +42,7 @@ function IndexModule() {
         <Global data={gatewayInfo?.global} />
         <Services data={gatewayInfo?.services} />
         <Routes />
-        <Json />
+        <Json data={gatewayInfo} />
       </div>
     </Container>
   );
