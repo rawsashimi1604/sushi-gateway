@@ -1,17 +1,21 @@
-import Header from '../../components/typography/Header'
-import ServiceDropdown from '../../components/sushi-gateway/ServiceDropdown'
+import Header from "../../components/typography/Header";
+import ServiceDropdown from "../../components/sushi-gateway/ServiceDropdown";
 
-function Services() {
-    return (
-        <div>
-            <Header text="Services" align="left" size="md" />
-            <div className='flex flex-col gap-3'>
-                <ServiceDropdown />
-                <ServiceDropdown />
-                <ServiceDropdown />
-            </div>
-        </div>
-    )
+interface ServiceProps {
+  data: any;
 }
 
-export default Services
+function Services({ data }: ServiceProps) {
+  return (
+    <div>
+      <Header text="Services" align="left" size="md" />
+      <div className="flex flex-col gap-3">
+        {data?.map((service: any) => {
+          return <ServiceDropdown key={service?.name} data={service} />;
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default Services;

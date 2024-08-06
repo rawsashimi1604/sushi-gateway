@@ -39,8 +39,8 @@ function IndexModule() {
   return (
     <Container>
       <div className="flex flex-col gap-6">
-        <Global data={gatewayInfo.global} />
-        <Services />
+        <Global data={gatewayInfo?.global} />
+        <Services data={gatewayInfo?.services} />
         <Routes />
         <Json />
       </div>

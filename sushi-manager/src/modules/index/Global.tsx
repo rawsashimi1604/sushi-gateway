@@ -26,7 +26,13 @@ function Global({ data }: GlobalProps) {
           </div>
           <div className="flex flex-col gap-2">
             {data?.plugins.map((plugin: any) => {
-              return <PluginDropdown name={plugin?.name} data={plugin} />;
+              return (
+                <PluginDropdown
+                  key={plugin?.name}
+                  name={plugin?.name}
+                  data={plugin}
+                />
+              );
             })}
           </div>
         </div>
