@@ -20,6 +20,7 @@
     "react-icons": "^5.0.1",
     "react-json-view": "^1.21.3",
     "react-router-dom": "^6.21.3",
+    "recoil": "^0.7.7",
     "use-react-router-breadcrumbs": "^4.0.1",
     "yup": "^1.4.0"
   },

@@ -14,7 +14,9 @@ function login(username: string, password: string) {
 }
 
 function getGatewayData() {
-  return HttpRequest.get("/");
+  return HttpRequest.get("/", {
+    withCredentials: true,
+  });
 }
 
 export default {
