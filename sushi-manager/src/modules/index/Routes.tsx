@@ -10,7 +10,7 @@ function Routes({ data }: RoutesProps) {
   return (
     <div>
       <Header text="Routes" align="left" size="md" />
-      {(data?.length === 0 || data === null) && (
+      {(data?.length === 0 || data === undefined) && (
         <NormalText text="No routes were found." />
       )}
       <div className="flex flex-col gap-3">

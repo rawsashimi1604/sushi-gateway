@@ -1,5 +1,5 @@
 import Header from "../../components/typography/Header";
-import ReactJson from "react-json-view";
+import JsonView from "react18-json-view";
 
 interface JsonProps {
   data: any;
@@ -10,7 +10,7 @@ function Json({ data }: JsonProps) {
     <div>
       <Header text="Json" align="left" size="md" />
       <div className="bg-neutral-200 px-4 py-4 rounded-lg shadow-sm w-[80%]">
-        <ReactJson src={data} />
+        <JsonView src={data} />
       </div>
     </div>
   );
