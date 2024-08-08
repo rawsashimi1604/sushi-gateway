@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/mux"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
 	"log/slog"
 	"net/http"
@@ -93,8 +94,8 @@ func (c *AuthController) Login() http.HandlerFunc {
 }
 
 func validate(username string, password string) bool {
-	// TODO: externalize this
-	return username == "admin" && password == "changeme"
+	return username == config.GlobalAppConfig.AdminUser &&
+		password == config.GlobalAppConfig.AdminPassword
 }
 
 func generateJWT(username string) (string, error) {

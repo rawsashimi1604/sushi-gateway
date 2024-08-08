@@ -21,14 +21,14 @@
         "name": "rate_limit",
         "enabled": true,
         "data": {
-          "limit_second": 100,
-          "limit_min": 100,
-          "limit_hour": 100
+          "limit_second": 10,
+          "limit_min": 10,
+          "limit_hour": 10
         }
       },
       {
         "name": "basic_auth",
-        "enabled": false,
+        "enabled": true,
         "data": {
           "username": "admin",
           "password": "changeme"

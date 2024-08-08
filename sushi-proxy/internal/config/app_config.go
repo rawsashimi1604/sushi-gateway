@@ -12,6 +12,8 @@ type AppConfig struct {
 	ServerCertPath string
 	ServerKeyPath  string
 	CACertPath     string
+	AdminUser      string
+	AdminPassword  string
 }
 
 var GlobalAppConfig *AppConfig
@@ -42,11 +44,23 @@ func LoadGlobalConfig() *AppConfig {
 		errors = append(errors, "CA_CERT_PATH is required.")
 	}
 
+	adminUser := os.Getenv("ADMIN_USER")
+	if adminUser == "" {
+		errors = append(errors, "ADMIN_USER is required.")
+	}
+
+	adminPassword := os.Getenv("ADMIN_PASSWORD")
+	if adminPassword == "" {
+		errors = append(errors, "ADMIN_PASSWORD is required.")
+	}
+
 	config := &AppConfig{
 		ConfigFilePath: configFilePath,
 		ServerCertPath: serverCertPath,
 		ServerKeyPath:  serverKeyPath,
 		CACertPath:     caCertPath,
+		AdminUser:      adminUser,
+		AdminPassword:  adminPassword,
 	}
 
 	if len(errors) > 0 {
