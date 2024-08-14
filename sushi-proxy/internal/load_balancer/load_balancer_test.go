@@ -47,4 +47,5 @@ func TestRoundRobin(t *testing.T) {
 	if fourthReq != 0 {
 		t.Errorf("Expected 0, got %d", fourthReq)
 	}
+	Reset()
 }
