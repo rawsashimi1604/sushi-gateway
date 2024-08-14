@@ -7,12 +7,12 @@ services:
       - "8008:8008"
       - "8443:8443"
     environment:
-      - CONFIG_FILE_PATH=./app/config/config.json
-      - SERVER_CERT_PATH=./app/config/server.crt
-      - SERVER_KEY_PATH=./app/config/server.key
-      - CA_CERT_PATH=./app/config/ca.crt
+      - CONFIG_FILE_PATH=./app/gateway/gateway.json
+      - SERVER_CERT_PATH=./app/gateway/server.crt
+      - SERVER_KEY_PATH=./app/gateway/server.key
+      - CA_CERT_PATH=./app/gateway/ca.crt
     volumes:
-      - ./config/config.json:/app/config/config.json
-      - ./config/server.crt:/app/config/server.crt
-      - ./config/server.key:/app/config/server.key
-      - ./config/ca.crt:/app/config/ca.crt
+      - ./gateway/gateway.json:/app/gateway/gateway.json
+      - ./gateway/server.crt:/app/gateway/server.crt
+      - ./gateway/server.key:/app/gateway/server.key
+      - ./gateway/ca.crt:/app/gateway/ca.crt

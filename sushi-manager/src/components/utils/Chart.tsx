@@ -9,7 +9,7 @@ function Chart({ config }: ChartProps) {
   const chartInstance = useRef<c3.ChartAPI | null>(null);
   const chartRef = useRef<HTMLDivElement>(null);
 
-  // Update the chart when config changes, simply update the data not rerender the whole chart
+  // Update the chart when gateway changes, simply update the data not rerender the whole chart
   useEffect(() => {
     if (chartRef && chartRef.current) {
       if (chartInstance.current) {

@@ -7,18 +7,16 @@ import (
 	"log/slog"
 	"net/http"
 
-	certificate "github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/cert"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/router"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
 )
 
 func main() {
-	config.GlobalAppConfig = config.LoadGlobalConfig()
-	config.LoadProxyConfig(config.GlobalAppConfig.ConfigFilePath)
-	go config.WatchConfigFile(config.GlobalAppConfig.ConfigFilePath)
+	gateway.GlobalAppConfig = gateway.LoadGlobalConfig()
+	gateway.LoadProxyConfig(gateway.GlobalAppConfig.ConfigFilePath)
+	go gateway.WatchConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
 
-	appRouter := router.NewRouter()
+	appRouter := gateway.NewRouter()
 
 	// Setup http server
 	go func() {
@@ -32,9 +30,9 @@ func main() {
 	// Setup https server
 	go func() {
 		// Load global CA Cert Pool
-		certificate.GlobalCaCertPool = certificate.LoadCertPool()
+		gateway.GlobalCaCertPool = gateway.LoadCertPool()
 
-		cert, err := tls.LoadX509KeyPair(config.GlobalAppConfig.ServerCertPath, config.GlobalAppConfig.ServerKeyPath)
+		cert, err := tls.LoadX509KeyPair(gateway.GlobalAppConfig.ServerCertPath, gateway.GlobalAppConfig.ServerKeyPath)
 		if err != nil {
 			log.Fatalf("server: loadkeys: %s", err)
 		}
@@ -42,7 +40,7 @@ func main() {
 		// allow clients to send cert for mtls validation
 		tlsConfig := &tls.Config{
 			Certificates: []tls.Certificate{cert},
-			ClientCAs:    certificate.GlobalCaCertPool.Pool,
+			ClientCAs:    gateway.GlobalCaCertPool.Pool,
 			ClientAuth:   tls.RequestClientCert,
 		}
 
@@ -52,7 +50,7 @@ func main() {
 			TLSConfig: tlsConfig,
 		}
 		slog.Info("Started sushi-proxy_pass https server on port: " + constant.PORT_HTTPS)
-		log.Fatal(server.ListenAndServeTLS("", "")) // Certs loaded from tls config.
+		log.Fatal(server.ListenAndServeTLS("", "")) // Certs loaded from tls gateway.
 	}()
 
 	// Setup admin api

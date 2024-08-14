@@ -8,15 +8,15 @@ docker push rawsashimi/sushi-proxy:latest
 
 - Please place these files config folder. It should look like this
 ```bash
-cd ./sushi-proxy/config 
-config
+cd ./sushi-proxy/gateway 
+gateway
 ├── ca.crt
 ├── ca.key
 ├── extfile.cnf
 ├── server.crt
 ├── server.csr
 └── server.key
-└── config.json    
+└── gateway.json    
 ```
 
 - Set env variables as well in `.env` file

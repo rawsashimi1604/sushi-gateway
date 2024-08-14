@@ -86,6 +86,7 @@
       "name": "sushi-svc",
       "base_path": "/sushi-service",
       "protocol": "http",
+      "load_balancing_strategy": "round_robin",
       "upstreams": [
         { "host": "localhost", "port": 8001 },
         { "host": "localhost", "port": 8002 },

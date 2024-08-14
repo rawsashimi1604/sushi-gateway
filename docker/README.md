@@ -7,15 +7,15 @@ You will need to setup the proxy server TLS certs. Ensure that they are in a con
 
 - Please place these files config folder. It should look like this
 ```bash
-cd ./sushi-proxy/config 
-config
+cd ./sushi-proxy/gateway 
+gateway
 ├── ca.crt
 ├── ca.key
 ├── extfile.cnf
 ├── server.crt
 ├── server.csr
 └── server.key
-└── config.json    
+└── gateway.json    
 ```
 
 - Install OpenSSL
