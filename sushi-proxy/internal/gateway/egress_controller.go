@@ -37,7 +37,7 @@ func newCaptureResponseWriter(w http.ResponseWriter) *captureResponseWriter {
 func (w *captureResponseWriter) Write(data []byte) (int, error) {
 	size, err := w.ResponseWriter.Write(data)
 	w.size += size
-	w.Header().Set("Content-Length", string(w.size))
+	w.Header().Set("Content-Length", string(rune(w.size)))
 	return size, err
 }
 

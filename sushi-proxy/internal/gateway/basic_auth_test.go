@@ -10,7 +10,7 @@ import (
 const username = "mockUser"
 const password = "mockPassword"
 
-func handleRequest(t *testing.T, user string, pass string) *httptest.ResponseRecorder {
+func handleBasicAuthRequest(t *testing.T, user string, pass string) *httptest.ResponseRecorder {
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
 		t.Fatal(err)
@@ -44,7 +44,7 @@ func handleRequest(t *testing.T, user string, pass string) *httptest.ResponseRec
 
 func TestBasicAuthSuccess(t *testing.T) {
 
-	rr := handleRequest(t, username, password)
+	rr := handleBasicAuthRequest(t, username, password)
 
 	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
@@ -56,7 +56,7 @@ func TestBasicAuthSuccess(t *testing.T) {
 }
 
 func TestBasicAuthFail(t *testing.T) {
-	rr := handleRequest(t, "fakeUser", "fakePassword")
+	rr := handleBasicAuthRequest(t, "fakeUser", "fakePassword")
 
 	if rr.Code != http.StatusUnauthorized {
 		t.Errorf("Should return 401 Unauthorized when basic auth is failing")

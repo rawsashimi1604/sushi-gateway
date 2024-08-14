@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func handleRequest(t *testing.T, agent string) *httptest.ResponseRecorder {
+func handleBotRequest(t *testing.T, agent string) *httptest.ResponseRecorder {
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
 		t.Fatal(err)
@@ -39,7 +39,7 @@ func handleRequest(t *testing.T, agent string) *httptest.ResponseRecorder {
 
 func TestBotProtectionSuccess(t *testing.T) {
 	// Valid Request
-	rr := handleRequest(t, "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
+	rr := handleBotRequest(t, "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
 	if rr.Code != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v", rr.Code, http.StatusOK)
 	}
@@ -47,7 +47,7 @@ func TestBotProtectionSuccess(t *testing.T) {
 
 func TestBotProtectionBlacklisted(t *testing.T) {
 	// Invalid Request
-	rr := handleRequest(t, "googlebot")
+	rr := handleBotRequest(t, "googlebot")
 	if rr.Code != http.StatusForbidden {
 		t.Errorf("handler returned wrong status code: got %v want %v", rr.Code, http.StatusOK)
 	}

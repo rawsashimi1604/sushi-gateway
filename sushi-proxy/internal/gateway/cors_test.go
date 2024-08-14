@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func handleRequest(t *testing.T) *httptest.ResponseRecorder {
+func handleCorsRequest(t *testing.T) *httptest.ResponseRecorder {
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
 		t.Fatal(err)
@@ -42,7 +42,7 @@ func handleRequest(t *testing.T) *httptest.ResponseRecorder {
 }
 
 func TestCorsPlugin(t *testing.T) {
-	rr := handleRequest(t)
+	rr := handleCorsRequest(t)
 	if rr.Code != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v", rr.Code, http.StatusOK)
 	}
