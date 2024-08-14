@@ -8,9 +8,8 @@ type LoadBalancingAlgorithm string
 
 const (
 	RoundRobin LoadBalancingAlgorithm = "round_robin"
-	LeastConn  LoadBalancingAlgorithm = "least_conn"
-	IPHash     LoadBalancingAlgorithm = "ip_hash"
 	Weighted   LoadBalancingAlgorithm = "weighted"
+	IPHash     LoadBalancingAlgorithm = "ip_hash"
 )
 
 // Create a round robin cache based on service name
