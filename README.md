@@ -21,10 +21,10 @@
   - [x] Bot protection
   - [x] Cors
   - [ ] Jwt
-  - [ ] Key auth
+  - [x] Key auth
   - [ ] Mtls
   - [ ] Rate limit
-  - [ ] Request size limit
+  - [x] Request size limit
   - [ ] Http log
 - [x] Finish up plugins
 - [x] Add "enabled" field to plugins (common middleware for all plugins)
