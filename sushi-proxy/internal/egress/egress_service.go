@@ -5,6 +5,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/config"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/errors"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/load_balancer"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
@@ -72,6 +73,7 @@ func (s *EgressService) convertPathToProxyPassUrl(req *http.Request) (string, *e
 
 	// TODO: Use first upstream for now, configure load balancing next time.
 	upstream := matchedService.Upstreams[0]
+	loadBalancer := load_balancer.NewLoadBalancer()
 	proxyURL := fmt.Sprintf("%s://%s:%d%s", matchedService.Protocol, upstream.Host, upstream.Port, matchedRoute.Path)
 	return proxyURL, nil
 }
