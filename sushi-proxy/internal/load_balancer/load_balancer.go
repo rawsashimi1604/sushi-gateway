@@ -30,6 +30,11 @@ func (lb *LoadBalancer) GetNextUpstream(alg LoadBalancingAlgorithm, service mode
 	}
 }
 
+// Reset the load balancer caches
+func Reset() {
+	roundRobinCache = make(map[string]int)
+}
+
 func (lb *LoadBalancer) handleRoundRobin(service models.Service) int {
 	if len(service.Upstreams) == 1 {
 		return 0

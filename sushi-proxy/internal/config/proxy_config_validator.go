@@ -41,6 +41,8 @@ func ValidateConfig(config *models.ProxyConfig) error {
 	return nil
 }
 
+// TODO: validate load balancer configs
+
 func validateGeneralConfigs(config *models.ProxyConfig) error {
 	if config.Global.Name == "" {
 		return fmt.Errorf("global name is required")

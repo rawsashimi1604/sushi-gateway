@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/fsnotify/fsnotify"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/load_balancer"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
 	"log/slog"
 	"os"
@@ -36,6 +37,10 @@ func LoadProxyConfig(filePath string) {
 	slog.Info("Config file loaded successfully")
 	// Validations passed
 	GlobalProxyConfig = *config
+
+	// Reset load balancer caches
+	load_balancer.Reset()
+
 	configLock.Unlock()
 
 }
