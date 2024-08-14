@@ -12,6 +12,8 @@
 
 ## TODO LIST
 
+- [ ] Update readme with latest architecture diagrams and logos
+- [ ] Add CI github actions
 - [ ] Add more tests for each plugin
   - [x] Acl
   - [x] Basic auth
@@ -38,10 +40,6 @@
 - [x] UI Portal development and design
 - [ ] AI Component development and design
 - [x] Flatten file structure, cyclic imports
-
-## Llama
-
-- get the llama model
 
 ## TLS
 
