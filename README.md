@@ -13,6 +13,16 @@
 ## TODO LIST
 
 - [ ] Add more tests for each plugin
+  - [x] Acl
+  - [x] Basic auth
+  - [x] Bot protection
+  - [x] Cors
+  - [ ] Jwt
+  - [ ] Key auth
+  - [ ] Mtls
+  - [ ] Rate limit
+  - [ ] Request size limit
+  - [ ] Http log
 - [x] Finish up plugins
 - [x] Add "enabled" field to plugins (common middleware for all plugins)
 - [ ] Add validation schema for each plugin, that is validated at config file load time
@@ -22,6 +32,9 @@
 - [ ] Create kube deployment (helm)
 - [x] Admin API development and design
 - [ ] Load balancing to upstreams
+  - [x] Round robin
+  - [ ] IP hash
+  - [ ] Weighted
 - [x] UI Portal development and design
 - [ ] AI Component development and design
 - [x] Flatten file structure, cyclic imports
