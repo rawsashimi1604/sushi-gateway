@@ -58,7 +58,7 @@ services:
       - APP_ID=8003
       - JWT_ISSUER=someIssuerKey
       - JWT_SECRET=123secret456
-      
+
   sushi-http-log-consumer:
     networks:
       - sushi-net
