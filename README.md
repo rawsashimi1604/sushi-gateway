@@ -23,7 +23,7 @@
   - [ ] Jwt
   - [x] Key auth
   - [ ] Mtls
-  - [ ] Rate limit
+  - [x] Rate limit
   - [x] Request size limit
   - [ ] Http log
 - [x] Finish up plugins
