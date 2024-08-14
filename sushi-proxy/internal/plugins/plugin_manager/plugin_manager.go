@@ -7,7 +7,6 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/acl"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/analytics"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/basic_auth"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/bot_protection"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/cors"
@@ -93,8 +92,6 @@ func (pm *PluginManager) loadConfig(pc models.PluginConfig) *errors.HttpError {
 		pm.RegisterPlugin(basic_auth.NewBasicAuthPlugin(pc))
 	case constant.PLUGIN_ACL:
 		pm.RegisterPlugin(acl.NewAclPlugin(pc))
-	case constant.PLUGIN_ANALYTICS:
-		pm.RegisterPlugin(analytics.NewAnalyticsPlugin())
 	case constant.PLUGIN_BOT_PROTECTION:
 		pm.RegisterPlugin(bot_protection.NewBotProtectionPlugin(pc))
 	case constant.PLUGIN_KEY_AUTH:
