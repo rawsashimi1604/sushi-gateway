@@ -29,6 +29,17 @@
 - [x] Finish up plugins
 - [x] Add "enabled" field to plugins (common middleware for all plugins)
 - [ ] Add validation schema for each plugin, that is validated at config file load time
+  - [ ] General architecture
+  - [ ] Acl
+  - [ ] Basic auth
+  - [ ] Bot protection
+  - [ ] Cors
+  - [ ] Jwt
+  - [ ] Key auth
+  - [ ] Mtls
+  - [ ] Rate limit
+  - [ ] Request size limit
+  - [ ] Http log
 - [ ] Add dynamic routing (route parameters like :id, :anything)
 - [ ] Add more tests for the proxy
 - [x] Dockerizing proxy
@@ -39,6 +50,7 @@
   - [ ] IP hash
   - [ ] Weighted
 - [x] UI Portal development and design
+  - [ ] Update UI Portal to show services, routes, upstreams etc...
 - [ ] AI Component development and design
 - [x] Flatten file structure, cyclic imports
 
