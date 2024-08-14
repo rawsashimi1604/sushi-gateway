@@ -24,7 +24,7 @@
 - [ ] Load balancing to upstreams
 - [x] UI Portal development and design
 - [ ] AI Component development and design
-- [ ] Flatten file structure, cyclic imports
+- [x] Flatten file structure, cyclic imports
 
 ## Llama
 
