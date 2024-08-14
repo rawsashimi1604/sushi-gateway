@@ -132,8 +132,7 @@ func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *Http
 	}
 
 	loadBalancer := NewLoadBalancer()
-	// TODO: check which algorithm for routing. For now, use round robin
-	upstreamIndex := loadBalancer.GetNextUpstream(RoundRobin, *matchedService)
+	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService)
 	upstream := matchedService.Upstreams[upstreamIndex]
 	proxyURL := fmt.Sprintf("%s://%s:%d%s", matchedService.Protocol, upstream.Host, upstream.Port, matchedRoute.Path)
 	return proxyURL, nil

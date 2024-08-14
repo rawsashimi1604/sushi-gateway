@@ -72,14 +72,17 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 			"Error parsing service and route from request")
 	}
 
+	lb := NewLoadBalancer()
+	upstreamIndexToRoute := lb.GetCurrentUpstream(*service)
+
 	// Map the service and route to log
 	log := map[string]interface{}{
 		// TODO: for now use 1st upstream, later use round robin alg
 		"service": map[string]interface{}{
 			"name":     service.Name,
 			"protocol": service.Protocol,
-			"host":     service.Upstreams[0].Host,
-			"port":     service.Upstreams[0].Port,
+			"host":     service.Upstreams[upstreamIndexToRoute].Host,
+			"port":     service.Upstreams[upstreamIndexToRoute].Port,
 		},
 		"route": map[string]interface{}{
 			"path": route.Path,

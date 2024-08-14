@@ -34,10 +34,20 @@ func NewLoadBalancer() *LoadBalancer {
 }
 
 // Gets the index of upstream to forward the request to based on the load balancing algorithm
-func (lb *LoadBalancer) GetNextUpstream(alg LoadBalancingAlgorithm, service Service) int {
-	switch alg {
+func (lb *LoadBalancer) GetNextUpstream(service Service) int {
+	switch service.LoadBalancingStrategy {
 	case RoundRobin:
 		return lb.handleRoundRobin(service)
+	default:
+		return 0
+	}
+}
+
+// Get the current upstream request is routed to.
+func (lb *LoadBalancer) GetCurrentUpstream(service Service) int {
+	switch service.LoadBalancingStrategy {
+	case RoundRobin:
+		return roundRobinCache[service.Name]
 	default:
 		return 0
 	}
