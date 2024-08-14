@@ -31,15 +31,17 @@ type RateLimitStore struct {
 }
 
 type RateLimitPlugin struct {
-	config map[string]interface{}
+	config      map[string]interface{}
+	proxyConfig *ProxyConfig
 }
 
-func NewRateLimitPlugin(config map[string]interface{}) *Plugin {
+func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *ProxyConfig) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_RATE_LIMIT,
 		Priority: 10,
 		Handler: RateLimitPlugin{
-			config: config,
+			config:      config,
+			proxyConfig: proxyConfig,
 		},
 	}
 }
@@ -83,7 +85,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing rate limit function...")
 
-		service, route, err := GetServiceAndRouteFromRequest(&GlobalProxyConfig, r)
+		service, route, err := GetServiceAndRouteFromRequest(plugin.proxyConfig, r)
 		rateLimitOperationLevel, err := plugin.detectRateLimitOperationLevel(service, route, r)
 		if err != nil {
 			err.WriteJSONResponse(w)

@@ -82,7 +82,7 @@ func (pm *PluginManager) loadConfig(pc PluginConfig) *HttpError {
 	case constant.PLUGIN_KEY_AUTH:
 		pm.RegisterPlugin(NewKeyAuthPlugin(pc))
 	case constant.PLUGIN_RATE_LIMIT:
-		pm.RegisterPlugin(NewRateLimitPlugin(pc))
+		pm.RegisterPlugin(NewRateLimitPlugin(pc, &GlobalProxyConfig))
 	case constant.PLUGIN_REQUEST_SIZE_LIMIT:
 		pm.RegisterPlugin(NewRequestSizeLimitPlugin(pc))
 	case constant.PLUGIN_JWT:
