@@ -6,7 +6,7 @@
         "name": "http_log",
         "enabled": true,
         "data": {
-          "http_endpoint": "http://localhost:8003/v1/log",
+          "http_endpoint": "http://localhost:3000/v1/log",
           "method": "POST",
           "content_type": "application/json"
         }
@@ -88,7 +88,8 @@
       "protocol": "http",
       "upstreams": [
         { "host": "localhost", "port": 8001 },
-        { "host": "localhost", "port": 8002 }
+        { "host": "localhost", "port": 8002 },
+        { "host": "localhost", "port": 8003 }
       ],
       "plugins": [],
       "routes": [

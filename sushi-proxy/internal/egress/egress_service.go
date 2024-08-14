@@ -71,9 +71,10 @@ func (s *EgressService) convertPathToProxyPassUrl(req *http.Request) (string, *e
 		}
 	}
 
-	// TODO: Use first upstream for now, configure load balancing next time.
-	upstream := matchedService.Upstreams[0]
 	loadBalancer := load_balancer.NewLoadBalancer()
+	// TODO: check which algorithm for routing. For now, use round robin
+	upstreamIndex := loadBalancer.GetNextUpstream(load_balancer.RoundRobin, *matchedService)
+	upstream := matchedService.Upstreams[upstreamIndex]
 	proxyURL := fmt.Sprintf("%s://%s:%d%s", matchedService.Protocol, upstream.Host, upstream.Port, matchedRoute.Path)
 	return proxyURL, nil
 }
