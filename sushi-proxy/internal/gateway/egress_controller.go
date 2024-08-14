@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+// TODO: refactor egress controller and egress service into 1 proxy component
+
 type EgressController struct {
 	proxyService *EgressService
 }
