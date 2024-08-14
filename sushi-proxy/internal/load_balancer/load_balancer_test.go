@@ -8,7 +8,6 @@ import (
 // Write test to test load balancer given a service with multiple upstreams
 
 func TestRoundRobin(t *testing.T) {
-
 	Reset()
 	lb := NewLoadBalancer()
 	service := models.Service{

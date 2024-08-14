@@ -1,8 +1,13 @@
 package load_balancer
 
-import "github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
+import (
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/models"
+	"sync"
+)
 
-type LoadBalancer struct{}
+type LoadBalancer struct {
+	mu sync.Mutex
+}
 
 type LoadBalancingAlgorithm string
 
@@ -36,6 +41,8 @@ func Reset() {
 }
 
 func (lb *LoadBalancer) handleRoundRobin(service models.Service) int {
+	lb.mu.Lock()
+	defer lb.mu.Unlock()
 	if len(service.Upstreams) == 1 {
 		return 0
 	}
