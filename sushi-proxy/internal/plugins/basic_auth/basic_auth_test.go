@@ -8,16 +8,17 @@ import (
 	"testing"
 )
 
-func TestBasicAuthSuccess(t *testing.T) {
+const username = "mockUser"
+const password = "mockPassword"
+
+func handleRequest(t *testing.T, user string, pass string) *httptest.ResponseRecorder {
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Simulate a request with basic auth header
-	username := "mockUser"
-	password := "mockPassword"
-	req.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(username+":"+password)))
+	req.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(user+":"+pass)))
 
 	// Set the basic auth plugin data.
 	config, err := util.CreatePluginConfigJsonInput(map[string]interface{}{
@@ -38,6 +39,13 @@ func TestBasicAuthSuccess(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	}))
 	handler.ServeHTTP(rr, req)
+
+	return rr
+}
+
+func TestBasicAuthSuccess(t *testing.T) {
+
+	rr := handleRequest(t, username, password)
 
 	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
@@ -49,35 +57,7 @@ func TestBasicAuthSuccess(t *testing.T) {
 }
 
 func TestBasicAuthFail(t *testing.T) {
-	req, err := http.NewRequest("GET", "/", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Simulate a request with failing basic auth header
-	username := "mockUser"
-	password := "mockPassword"
-	req.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte("wrongUser"+":wrongPassword")))
-
-	// Set the basic auth plugin data.
-	config, err := util.CreatePluginConfigJsonInput(map[string]interface{}{
-		"data": map[string]interface{}{
-			"username": username,
-			"password": password,
-		},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Create a new instance of the basic auth plugin
-	plugin := NewBasicAuthPlugin(config)
-
-	rr := httptest.NewRecorder()
-	handler := plugin.Handler.Execute(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	}))
-	handler.ServeHTTP(rr, req)
+	rr := handleRequest(t, "fakeUser", "fakePassword")
 
 	if rr.Code != http.StatusUnauthorized {
 		t.Errorf("Should return 401 Unauthorized when basic auth is failing")

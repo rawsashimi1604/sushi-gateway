@@ -10,7 +10,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/basic_auth"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/bot_protection"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/cors"
-	http_log "github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/http_log"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/http_log"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/jwt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/key_auth"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/plugins/mtls"
