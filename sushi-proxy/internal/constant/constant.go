@@ -14,7 +14,6 @@ const RSA_256 = "RS256"
 var AVAILABLE_PLUGINS = []string{
 	PLUGIN_BASIC_AUTH,
 	PLUGIN_ACL,
-	PLUGIN_ANALYTICS,
 	PLUGIN_BOT_PROTECTION,
 	PLUGIN_RATE_LIMIT,
 	PLUGIN_REQUEST_SIZE_LIMIT,
@@ -27,7 +26,6 @@ var AVAILABLE_PLUGINS = []string{
 
 const PLUGIN_BASIC_AUTH = "basic_auth"
 const PLUGIN_ACL = "acl"
-const PLUGIN_ANALYTICS = "analytics"
 const PLUGIN_CORS = "cors"
 const PLUGIN_BOT_PROTECTION = "bot_protection"
 const PLUGIN_RATE_LIMIT = "rate_limit"
