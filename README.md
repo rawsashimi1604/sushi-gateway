@@ -14,6 +14,7 @@
 
 - [ ] Update readme with latest architecture diagrams and logos
 - [ ] Add CI github actions
+- [ ] Add CD for each release to push to dockerhub
 - [ ] Add more tests for each plugin
   - [x] Acl
   - [x] Basic auth
