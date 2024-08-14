@@ -18,6 +18,13 @@
         }
       },
       {
+        "name": "key_auth",
+        "enabled": false,
+        "data": {
+          "key": "123456"
+        }
+      },
+      {
         "name": "rate_limit",
         "enabled": true,
         "data": {
