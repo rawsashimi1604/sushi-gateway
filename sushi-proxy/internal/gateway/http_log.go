@@ -77,7 +77,6 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 
 	// Map the service and route to log
 	log := map[string]interface{}{
-		// TODO: for now use 1st upstream, later use round robin alg
 		"service": map[string]interface{}{
 			"name":     service.Name,
 			"protocol": service.Protocol,
