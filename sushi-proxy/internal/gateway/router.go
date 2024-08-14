@@ -10,8 +10,7 @@ func NewRouter() *mux.Router {
 	slog.Info("Creating new router...")
 	router := mux.NewRouter()
 
-	egressService := NewEgressService()
-	egressController := NewEgressController(egressService)
+	egressController := NewSushiProxy()
 	egressController.RegisterRoutes(router)
 
 	slog.Info("Successfully created router...")
