@@ -4,8 +4,6 @@
 
 ## High Level Design
 
-![High Level Design](./images/design.png)
-
 ## API Request lifecycle
 
 - Receive request from API client
