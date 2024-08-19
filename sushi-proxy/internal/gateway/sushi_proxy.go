@@ -11,6 +11,8 @@ import (
 	"net/url"
 )
 
+// TODO: refactor code for routing logic.
+
 type SushiProxy struct {
 }
 
@@ -53,7 +55,7 @@ func (proxy *SushiProxy) RouteRequest() http.HandlerFunc {
 		w.Header().Add("Content-Type", "application/json; charset=UTF-8")
 		captureWriter := newCaptureResponseWriter(w)
 
-		// Configure, register new plugins...
+		// Register plugins from global, service and routes using the plugin manager.
 		pluginManager, err := NewPluginManagerFromConfig(req)
 		if err != nil {
 			slog.Info(err.Error())
@@ -75,7 +77,7 @@ func (proxy *SushiProxy) RouteRequest() http.HandlerFunc {
 		// Execute the request (plugins + proxying).
 		chainedHandler.ServeHTTP(captureWriter, req)
 
-		// After whole request lifecycle.
+		// After whole request lifecycle, write the response from the upstream API to the client.
 		w.Write(captureWriter.body.Bytes())
 	}
 }
@@ -104,7 +106,6 @@ func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *
 	proxy.Director = func(req *http.Request) {
 		// Call the original Director to preserve other behaviors
 		originalDirector(req)
-
 		req.URL.Path = target.Path
 		req.URL.Scheme = target.Scheme
 		req.URL.Host = target.Host
@@ -116,24 +117,18 @@ func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *
 	return nil
 }
 
+// Routing logic
 func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *HttpError) {
 	matchedService, matchedRoute, err := GetServiceAndRouteFromRequest(&GlobalProxyConfig, req)
 	if err != nil {
 		return "", err
 	}
 
-	// Assuming the use of the first upstream for simplicity
-	if len(matchedService.Upstreams) == 0 {
-		return "", &HttpError{
-			Code:     "NO_UPSTREAMS",
-			Message:  "No upstreams found for the matched service",
-			HttpCode: http.StatusInternalServerError,
-		}
-	}
-
+	// Handle load balancing
 	loadBalancer := NewLoadBalancer()
 	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService)
 	upstream := matchedService.Upstreams[upstreamIndex]
+
 	proxyURL := fmt.Sprintf("%s://%s:%d%s", matchedService.Protocol, upstream.Host, upstream.Port, matchedRoute.Path)
 	return proxyURL, nil
 }

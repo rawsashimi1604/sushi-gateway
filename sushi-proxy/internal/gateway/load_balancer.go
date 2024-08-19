@@ -4,6 +4,7 @@ import (
 	"sync"
 )
 
+// Contains all logic related to getting the upstream for load balancing based on the load balancing strategy.
 type LoadBalancer struct {
 	mu sync.Mutex
 }

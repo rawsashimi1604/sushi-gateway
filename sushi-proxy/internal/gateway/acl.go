@@ -56,6 +56,10 @@ func (plugin AclPlugin) Execute(next http.Handler) http.Handler {
 	})
 }
 
+func ValidateACLPlugin(config map[string]interface{}) {
+	// TODO: complete
+}
+
 func (plugin AclPlugin) isWhitelisted(ip string) bool {
 	// TODO: add validation for this plugin in the gateway file
 	data := plugin.config["data"].(map[string]interface{})
