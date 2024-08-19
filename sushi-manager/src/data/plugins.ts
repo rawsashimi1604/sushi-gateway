@@ -1,5 +1,6 @@
 export const plugins: { [key: string]: string } = {
   basic_auth: "Basic Authentication",
+  key_auth: "Key Authentication",
   http_log: "Http Log",
   mtls: "Mutual TLS",
   rate_limit: "Rate Limiting",

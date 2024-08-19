@@ -62,7 +62,6 @@ web application.
 | Request Size Limit | Traffic Control | Limit the size of the request body                                |
 | Http Log | Logging | Log HTTP requests                                                 |
 
-
 ## GETTING STARTED
 
 ### docker-compose
