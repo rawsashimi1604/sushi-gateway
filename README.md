@@ -47,6 +47,22 @@ periodically check whether there any anomalies in the data.
 Furthermore, any anomalies can be queried from the UI Manager via `port 8002 which will be exposed by the AI Agent`
 web application.
 
+## Available Plugins
+
+| Plugin | Type | Description                                                       |
+|--------|------|-------------------------------------------------------------------|
+| Acl | Traffic Control | Access Control List to allow or deny requests based on IP address |
+| Basic Auth | Auth | Basic Authentication                                              |
+| Bot Protection | Security | Protects against bot attacks                                      |
+| Cors | Security | Cross-Origin Resource Sharing                                     |
+| Jwt | Auth | Json Web Token Authentication                                     |
+| Key Auth | Auth | Key Authentication                                                |
+| Mtls | Auth | Mutual TLS Authentication                                         |
+| Rate Limit | Traffic Control | Limit number of requests to upstreams                             |
+| Request Size Limit | Traffic Control | Limit the size of the request body                                |
+| Http Log | Logging | Log HTTP requests                                                 |
+
+
 ## GETTING STARTED
 
 ### docker-compose
