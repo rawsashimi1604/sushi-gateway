@@ -93,7 +93,7 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 			"path":     r.URL.Path,
 			"url":      r.URL.String(),
 			"uri":      r.RequestURI,
-			"size":     ParseContentLength(r.Header.Get("Content-Length")),
+			"size":     GetContentLength(r.Header.Get("Content-Length")),
 			"headers":  r.Header,
 		},
 		"client_ip":  r.RemoteAddr,

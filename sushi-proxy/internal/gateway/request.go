@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -32,9 +33,10 @@ func GetServiceAndRouteFromRequest(proxyConfig *ProxyConfig, req *http.Request) 
 					return &service, &route, nil
 				}
 			}
+
 			return nil, nil, &HttpError{
 				Code:     "ROUTE_NOT_FOUND",
-				Message:  "Route not found within the service",
+				Message:  fmt.Sprintf("Route not found for path: %s. Check your HTTP Method and Route path", routePath),
 				HttpCode: http.StatusNotFound,
 			}
 		}
@@ -52,7 +54,7 @@ func MatchRoute(route *Route, path string) bool {
 	return route.Path == path
 }
 
-func ParseContentLength(input string) int64 {
+func GetContentLength(input string) int64 {
 	if input == "" {
 		return 0
 	}
