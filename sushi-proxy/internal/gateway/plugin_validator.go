@@ -9,6 +9,6 @@ func NewPluginValidator() *PluginValidator {
 }
 
 func (pv *PluginValidator) ValidatePluginConfig(config PluginConfig) bool {
-	// TODO: complete this....
+	// TODO: complete plugin validation architecture logic....
 	return true
 }

@@ -12,8 +12,6 @@ import (
 	"strings"
 )
 
-// TODO: refactor code for routing logic.
-
 type SushiProxy struct {
 }
 
