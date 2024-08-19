@@ -2,14 +2,50 @@
 
 ![Sushi Gateway](./docs/logos/sushi-gateway-LOGO.png)
 
+Sushi Gateway is a lightweight Layer 7 API Gateway used to route, secure, log and learn traffic to your services. It is designed to be simple to use and easy to configure. 
+It is built on top of Golang and incorporates a plugin architecture, 
+allowing you to extend the gateway with your policies of your choice. It also incorporates an AI-driven component that can learn traffic patterns and detects anamolies for you.
+
 ## Components
 
 ![Components](./docs/images/sushi-gateway-components.png)
+
+Sushi Gateway  contains three components: `Sushi Proxy`, `Sushi Manager` and `Sushi AI Agent`.
+
+| Component      | Function                                                                                                                                                                                                              |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Sushi Proxy    | Contains all the backend logic related to API request routing, upstream API load balancing, as well as the modular plugin architecture, which allows configurable policies/plugins to be attached to the API gateway. |
+| Sushi Manager  | The frontend user interface to view gateway information and metrics, as well as interface to manage threats detected by Sushi AI Agent.                                                                               |
+| Sushi AI Agent | AI Model to learn and detect threats provided by Sushi Proxy logs. It learns and detects threats and classifies them into different levels.                                                                           |
 
 ## Architecture
 
 ![Architecture](./docs/images/sushi-gateway-architecture.png)
 
+### Services
+| Service        | Port                    | Description                                       |
+|----------------|-------------------------|---------------------------------------------------|
+| Sushi Proxy    | `8008(http), 8443(https)` | Exposes the API Gateway to the public.            |
+| Admin API      | `8001`                   | Exposes API Gateway information to the UI Manager |
+| Sushi Manager  | `5173`                    | Exposes the UI Manager                            |
+| Sushi AI Agent | `8002`                    | Exposes the AI Agent to the UI Manager            |
+
+
+Sushi Proxy is exposed on 2 ports publicly: `8008 for HTTP requests` as well as `8443 for
+HTTPS requests`. API Clients can connect to the gateway via these ports, where their
+requests will be forwarded to the respective API upstream services. 
+
+The gateway can be configured via a JSON file which will be mounted onto it on startup and reload.
+
+Furthermore, `there is also an admin API exposed on port 8001 for internal usage`. This
+exposes an interface for the UI Manager to connect to retrieve gateway data.
+
+When the gateway is processing requests, logs are also sent to an Elastic server to be
+used for log storage. The AI Agent can then query the logs from the log server to
+periodically check whether there any anomalies in the data. 
+
+Furthermore, any anomalies can be queried from the UI Manager via `port 8002 which will be exposed by the AI Agent`
+web application.
 
 ## GETTING STARTED
 
