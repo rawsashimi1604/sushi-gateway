@@ -12,6 +12,8 @@
 
 ## TODO LIST
 
+- [ ] Add gateway metadata (last configuration update, total requests)
+  - [ ] gateway logs middleware
 - [ ] Update readme with latest architecture diagrams and logos
 - [ ] Add CI github actions
 - [ ] Add CD for each release to push to dockerhub
