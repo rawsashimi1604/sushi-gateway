@@ -88,13 +88,12 @@ func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *
 	if convertErr != nil {
 		return convertErr
 	}
-
-	slog.Info("path: " + path)
 	target, err := url.Parse(path)
+
 	if err != nil {
 		return &HttpError{
 			Code:     "ERROR_PARSING_PROXY_URL",
-			Message:  "Error parsing URL when creating proxy_pass",
+			Message:  "Error parsing URL when handling request.",
 			HttpCode: http.StatusInternalServerError,
 		}
 	}
@@ -117,8 +116,9 @@ func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *
 	return nil
 }
 
-// Routing logic
+// Routing logic, get the URL to proxy the request to.
 func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *HttpError) {
+	// TODO: check the protocol http or https
 	matchedService, matchedRoute, err := GetServiceAndRouteFromRequest(&GlobalProxyConfig, req)
 	if err != nil {
 		return "", err
