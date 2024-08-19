@@ -108,8 +108,11 @@ func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *
 		req.URL.Path = target.Path
 		req.URL.Scheme = target.Scheme
 		req.URL.Host = target.Host
+
+		// Set Api Gateway headers
 		req.Header.Set(constant.X_FORWARDED_HOST, req.Header.Get("Host"))
 		req.Header.Set(constant.X_FORWARDED_FOR, req.RemoteAddr)
+
 		req.Host = target.Host
 	}
 	proxy.ServeHTTP(w, req)
@@ -123,7 +126,7 @@ func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *Http
 	if err != nil {
 		return "", err
 	}
-
+	
 	// Handle load balancing
 	loadBalancer := NewLoadBalancer()
 	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService)

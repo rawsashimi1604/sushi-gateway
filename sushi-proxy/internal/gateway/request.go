@@ -7,8 +7,12 @@ import (
 )
 
 func GetServiceAndRouteFromRequest(proxyConfig *ProxyConfig, req *http.Request) (*Service, *Route, *HttpError) {
+	// TODO: we should handle dynamic routes as well.
 	path := req.URL.Path
 	parts := strings.Split(path, "/")
+
+	// Needs to have at least 3 parts for path to be valid:
+	// 1. empty string, 2. service base path, 3. route path
 	if len(parts) < 3 {
 		return nil, nil, &HttpError{
 			Code:     "INVALID_PATH",
