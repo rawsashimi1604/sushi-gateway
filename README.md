@@ -1,5 +1,14 @@
 # Sushi Gateway
 
+![Sushi Gateway](./docs/logos/sushi-gateway-LOGO.png)
+
+## Components
+
+![Components](./docs/images/sushi-gateway-components.png)
+
+## Architecture
+
+![Architecture](./docs/images/sushi-gateway-architecture.png)
 
 
 ## GETTING STARTED
