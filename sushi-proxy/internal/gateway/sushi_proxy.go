@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strings"
 )
 
 // TODO: refactor code for routing logic.
@@ -121,17 +122,25 @@ func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *
 
 // Routing logic, get the URL to proxy the request to.
 func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *HttpError) {
-	// TODO: check the protocol http or https
-	matchedService, matchedRoute, err := GetServiceAndRouteFromRequest(&GlobalProxyConfig, req)
+	matchedService, _, err := GetServiceAndRouteFromRequest(&GlobalProxyConfig, req)
 	if err != nil {
 		return "", err
 	}
-	
+
 	// Handle load balancing
 	loadBalancer := NewLoadBalancer()
 	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService)
 	upstream := matchedService.Upstreams[upstreamIndex]
 
-	proxyURL := fmt.Sprintf("%s://%s:%d%s", matchedService.Protocol, upstream.Host, upstream.Port, matchedRoute.Path)
+	// Get the proxy URL...
+	path := retrieveFullPathFromRequest(req.URL.Path)
+	proxyURL := fmt.Sprintf("%s://%s:%d%s", matchedService.Protocol, upstream.Host, upstream.Port, path)
 	return proxyURL, nil
+}
+
+// Should get the path after splitting URL from request, join them, and return the full path.
+func retrieveFullPathFromRequest(path string) string {
+	// Convert /service/route/v1/anything to /route/v1/anything
+	parts := strings.Split(path, "/")
+	return "/" + strings.Join(parts[2:], "/")
 }

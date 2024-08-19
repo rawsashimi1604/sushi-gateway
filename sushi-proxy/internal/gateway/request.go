@@ -8,7 +8,6 @@ import (
 )
 
 func GetServiceAndRouteFromRequest(proxyConfig *ProxyConfig, req *http.Request) (*Service, *Route, *HttpError) {
-	// TODO: we should handle dynamic routes as well.
 	path := req.URL.Path
 	parts := strings.Split(path, "/")
 
@@ -49,9 +48,40 @@ func GetServiceAndRouteFromRequest(proxyConfig *ProxyConfig, req *http.Request) 
 	}
 }
 
-func MatchRoute(route *Route, path string) bool {
-	// TODO: Add url path params matching as well.
-	return route.Path == path
+// Check whether the route exists in the service, match either static or dynamic routes
+func MatchRoute(route *Route, requestPath string) bool {
+	// if not contains any {param} in route path, do a simple static match
+	isStaticRoute := !strings.Contains(route.Path, "{") && !strings.Contains(route.Path, "}")
+	if isStaticRoute {
+		return route.Path == requestPath
+	}
+
+	// if contains {param} in route path, then do a dynamic match
+	return matchDynamicRoute(route.Path, requestPath)
+}
+
+func matchDynamicRoute(routePath string, requestPath string) bool {
+	routeParts := strings.Split(routePath, "/")
+	requestPathParts := strings.Split(requestPath, "/")
+	if len(routeParts) != len(requestPathParts) {
+		return false
+	}
+
+	// Compare each segment
+	for i := range routeParts {
+		if strings.HasPrefix(routeParts[i], "{") && strings.HasSuffix(routeParts[i], "}") {
+			// This is a dynamic segment, so continue without checking
+			continue
+		}
+
+		// For static segments, they must match exactly
+		if routeParts[i] != requestPathParts[i] {
+			return false
+		}
+	}
+
+	// All segments match for dynamic values
+	return true
 }
 
 func GetContentLength(input string) int64 {

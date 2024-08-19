@@ -118,6 +118,12 @@
           ]
         },
         {
+          "name": "get-sushi-by-id",
+          "path": "/v1/sushi/{id}",
+          "methods": ["GET"],
+          "plugins": []
+        },
+        {
           "name": "get-sushi-restaurants",
           "path": "/v1/sushi/restaurant",
           "methods": ["GET"],
