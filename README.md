@@ -40,7 +40,7 @@
   - [ ] Rate limit
   - [ ] Request size limit
   - [ ] Http log
-- [ ] Add dynamic routing (route parameters like :id, :anything)
+- [x] Add dynamic routing (route parameters like {id}, {anything})
 - [ ] Add more tests for the proxy
 - [x] Dockerizing proxy
 - [ ] Create kube deployment (helm)
