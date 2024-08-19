@@ -37,18 +37,17 @@ func (plugin HttpLogPlugin) Execute(next http.Handler) http.Handler {
 		slog.Info("Executing httplog function...")
 		next.ServeHTTP(w, r)
 
+		// For http logs, any errors should not stop the request, so we will log the error and continue
 		config := plugin.parseConfig()
 
 		log, err := plugin.createLogBody(r)
 		if err != nil {
-			err.WriteJSONResponse(w)
-			return
+			err.WriteLogMessage()
 		}
 
 		err = plugin.sendLog(log, config)
 		if err != nil {
-			err.WriteJSONResponse(w)
-			return
+			err.WriteLogMessage()
 		}
 	})
 }

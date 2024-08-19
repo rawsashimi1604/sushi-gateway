@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 )
 
@@ -34,4 +35,8 @@ func (e *HttpError) WriteJSONResponse(w http.ResponseWriter) {
 		http.Error(w, "Failed to write error response", http.StatusInternalServerError)
 	}
 	w.Write(bytes)
+}
+
+func (e *HttpError) WriteLogMessage() {
+	slog.Info("Error code: " + e.Code + ", message: " + e.Message)
 }

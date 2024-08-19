@@ -49,6 +49,7 @@
   - [x] Round robin
   - [ ] IP hash
   - [ ] Weighted
+- [ ] Configure health checks for upstreams (good to have)
 - [x] UI Portal development and design
   - [ ] Update UI Portal to show services, routes, upstreams etc...
 - [ ] AI Component development and design
