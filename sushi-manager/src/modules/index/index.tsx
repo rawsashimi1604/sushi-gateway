@@ -1,34 +1,13 @@
 import Container from "../../components/layout/Container";
-import { useRecoilState } from "recoil";
-import { gatewayState } from "../../states/GatewayState";
 import Global from "./Global";
 import Json from "./Json";
 import Routes from "./Routes";
 import Services from "./Services";
-import { useNavigate } from "react-router-dom";
-
-import { useEffect } from "react";
-import AdminAuth from "../../api/services/admin/AdminAuth";
+import { useGatewayData } from "../../hooks/useGatewayState";
 
 function IndexModule() {
   // Get some information from Sushi proxy API, probably from global state.
-  const navigate = useNavigate();
-  const [gatewayInfo, setGatewayInfo] = useRecoilState<any>(gatewayState);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  async function fetchData() {
-    try {
-      const res = await AdminAuth.getGatewayData();
-      setGatewayInfo(res.data);
-    } catch (err: any) {
-      if (err.response.status === 401) {
-        return navigate("/login");
-      }
-    }
-  }
+  const gatewayInfo = useGatewayData();
 
   function parseRouteData(): any[] {
     const routes: any[] = [];
