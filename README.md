@@ -72,6 +72,8 @@ web application.
 
 ## TODO LIST
 
+- [ ] sushi manager update logo
+- [ ] sushi manager update gateway state to get types and also domain object to retrieve from gateway state.
 - [ ] Add gateway metadata (last configuration update, total requests)
   - [ ] gateway logs middleware
 - [ ] Add stateful gateway configurations (good to have)
