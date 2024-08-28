@@ -1,4 +1,3 @@
-import { BsBrightnessHighFill } from "react-icons/bs";
 import { RxDashboard } from "react-icons/rx";
 
 import Breadcrumbs from "../typography/Breadcrumbs";

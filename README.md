@@ -74,6 +74,11 @@ web application.
 
 - [ ] Add gateway metadata (last configuration update, total requests)
   - [ ] gateway logs middleware
+- [ ] Add stateful gateway configurations (good to have)
+  - [ ] Postgres DB (Externalise option)
+  - [ ] Postgres DB docker
+  - [ ] Admin API for CRUD operations
+  - [ ] global domain object config state retrieval from db.
 - [ ] Update readme with latest architecture diagrams and logos
 - [ ] Add CI github actions
 - [ ] Add CD for each release to push to dockerhub
