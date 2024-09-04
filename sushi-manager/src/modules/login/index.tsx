@@ -19,7 +19,7 @@ type LoginState = {
   message: string;
 };
 
-function LoginForm() {
+function LoginModule() {
   const navigate = useNavigate();
   // TODO: change to auth check route...
   const [loginData, setLoginData] = useState({
@@ -143,4 +143,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default LoginModule;

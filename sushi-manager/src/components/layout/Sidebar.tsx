@@ -32,6 +32,9 @@ function Sidebar() {
           </h2>
           <ul className="flex flex-col gap-0">
             <SidebarItem item="Home" href="/" />
+            <SidebarItem item="Services" href="/services" />
+            <SidebarItem item="Routes" href="/routes" />
+            <SidebarItem item="Plugins" href="/plugins" />
             <SidebarItem item="Sushi AI" href="/sushi-ai" />
           </ul>
         </div>
