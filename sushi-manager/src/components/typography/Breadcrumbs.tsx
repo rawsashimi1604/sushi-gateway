@@ -31,7 +31,7 @@ function Breadcrumbs() {
         to="https://github.com/rawsashimi1604/sushi-gateway"
         target="_blank"
       >
-        <BsGithub className="cursor-pointer duration-150 transition-all hover:opacity-80" />
+        <BsGithub className="text-xl cursor-pointer duration-150 transition-all hover:opacity-80" />
       </Link>
     </div>
   );
