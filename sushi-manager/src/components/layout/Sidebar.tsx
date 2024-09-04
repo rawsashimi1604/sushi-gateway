@@ -8,7 +8,7 @@ function Sidebar() {
   const navigate = useNavigate();
 
   function handleLogout() {
-    localStorage.removeItem("jwt-token");
+    // TODO: delete token from http cookies
     navigate("/login");
   }
 

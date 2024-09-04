@@ -29,6 +29,7 @@ func NewAuthController() *AuthController {
 
 func (c *AuthController) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/login").Methods("POST").HandlerFunc(c.Login())
+	router.PathPrefix("/logout").Methods("DELETE").HandlerFunc(c.Logout())
 }
 
 func (c *AuthController) Login() http.HandlerFunc {
@@ -88,7 +89,22 @@ func (c *AuthController) Login() http.HandlerFunc {
 
 		slog.Info("Login successful for user: " + username)
 		w.WriteHeader(http.StatusOK)
-		return
+	}
+}
+
+func (c *AuthController) Logout() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		// To log out, we invalidate the token by setting a past expiration date
+		http.SetCookie(w, &http.Cookie{
+			Name:     "token",
+			Value:    "",
+			Expires:  time.Unix(0, 0),
+			HttpOnly: true,
+			Secure:   false,
+			SameSite: http.SameSiteLaxMode,
+		})
+
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
