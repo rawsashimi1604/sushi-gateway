@@ -124,6 +124,7 @@ web application.
   - [ ] Update UI Portal to show services, routes, upstreams etc...
 - [ ] AI Component development and design
 - [x] Flatten file structure, cyclic imports
+- [ ] Add elastic logs support
 
 ## TLS
 
