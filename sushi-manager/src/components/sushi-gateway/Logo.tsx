@@ -1,5 +1,4 @@
-import { ReactComponent as LogoSvg } from "../../assets/sushi.svg";
-import logo from "../../assets/logos/sushi-manager.png";
+import logo from "../../assets/logos/sushi-manager.jpeg";
 
 function Logo() {
   return (
