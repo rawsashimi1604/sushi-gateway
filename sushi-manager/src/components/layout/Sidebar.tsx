@@ -3,13 +3,24 @@ import { useNavigate } from "react-router-dom";
 import GatewayInfo from "../sushi-gateway/GatewayInfo";
 import Logo from "../sushi-gateway/Logo";
 import SidebarItem from "./SidebarItem";
+import AdminAuth from "../../api/services/admin/AdminAuth";
 
 function Sidebar() {
   const navigate = useNavigate();
 
   function handleLogout() {
-    // TODO: delete token from http cookies
-    navigate("/login");
+    const logout = async () => {
+      try {
+        // Deletes the 'token' httpOnly cookie used for sessions
+        await AdminAuth.logout();
+        navigate("/login");
+      } catch (err: any) {
+        if (err.response.status === 401) {
+          console.log("logout fail");
+        }
+      }
+    };
+    logout();
   }
 
   return (

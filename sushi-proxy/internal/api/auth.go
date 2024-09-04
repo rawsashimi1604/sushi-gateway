@@ -103,7 +103,6 @@ func (c *AuthController) Logout() http.HandlerFunc {
 			Secure:   false,
 			SameSite: http.SameSiteLaxMode,
 		})
-
 		w.WriteHeader(http.StatusOK)
 	}
 }

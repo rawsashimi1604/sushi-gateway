@@ -13,6 +13,10 @@ function login(username: string, password: string) {
   );
 }
 
+function logout() {
+  return HttpRequest.delete("/logout", { withCredentials: true });
+}
+
 function getGatewayData() {
   return HttpRequest.get("/", {
     withCredentials: true,
@@ -21,5 +25,6 @@ function getGatewayData() {
 
 export default {
   login,
+  logout,
   getGatewayData,
 };
