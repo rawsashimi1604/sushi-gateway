@@ -21,11 +21,12 @@ function IndexModule() {
 
   // TODO: add a loading state
   // TODO: add info storage as well as info bubble
+  // TODO: add graph
   return (
     <Container>
       <div className="flex flex-col gap-6">
         <Summary />
-        <DashboardCard className="p-6">some graph component</DashboardCard>
+        <DashboardCard className="p-6">graph to be added...</DashboardCard>
       </div>
     </Container>
   );
