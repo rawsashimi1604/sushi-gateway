@@ -87,7 +87,7 @@ func (c *AuthController) Login() http.HandlerFunc {
 			SameSite: http.SameSiteLaxMode,
 		})
 
-		slog.Info("Login successful for user: " + username)
+		slog.Info("Login success:: " + username)
 		w.WriteHeader(http.StatusOK)
 	}
 }

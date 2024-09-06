@@ -4,9 +4,11 @@ import GatewayInfo from "../sushi-gateway/GatewayInfo";
 import Logo from "../sushi-gateway/Logo";
 import SidebarItem from "./SidebarItem";
 import AdminAuth from "../../api/services/admin/AdminAuth";
+import { useGatewayData } from "../../hooks/useGatewayState";
 
 function Sidebar() {
   const navigate = useNavigate();
+  const gatewayInfo = useGatewayData();
 
   function handleLogout() {
     const logout = async () => {
@@ -33,8 +35,11 @@ function Sidebar() {
         </div>
 
         <div className="border-b border-gray-200 pb-5">
-          {/* Reverse proxy_pass name */}
-          <GatewayInfo gateway="some-gateway-name" user="admin" />
+          {/* TODO: Get reverse proxy_pass name */}
+          <GatewayInfo
+            gateway={gatewayInfo?.global?.name || "loading..."}
+            user="admin"
+          />
         </div>
         {/* Services, Routes */}
         <div className="mt-4">
