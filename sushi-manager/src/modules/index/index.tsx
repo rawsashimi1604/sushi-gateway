@@ -1,4 +1,5 @@
 import Container from "../../components/layout/Container";
+import DashboardCard from "../../components/layout/DashboardCard";
 import { useGatewayData } from "../../hooks/useGatewayState";
 import Summary from "./Summary";
 
@@ -22,8 +23,9 @@ function IndexModule() {
   // TODO: add info storage as well as info bubble
   return (
     <Container>
-      <div>
+      <div className="flex flex-col gap-6">
         <Summary />
+        <DashboardCard className="p-6">some graph component</DashboardCard>
       </div>
     </Container>
   );
