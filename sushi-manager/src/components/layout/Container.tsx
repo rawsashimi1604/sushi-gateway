@@ -13,9 +13,13 @@ function Container({ children }: ContainerProps) {
       <div className="min-w-[300px]">
         <Sidebar />
       </div>
-      <main className="flex-grow p-6 flex flex-col h-full">
-        <Navbar />
-        <div className="mt-3 overflow-y-scroll">{children}</div>
+      <main className="flex-grow flex flex-col h-full">
+        <div className="p-6 pb-0">
+          <Navbar />
+        </div>
+        <div className="p-6 bg-gray-100 overflow-y-scroll min-h-screen">
+          {children}
+        </div>
       </main>
     </div>
   );
