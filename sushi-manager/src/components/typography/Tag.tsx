@@ -1,14 +1,13 @@
-import React from 'react'
-
 interface TagProps {
-    value: string
+  value: string;
+  bgColor?: string;
 }
 
-function Tag({ value }: TagProps) {
-    return (
-        // TODO: change color scheme
-        <span className='text-xs px-2.5 py-1 rounded-xl bg-neutral-500 text-white'>{value}</span>
-    )
+function Tag({ value, bgColor = "bg-gray-100" }: TagProps) {
+  return (
+    // TODO: change color scheme
+    <span className={`px-2.5 py-1 rounded-xl ${bgColor}`}>{value}</span>
+  );
 }
 
-export default Tag
+export default Tag;

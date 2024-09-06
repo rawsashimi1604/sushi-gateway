@@ -2,6 +2,8 @@ import { IoMdInformationCircle } from "react-icons/io";
 import Container from "../../components/layout/Container";
 import DashboardCard from "../../components/layout/DashboardCard";
 import Header from "../../components/typography/Header";
+import Tag from "../../components/typography/Tag";
+import HttpMethodTag from "./HttpMethodTag";
 
 function RoutesModule() {
   return (
@@ -59,7 +61,7 @@ function RoutesModule() {
                     scope="row"
                     className="px-6 py-4 font-medium whitespace-nowrap"
                   >
-                    GET
+                    <HttpMethodTag method="GET" />
                   </td>
 
                   <td
