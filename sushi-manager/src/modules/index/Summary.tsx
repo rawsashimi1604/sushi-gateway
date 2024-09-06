@@ -5,7 +5,7 @@ import DashboardCard from "../../components/layout/DashboardCard";
 function Summary() {
   return (
     <DashboardCard className="flex flex-col gap-2 p-6 ">
-      <Header text="summary" align="left" size="md" />
+      <Header text="summary" align="left" size="sm" />
       <div className="flex items-center gap-8">
         {/* Services */}
         <div className="flex flex-col gap-2 border-r pr-8">
