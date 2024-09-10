@@ -43,10 +43,10 @@ function Sidebar() {
         </div>
         {/* Services, Routes */}
         <div className="mt-4">
-          <h2 className="font-bold text-gray-800 tracking-tighter font-lora">
-            gateway
+          <h2 className="font-bold text-gray-800 tracking-wider font-lora mb-2">
+            GATEWAY
           </h2>
-          <ul className="flex flex-col gap-0">
+          <ul className="flex flex-col gap-2 ">
             <SidebarItem item="Home" href="/" />
             <SidebarItem item="Services" href="/services" />
             <SidebarItem item="Routes" href="/routes" />
