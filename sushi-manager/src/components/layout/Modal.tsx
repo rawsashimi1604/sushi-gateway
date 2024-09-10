@@ -19,7 +19,7 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
       onClick={onClose}
     >
       <div
-        className="animate__animated animate__fast animate__fast bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative"
+        className="animate__animated animate__fast animate__fast bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative"
         onClick={(e) => e.stopPropagation()} // Prevents closing the modal when clicking inside the modal
       >
         <div className="flex justify-between items-center border-b pb-3 mb-4">

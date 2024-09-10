@@ -18,7 +18,7 @@ function PluginModal() {
   };
 
   return (
-    <Modal isOpen={isPluginModalOpen} onClose={closeModal} title="Plugin Modal">
+    <Modal isOpen={isPluginModalOpen} onClose={closeModal} title="Plugin">
       <section className="flex flex-col gap-4 font-lora tracking-wider font-light text-sm">
         {/* Plugin Name */}
         <div className="flex gap-2">
