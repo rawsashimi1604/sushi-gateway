@@ -8,14 +8,21 @@ export interface HttpMethodTag {
 // TODO: fix colors...
 function HttpMethodTag({ method }: HttpMethodTag) {
   const colorMap: { [key: string]: string } = {
-    GET: "bg-green-600",
-    POST: "bg-yellow-700",
-    PATCH: "bg-yellow-700",
-    DELETE: "bg-red-500",
-    OPTIONS: "bg-blue-500",
+    GET: "bg-httpGet",
+    POST: "bg-httpPost",
+    PUT: "bg-httpPut",
+    PATCH: "bg-httpPatch",
+    DELETE: "bg-httpDelete",
+    OPTIONS: "bg-httpOptions",
   };
 
-  return <Tag value={method} bgColor={colorMap[method]} />;
+  return (
+    <Tag
+      value={method}
+      bgColor={colorMap[method]}
+      className="text-white shadow-md"
+    />
+  );
 }
 
 export default HttpMethodTag;
