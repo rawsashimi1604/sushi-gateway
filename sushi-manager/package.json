@@ -13,6 +13,7 @@
     "@fontsource-variable/bitter": "^5.0.9",
     "@fontsource-variable/cabin": "^5.0.9",
     "@fontsource-variable/lora": "^5.0.9",
+    "animate.css": "^4.1.1",
     "axios": "^1.7.3",
     "c3": "^0.7.20",
     "react": "^18.2.0",

@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import "animate.css";
 import "react18-json-view/src/style.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
