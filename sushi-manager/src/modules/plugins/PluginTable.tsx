@@ -19,13 +19,13 @@ function PluginTable() {
           </th>
           <th className="px-6 py-3">
             <div className="flex flex-row items-center gap-2">
-              <span>applied to</span>
+              <span>level</span>
               <IoMdInformationCircle className="text-lg mb-0.5" />
             </div>
           </th>
           <th className="px-6 py-3">
             <div className="flex flex-row items-center gap-2">
-              <span>configuration</span>
+              <span>applied to</span>
               <IoMdInformationCircle className="text-lg mb-0.5" />
             </div>
           </th>
@@ -45,11 +45,11 @@ function PluginTable() {
           </td>
 
           <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            service:: SushiService
+            service
           </td>
 
           <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            view
+            SushiService
           </td>
         </tr>
         <tr className="border-b">
@@ -65,11 +65,11 @@ function PluginTable() {
           </td>
 
           <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            service:: SushiService
+            service
           </td>
 
           <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            view
+            SushiService
           </td>
         </tr>
       </tbody>
