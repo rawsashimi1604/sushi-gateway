@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Header from "../typography/Header";
+import { IoClose } from "react-icons/io5";
 
 interface ModalProps {
   isOpen: boolean;
@@ -26,9 +27,9 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
           {title && <Header text={title} size="sm" />}
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 rounded-full"
+            className="text-gray-500 hover:text-gray-700 rounded-full mb-2"
           >
-            X
+            <IoClose />
           </button>
         </div>
         <div>{children}</div>
