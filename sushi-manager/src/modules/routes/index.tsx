@@ -2,6 +2,7 @@ import Container from "../../components/layout/Container";
 import DashboardCard from "../../components/layout/DashboardCard";
 import Header from "../../components/typography/Header";
 import Subtitle from "../../components/typography/Subtitle";
+import RouteModal from "./RouteModal";
 import RouteTable from "./RouteTable";
 
 function RoutesModule() {
@@ -9,6 +10,7 @@ function RoutesModule() {
     <Container>
       <DashboardCard>
         <div className="p-6">
+          <RouteModal />
           <div className="mb-6">
             <Header text="routes  " align="left" size="sm" />
             <Subtitle text="Routes define the different endpoints for each Service." />

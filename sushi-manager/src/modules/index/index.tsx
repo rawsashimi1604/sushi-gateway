@@ -1,7 +1,8 @@
 import Container from "../../components/layout/Container";
 import DashboardCard from "../../components/layout/DashboardCard";
 import { useGatewayData } from "../../hooks/useGatewayState";
-import Configuration from "./Configuration";
+import EnvConfiguration from "./EnvConfiguration";
+import GatewayConfiguration from "./GatewayConfiguration";
 import Summary from "./Summary";
 
 function IndexModule() {
@@ -27,7 +28,10 @@ function IndexModule() {
     <Container>
       <div className="flex flex-col gap-6">
         <Summary />
-        <Configuration />
+        <div className="grid grid-cols-2 gap-6">
+          <EnvConfiguration />
+          <GatewayConfiguration />
+        </div>
         <DashboardCard className="p-6">graph to be added...</DashboardCard>
       </div>
     </Container>

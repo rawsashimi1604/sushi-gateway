@@ -3,13 +3,17 @@ import DashboardCard from "../../components/layout/DashboardCard";
 import Header from "../../components/typography/Header";
 import Tag from "../../components/typography/Tag";
 
-interface ConfigurationItemProps {
+interface EnvConfigurationItemProps {
   item: string;
   value?: string;
   tooltip?: string;
 }
 
-function ConfigurationItem({ item, value, tooltip }: ConfigurationItemProps) {
+function EnvConfigurationItem({
+  item,
+  value,
+  tooltip,
+}: EnvConfigurationItemProps) {
   return (
     <div className="flex flex-row">
       <div className="w-[150px] flex gap-3 items-start justify-start">
@@ -22,48 +26,51 @@ function ConfigurationItem({ item, value, tooltip }: ConfigurationItemProps) {
   );
 }
 
-function Configuration() {
+function EnvConfiguration() {
   return (
     <DashboardCard className="flex flex-col gap-2 p-6 ">
       <div className="">
         <Header text="environment configuration" align="left" size="sm" />
         <div className="mt-4 flex flex-col gap-2">
-          <ConfigurationItem item="proxy_version" value="0.1" />
-          <ConfigurationItem item="manager_url" value="http://localhost:5173" />
-          <ConfigurationItem
+          <EnvConfigurationItem item="proxy_version" value="0.1" />
+          <EnvConfigurationItem
+            item="manager_url"
+            value="http://localhost:5173"
+          />
+          <EnvConfigurationItem
             item="admin_api_url"
             value="http://localhost:8081"
           />
-          <ConfigurationItem
+          <EnvConfigurationItem
             item="proxy_http_url"
             value="http://localhost:8008"
           />
-          <ConfigurationItem
+          <EnvConfigurationItem
             item="proxy_https_url"
             value="https://localhost:8443"
           />
-          <ConfigurationItem item="proxy_version" value="0.1" />
-          <ConfigurationItem item="data_model" value="stateless" />
-          <ConfigurationItem
+          <EnvConfigurationItem item="proxy_version" value="0.1" />
+          <EnvConfigurationItem item="data_model" value="stateless" />
+          <EnvConfigurationItem
             item="config_file_path"
             value="./config/config.json"
           />
-          <ConfigurationItem
+          <EnvConfigurationItem
             item="server_cert_path"
             value="./config/server.crt"
           />
-          <ConfigurationItem
+          <EnvConfigurationItem
             item="server_key_path"
             value="./config/server.key"
           />
-          <ConfigurationItem item="ca_cert_path" value="./config/ca.crt" />
-          <ConfigurationItem item="admin_user" value="admin" />
-          <ConfigurationItem item="admin_password" value="changeme" />
-          <ConfigurationItem item="config_format" value="json" />
+          <EnvConfigurationItem item="ca_cert_path" value="./config/ca.crt" />
+          <EnvConfigurationItem item="admin_user" value="admin" />
+          <EnvConfigurationItem item="admin_password" value="changeme" />
+          <EnvConfigurationItem item="config_format" value="json" />
         </div>
       </div>
     </DashboardCard>
   );
 }
 
-export default Configuration;
+export default EnvConfiguration;
