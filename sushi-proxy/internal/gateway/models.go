@@ -16,7 +16,6 @@ type PluginConfig struct {
 	Enabled bool                   `json:"enabled"`
 }
 
-// TODO: add id to upstream
 type Upstream struct {
 	Id   string `json:"id"`
 	Host string `json:"host"`
