@@ -72,6 +72,8 @@ web application.
 
 ## TODO LIST
 
+- [ ] design database schema
+- [ ] provide database configuration options
 - [x] sushi manager update logo
 - [x] Logout endpoint to delete httponly cookie
 - [ ] sushi manager update gateway state to get types and also domain object to retrieve from gateway state.
@@ -83,7 +85,7 @@ web application.
   - [ ] Postgres DB docker
   - [ ] Admin API for CRUD operations
   - [ ] global domain object config state retrieval from db.
-- [ ] Update readme with latest architecture diagrams and logos
+- [x] Update readme with latest architecture diagrams and logos
 - [ ] Add CI github actions
 - [ ] Add CD for each release to push to dockerhub
 - [ ] Add more tests for each plugin
@@ -99,7 +101,7 @@ web application.
   - [ ] Http log
 - [x] Finish up plugins
 - [x] Add "enabled" field to plugins (common middleware for all plugins)
-- [ ] Add validation schema for each plugin, that is validated at config file load time
+- [ ] Add validation schema for each plugin, that is validated at config file load time (good to have)
   - [ ] General architecture
   - [ ] Acl
   - [ ] Basic auth
