@@ -31,9 +31,3 @@ type Service struct {
 	Plugins               []PluginConfig         `json:"plugins"` // Adjusted to use the Plugin struct
 	Routes                []Route                `json:"routes"`
 }
-
-type Credentials struct {
-	Plugin  string                 `json:"plugin"`
-	Enabled bool                   `json:"enabled"`
-	Data    map[string]interface{} `json:"data"`
-}

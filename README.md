@@ -75,7 +75,7 @@ web application.
 - [x] sushi manager update logo
 - [x] Logout endpoint to delete httponly cookie
 - [ ] sushi manager update gateway state to get types and also domain object to retrieve from gateway state.
-- [ ] sushi manager create screens
+- [x] sushi manager create screens
 - [ ] Add gateway metadata (last configuration update, total requests)
   - [ ] gateway logs middleware
 - [ ] Add stateful gateway configurations (good to have)
