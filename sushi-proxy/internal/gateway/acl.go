@@ -7,7 +7,6 @@ import (
 	"net/http"
 )
 
-// TODO: add allow and deny mechanism, now both are enabled
 type AclPlugin struct {
 	config map[string]interface{}
 }

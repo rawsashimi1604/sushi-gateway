@@ -8,7 +8,6 @@ type ProxyConfig struct {
 	Services []Service `json:"services"`
 }
 
-// TODO: change plugin config to be proper schema.
 type PluginConfig struct {
 	Id      string                 `json:"id"`
 	Name    string                 `json:"name"`
