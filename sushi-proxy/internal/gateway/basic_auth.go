@@ -13,9 +13,6 @@ type BasicAuthPlugin struct {
 	config map[string]interface{}
 }
 
-// BasicAuthCache TODO: add caching mechanisms, persist between page views, per realm
-var BasicAuthCache = New(5, 100)
-
 func NewBasicAuthPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_BASIC_AUTH,
