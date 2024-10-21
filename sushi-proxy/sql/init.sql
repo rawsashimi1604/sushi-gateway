@@ -17,7 +17,7 @@ CREATE TABLE upstream (
     id TEXT PRIMARY KEY,
     service_name TEXT REFERENCES service(name),
     host TEXT NOT NULL,
-    port INTEGER NOT NULL,
+    port INTEGER,
     CONSTRAINT unique_service_host UNIQUE(service_name, host, port)
 );
 

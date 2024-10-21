@@ -20,11 +20,9 @@ func handleBasicAuthRequest(t *testing.T, user string, pass string) *httptest.Re
 	req.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(user+":"+pass)))
 
 	// Set the basic auth plugin data.
-	config, err := CreatePluginConfigJsonInput(map[string]interface{}{
-		"data": map[string]interface{}{
-			"username": username,
-			"password": password,
-		},
+	config, err := CreatePluginConfigInput(map[string]interface{}{
+		"username": username,
+		"password": password,
 	})
 	if err != nil {
 		t.Fatal(err)

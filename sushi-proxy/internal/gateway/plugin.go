@@ -15,8 +15,8 @@ type Plugin struct {
 	Handler  PluginExecutor
 }
 
-// CreatePluginConfigJsonInput Convert the plugin input to how we would expect it to be in the gateway file
-func CreatePluginConfigJsonInput(input map[string]interface{}) (map[string]interface{}, error) {
+// CreatePluginConfigInput Convert the plugin input to how we would expect it to be in the gateway file
+func CreatePluginConfigInput(input map[string]interface{}) (map[string]interface{}, error) {
 	converted, err := json.Marshal(input)
 	if err != nil {
 		return nil, err

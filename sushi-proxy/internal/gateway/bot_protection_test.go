@@ -16,10 +16,8 @@ func handleBotRequest(t *testing.T, agent string) *httptest.ResponseRecorder {
 	req.Header.Set("User-Agent", agent)
 
 	// Set the bot protection plugin data.
-	config, err := CreatePluginConfigJsonInput(map[string]interface{}{
-		"data": map[string]interface{}{
-			"blacklist": []string{"googlebot", "bingbot", "yahoobot"},
-		},
+	config, err := CreatePluginConfigInput(map[string]interface{}{
+		"blacklist": []string{"googlebot", "bingbot", "yahoobot"},
 	})
 	if err != nil {
 		t.Fatal(err)

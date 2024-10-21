@@ -8,8 +8,15 @@ type ProxyConfig struct {
 	Services []Service `json:"services"`
 }
 
-type PluginConfig map[string]interface{}
+// TODO: change plugin config to be proper schema.
+type PluginConfig struct {
+	Id      string                 `json:"id"`
+	Name    string                 `json:"name"`
+	Config  map[string]interface{} `json:"config"`
+	Enabled bool                   `json:"enabled"`
+}
 
+// TODO: add id to upstream
 type Upstream struct {
 	Host string `json:"host"`
 	Port int    `json:"port"`

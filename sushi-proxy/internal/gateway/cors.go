@@ -69,7 +69,7 @@ func (plugin CorsPlugin) Execute(next http.Handler) http.Handler {
 
 func (plugin CorsPlugin) parseCORSConfig() CORSConfig {
 
-	config := plugin.config["data"].(map[string]interface{})
+	config := plugin.config
 
 	corsConfig := CORSConfig{
 		AllowOrigins:        ToStringSlice(config["allow_origins"].([]interface{})),

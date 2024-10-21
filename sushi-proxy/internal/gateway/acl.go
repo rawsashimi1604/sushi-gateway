@@ -62,8 +62,8 @@ func ValidateACLPlugin(config map[string]interface{}) {
 
 func (plugin AclPlugin) isWhitelisted(ip string) bool {
 	// TODO: add validation for this plugin in the gateway file
-	data := plugin.config["data"].(map[string]interface{})
-	whitelist := ToStringSlice(data["whitelist"].([]interface{}))
+	config := plugin.config
+	whitelist := ToStringSlice(config["whitelist"].([]interface{}))
 
 	for _, whitelistedIP := range whitelist {
 		if ip == whitelistedIP {
@@ -75,8 +75,8 @@ func (plugin AclPlugin) isWhitelisted(ip string) bool {
 
 func (plugin AclPlugin) isBlacklisted(ip string) bool {
 	// TODO: add validation for this plugin in the gateway file
-	data := plugin.config["data"].(map[string]interface{})
-	blacklist := ToStringSlice(data["blacklist"].([]interface{}))
+	config := plugin.config
+	blacklist := ToStringSlice(config["blacklist"].([]interface{}))
 
 	for _, blacklistedIP := range blacklist {
 		if ip == blacklistedIP {

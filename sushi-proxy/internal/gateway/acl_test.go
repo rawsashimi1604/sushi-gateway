@@ -16,12 +16,11 @@ func TestWhitelistedIPs(t *testing.T) {
 	req.RemoteAddr = "127.0.0.1"
 
 	// Convert the input to how we would expect it to be in the gateway file
-	config, err := CreatePluginConfigJsonInput(map[string]interface{}{
-		"data": map[string]interface{}{
-			"whitelist": []string{"127.0.0.1"},
-			"blacklist": []string{},
-		},
+	config, err := CreatePluginConfigInput(map[string]interface{}{
+		"whitelist": []string{"127.0.0.1"},
+		"blacklist": []string{},
 	})
+
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -51,11 +50,9 @@ func TestBlacklistedIPs(t *testing.T) {
 	// Simulate a request from a blacklisted IP
 	req.RemoteAddr = "192.168.1.1"
 
-	config, err := CreatePluginConfigJsonInput(map[string]interface{}{
-		"data": map[string]interface{}{
-			"whitelist": []string{},
-			"blacklist": []string{"192.168.1.1"},
-		},
+	config, err := CreatePluginConfigInput(map[string]interface{}{
+		"whitelist": []string{},
+		"blacklist": []string{"192.168.1.1"},
 	})
 	if err != nil {
 		t.Fatal(err)

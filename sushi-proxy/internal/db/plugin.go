@@ -13,3 +13,11 @@ func NewPluginRepository(db *sql.DB) *PluginRepository {
 }
 
 // TODO: add methods
+// scope -> global, service, route
+func GetPlugins(scope string) {
+
+}
+
+func AddPlugin() {
+
+}

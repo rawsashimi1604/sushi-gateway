@@ -14,10 +14,8 @@ func handleRequestSizeLimitReq(t *testing.T, body string) *httptest.ResponseReco
 	}
 
 	// Set the request size limit plugin data.
-	config, err := CreatePluginConfigJsonInput(map[string]interface{}{
-		"data": map[string]interface{}{
-			"max_payload_size": 15,
-		},
+	config, err := CreatePluginConfigInput(map[string]interface{}{
+		"max_payload_size": 15,
 	})
 	if err != nil {
 		t.Fatal(err)

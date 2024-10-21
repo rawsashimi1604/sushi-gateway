@@ -87,13 +87,10 @@ func (plugin BasicAuthPlugin) authorize(username string, password string) *HttpE
 
 	invalidCredsErr := NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
 
-	data, ok := plugin.config["data"].(map[string]interface{})
-	if !ok {
-		return invalidCredsErr
-	}
+	config := plugin.config
 
-	usernameFromConfig, okUser := data["username"].(string)
-	passwordFromConfig, okPass := data["password"].(string)
+	usernameFromConfig, okUser := config["username"].(string)
+	passwordFromConfig, okPass := config["password"].(string)
 
 	// Invalid configuration
 	// TODO: handle this better, do validation in the gateway file

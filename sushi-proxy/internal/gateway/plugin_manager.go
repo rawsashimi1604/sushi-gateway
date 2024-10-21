@@ -55,44 +55,32 @@ func NewPluginManagerFromConfig(req *http.Request) (*PluginManager, *HttpError) 
 
 // Load the plugin configuration from the gateway file
 func (pm *PluginManager) loadConfig(pc PluginConfig) *HttpError {
-	name, ok := pc["name"].(string)
-	if !ok {
-		return NewHttpError(http.StatusInternalServerError, "PLUGIN_CONFIG_ERROR",
-			"Plugin name not found")
-	}
-
-	enabled, enabledOk := pc["enabled"].(bool)
-	if !enabledOk {
-		return NewHttpError(http.StatusInternalServerError, "PLUGIN_CONFIG_ERROR",
-			"Plugin enabled flag not found")
-	}
-
 	// Skip as not enabled.
-	if !enabled {
+	if !pc.Enabled {
 		return nil
 	}
 
-	switch name {
+	switch pc.Name {
 	case constant.PLUGIN_BASIC_AUTH:
-		pm.RegisterPlugin(NewBasicAuthPlugin(pc))
+		pm.RegisterPlugin(NewBasicAuthPlugin(pc.Config))
 	case constant.PLUGIN_ACL:
-		pm.RegisterPlugin(NewAclPlugin(pc))
+		pm.RegisterPlugin(NewAclPlugin(pc.Config))
 	case constant.PLUGIN_BOT_PROTECTION:
-		pm.RegisterPlugin(NewBotProtectionPlugin(pc))
+		pm.RegisterPlugin(NewBotProtectionPlugin(pc.Config))
 	case constant.PLUGIN_KEY_AUTH:
-		pm.RegisterPlugin(NewKeyAuthPlugin(pc))
+		pm.RegisterPlugin(NewKeyAuthPlugin(pc.Config))
 	case constant.PLUGIN_RATE_LIMIT:
-		pm.RegisterPlugin(NewRateLimitPlugin(pc, &GlobalProxyConfig))
+		pm.RegisterPlugin(NewRateLimitPlugin(pc.Config, &GlobalProxyConfig))
 	case constant.PLUGIN_REQUEST_SIZE_LIMIT:
-		pm.RegisterPlugin(NewRequestSizeLimitPlugin(pc))
+		pm.RegisterPlugin(NewRequestSizeLimitPlugin(pc.Config))
 	case constant.PLUGIN_JWT:
-		pm.RegisterPlugin(NewJwtPlugin(pc))
+		pm.RegisterPlugin(NewJwtPlugin(pc.Config))
 	case constant.PLUGIN_MTLS:
-		pm.RegisterPlugin(NewMtlsPlugin())
+		pm.RegisterPlugin(NewMtlsPlugin(pc.Config))
 	case constant.PLUGIN_HTTP_LOG:
-		pm.RegisterPlugin(NewHttpLogPlugin(pc))
+		pm.RegisterPlugin(NewHttpLogPlugin(pc.Config))
 	case constant.PLUGIN_CORS:
-		pm.RegisterPlugin(NewCorsPlugin(pc))
+		pm.RegisterPlugin(NewCorsPlugin(pc.Config))
 	}
 	return nil
 }

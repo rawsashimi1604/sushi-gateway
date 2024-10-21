@@ -13,17 +13,15 @@ func handleCorsRequest(t *testing.T) *httptest.ResponseRecorder {
 	}
 
 	// Set the cors plugin data.
-	config, err := CreatePluginConfigJsonInput(map[string]interface{}{
-		"data": map[string]interface{}{
-			"allow_origins":         []string{"*"},
-			"allow_methods":         []string{"GET", "POST"},
-			"allow_headers":         []string{"Authorization", "Content-Type"},
-			"expose_headers":        []string{"Authorization"},
-			"allow_credentials":     true,
-			"allow_private_network": false,
-			"preflight_continue":    false,
-			"max_age":               3600,
-		},
+	config, err := CreatePluginConfigInput(map[string]interface{}{
+		"allow_origins":         []string{"*"},
+		"allow_methods":         []string{"GET", "POST"},
+		"allow_headers":         []string{"Authorization", "Content-Type"},
+		"expose_headers":        []string{"Authorization"},
+		"allow_credentials":     true,
+		"allow_private_network": false,
+		"preflight_continue":    false,
+		"max_age":               3600,
 	})
 	if err != nil {
 		t.Fatal(err)

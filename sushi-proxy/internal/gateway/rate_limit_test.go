@@ -16,12 +16,10 @@ func handleRateLimitRequest(t *testing.T, ip string) *httptest.ResponseRecorder 
 	req.URL.Path = "/mockService/mockRoute"
 
 	// Set the rate limit plugin data.
-	config, err := CreatePluginConfigJsonInput(map[string]interface{}{
-		"data": map[string]interface{}{
-			"limit_second": 10,
-			"limit_min":    10,
-			"limit_hour":   10,
-		},
+	config, err := CreatePluginConfigInput(map[string]interface{}{
+		"limit_second": 10,
+		"limit_min":    10,
+		"limit_hour":   10,
 	})
 
 	if err != nil {
@@ -67,18 +65,29 @@ func TestRateLimitPluginBypass(t *testing.T) {
 
 func createMockProxyConfig(t *testing.T) *ProxyConfig {
 
-	rateLimitPlugin, err := CreatePluginConfigJsonInput(map[string]interface{}{
-		"name":    "rate_limit",
-		"enabled": true,
-		"data": map[string]interface{}{
+	//rateLimitPlugin, err := CreatePluginConfigInput(map[string]interface{}{
+	//	"name":    "rate_limit",
+	//	"enabled": true,
+	//	"data": map[string]interface{}{
+	//		"limit_second": 10,
+	//		"limit_min":    10,
+	//		"limit_hour":   10,
+	//	},
+	//})
+
+	rateLimitPlugin := PluginConfig{
+		Id:      "someId",
+		Name:    "rate_limit",
+		Enabled: true,
+		Config: map[string]interface{}{
 			"limit_second": 10,
 			"limit_min":    10,
 			"limit_hour":   10,
 		},
-	})
-	if err != nil {
-		t.Fatal(err)
 	}
+	//if err != nil {
+	//	t.Fatal(err)
+	//}
 
 	service := Service{
 		Name:                  "mockService",
@@ -86,7 +95,9 @@ func createMockProxyConfig(t *testing.T) *ProxyConfig {
 		Protocol:              "http",
 		LoadBalancingStrategy: RoundRobin,
 		Upstreams:             make([]Upstream, 0),
-		Plugins:               []PluginConfig{rateLimitPlugin},
+		Plugins: []PluginConfig{
+			rateLimitPlugin,
+		},
 		Routes: []Route{
 			{
 				Name:    "mockRoute",

@@ -49,14 +49,14 @@ func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *ProxyConfig)
 func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *Service, route *Route, r *http.Request) (string, *HttpError) {
 	// Check whether global, service or route level rate limit.
 	for _, servicePlugin := range service.Plugins {
-		name := servicePlugin["name"].(string)
+		name := servicePlugin.Name
 		if name == constant.PLUGIN_RATE_LIMIT {
 			return "service", nil
 		}
 	}
 
 	for _, routePlugin := range route.Plugins {
-		name := routePlugin["name"].(string)
+		name := routePlugin.Name
 		if name == constant.PLUGIN_RATE_LIMIT {
 			return "route", nil
 		}
@@ -95,10 +95,10 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		clientIp := r.RemoteAddr
 
 		// Get proxy configs
-		data := plugin.config["data"].(map[string]interface{})
-		limitSec := int64(data["limit_second"].(float64))
-		limitMin := int64(data["limit_min"].(float64))
-		limitHour := int64(data["limit_hour"].(float64))
+		config := plugin.config
+		limitSec := int64(config["limit_second"].(float64))
+		limitMin := int64(config["limit_min"].(float64))
+		limitHour := int64(config["limit_hour"].(float64))
 
 		// Async safe operation
 		globalRateLimitSecStore.mu.Lock()

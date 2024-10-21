@@ -53,12 +53,12 @@ func (plugin HttpLogPlugin) Execute(next http.Handler) http.Handler {
 }
 
 func (plugin HttpLogPlugin) parseConfig() *HttpLogConfig {
-	data := plugin.config["data"].(map[string]interface{})
+	config := plugin.config
 
 	return &HttpLogConfig{
-		httpEndpoint: data["http_endpoint"].(string),
-		method:       data["method"].(string),
-		contentType:  data["content_type"].(string),
+		httpEndpoint: config["http_endpoint"].(string),
+		method:       config["method"].(string),
+		contentType:  config["content_type"].(string),
 	}
 }
 
@@ -112,6 +112,8 @@ func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogC
 	// Create a new request with POST method, URL, and payload
 	req, err := http.NewRequest(config.method, config.httpEndpoint, bytes.NewBuffer(body))
 	if err != nil {
+		// TODO: remove log
+		slog.Info(err.Error())
 		return NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log when creating http request")
 	}
 

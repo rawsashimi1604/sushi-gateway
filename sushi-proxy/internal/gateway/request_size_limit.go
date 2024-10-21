@@ -36,8 +36,8 @@ func (plugin RequestSizeLimitPlugin) Execute(next http.Handler) http.Handler {
 }
 
 func (plugin RequestSizeLimitPlugin) checkRequestLength(r *http.Request) *HttpError {
-	data := plugin.config["data"].(map[string]interface{})
-	maxPayloadSize := data["max_payload_size"].(float64)
+	config := plugin.config
+	maxPayloadSize := config["max_payload_size"].(float64)
 
 	if r.ContentLength > int64(maxPayloadSize) {
 		slog.Info(fmt.Sprintf("Request size too large: %vB", r.ContentLength))

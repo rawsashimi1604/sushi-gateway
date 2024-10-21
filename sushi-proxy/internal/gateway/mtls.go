@@ -7,13 +7,15 @@ import (
 	"net/http"
 )
 
-type MtlsPlugin struct{}
+type MtlsPlugin struct {
+	config map[string]interface{}
+}
 
-func NewMtlsPlugin() *Plugin {
+func NewMtlsPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_MTLS,
 		Priority: 12,
-		Handler:  MtlsPlugin{},
+		Handler:  MtlsPlugin{config: config},
 	}
 }
 

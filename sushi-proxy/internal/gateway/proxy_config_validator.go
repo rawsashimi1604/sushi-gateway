@@ -68,12 +68,11 @@ func validatePlugins(config *ProxyConfig) error {
 
 	// Validate each plugin
 	for _, plugin := range plugins {
-		name, nameOk := plugin["name"].(string)
-		if !nameOk || name == "" {
+		if plugin.Name == "" {
 			return fmt.Errorf("plugin name is required")
 		}
 
-		if !SliceContainsString(constant.AVAILABLE_PLUGINS, name) {
+		if !SliceContainsString(constant.AVAILABLE_PLUGINS, plugin.Name) {
 			return fmt.Errorf("plugin name is invalid. "+
 				"Available plugins: %v", constant.AVAILABLE_PLUGINS)
 		}
