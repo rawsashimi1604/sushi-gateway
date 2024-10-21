@@ -133,6 +133,18 @@ web application.
 
 https/tls support has been added to the proxy, add cert and key into environment variables to use.
 
+## Start a database
+
+create a postgres database.
+- `docker run --name postgres-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres`
+- `docker exec -it postgres-db psql -U postgres`
+- `CREATE DATABASE sushi;`
+- `\c sushi`
+- `docker cp init.sql postgres-db:/init.sql`
+- `docker exec -it postgres-db psql -U postgres -d sushi -f /init.sql`
+- `\c`
+- `\dt`
+
 ## Plugins
 
 - Auth
