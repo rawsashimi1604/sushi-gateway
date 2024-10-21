@@ -3,63 +3,88 @@
     "name": "sushi-gateway-1",
     "plugins": [
       {
+        "id": "plugin_1",
         "name": "http_log",
         "enabled": true,
-        "data": {
-          "http_endpoint": "http://sushi-http-log-consumer:3000/v1/log",
+        "config": {
+          "http_endpoint": "http://localhost:3000/v1/log",
           "method": "POST",
           "content_type": "application/json"
         }
       },
       {
+        "id": "plugin_2",
         "name": "mtls",
         "enabled": false,
-        "data": {
+        "config": {}
+      },
+      {
+        "id": "plugin_3",
+        "name": "key_auth",
+        "enabled": false,
+        "config": {
+          "key": "123456"
         }
       },
       {
+        "id": "plugin_4",
+        "name": "rate_limit",
+        "enabled": true,
+        "config": {
+          "limit_second": 10,
+          "limit_min": 10,
+          "limit_hour": 10
+        }
+      },
+      {
+        "id": "plugin_5",
         "name": "basic_auth",
-        "enabled": false,
-        "data": {
+        "enabled": true,
+        "config": {
           "username": "admin",
           "password": "changeme"
         }
       },
       {
+        "id": "plugin_6",
         "name": "jwt",
         "enabled": false,
-        "data": {
+        "config": {
           "alg": "HS256",
           "iss": "someIssuerKey",
           "secret": "123secret456"
         }
       },
       {
+        "id": "plugin_7",
         "name": "acl",
         "enabled": true,
-        "data": {
+        "config": {
           "whitelist": ["127.0.0.1", "127.0.0.2"],
           "blacklist": ["192.168.0.1"]
         }
       },
       {
+        "id": "plugin_8",
         "name": "bot_protection",
         "enabled": true,
-        "data": {
+        "config": {
           "blacklist": ["googlebot", "bingbot", "yahoobot"]
         }
       },
       {
+        "id": "plugin_9",
         "name": "request_size_limit",
         "enabled": true,
-        "data": {
-            "max_payload_size": 10
+        "config": {
+          "max_payload_size": 10
         }
       },
       {
+        "id": "plugin_10",
         "name": "cors",
         "enabled": true,
-        "data": {
+        "config": {
           "allow_origins": ["*"],
           "allow_methods": ["GET", "POST"],
           "allow_headers": ["Authorization", "Content-Type"],
@@ -79,14 +104,32 @@
       "protocol": "http",
       "load_balancing_strategy": "round_robin",
       "upstreams": [
-        { "host": "sushi-svc-1", "port": 3000 },
-        { "host": "sushi-svc-2", "port": 3000 }
+        { "id": "upstream_1", "host": "localhost", "port": 8001 },
+        { "id": "upstream_2", "host": "localhost", "port": 8002 },
+        { "id": "upstream_3", "host": "localhost", "port": 8003 }
       ],
       "plugins": [],
       "routes": [
         {
           "name": "get-sushi",
           "path": "/v1/sushi",
+          "methods": ["GET"],
+          "plugins": [
+            {
+              "id": "plugin_11",
+              "name": "rate_limit",
+              "enabled": true,
+              "config": {
+                "limit_second": 10,
+                "limit_min": 10,
+                "limit_hour": 100
+              }
+            }
+          ]
+        },
+        {
+          "name": "get-sushi-by-id",
+          "path": "/v1/sushi/{id}",
           "methods": ["GET"],
           "plugins": []
         },

@@ -18,6 +18,7 @@ type PluginConfig struct {
 
 // TODO: add id to upstream
 type Upstream struct {
+	Id   string `json:"id"`
 	Host string `json:"host"`
 	Port int    `json:"port"`
 }
