@@ -40,8 +40,8 @@ func (plugin KeyAuthPlugin) Execute(next http.Handler) http.Handler {
 	})
 }
 func (plugin KeyAuthPlugin) validateAPIKey(apiKey string) *HttpError {
-	data := plugin.config["data"].(map[string]interface{})
-	key := data["key"].(string) // Assert to []interface{} first
+	config := plugin.config
+	key := config["key"].(string) // Assert to []interface{} first
 	if key == apiKey {
 		return nil
 	} else {

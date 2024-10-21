@@ -76,11 +76,11 @@ func verifyAndParseAuthHeaderJwt(req *http.Request) (string, *HttpError) {
 func (plugin JwtPlugin) validateToken(token string) (*jwt.Token, *HttpError) {
 	tokenInvalidErr := NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
 
-	data := plugin.config["data"].(map[string]interface{})
+	config := plugin.config
 	credentials := JwtCredentials{
-		alg:    data["alg"].(string),
-		iss:    data["iss"].(string),
-		secret: data["secret"].(string),
+		alg:    config["alg"].(string),
+		iss:    config["iss"].(string),
+		secret: config["secret"].(string),
 	}
 
 	jwtToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {

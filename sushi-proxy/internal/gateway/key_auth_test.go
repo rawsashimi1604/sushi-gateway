@@ -17,9 +17,7 @@ func handleKeyAuthRequest(t *testing.T, key string) *httptest.ResponseRecorder {
 
 	// Set the cors plugin data.
 	config, err := CreatePluginConfigInput(map[string]interface{}{
-		"data": map[string]interface{}{
-			"key": "validApiKey",
-		},
+		"key": "validApiKey",
 	})
 	if err != nil {
 		t.Fatal(err)
