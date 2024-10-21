@@ -15,6 +15,9 @@
 # VS_STORE
 .VS_Store/
 
+# intelliJ
+.idea/
+
 # Certificate files
 *.pem
 *.crt
