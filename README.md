@@ -72,7 +72,7 @@ web application.
 
 ## TODO LIST
 
-- [ ] design database schema
+- [x] design database schema
 - [ ] provide database configuration options
 - [x] sushi manager update logo
 - [x] Logout endpoint to delete httponly cookie

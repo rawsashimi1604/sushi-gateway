@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/api"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"log"
 	"log/slog"
 	"net/http"
@@ -64,6 +65,8 @@ func main() {
 		}
 	}()
 
+	db.ConnectDb()
+	
 	// Block forever
 	select {}
 }
