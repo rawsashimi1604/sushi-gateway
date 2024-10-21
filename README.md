@@ -142,6 +142,8 @@ create a postgres database.
 - `\c sushi`
 - `docker cp init.sql postgres-db:/init.sql`
 - `docker exec -it postgres-db psql -U postgres -d sushi -f /init.sql`
+- `docker cp mock.sql postgres-db:/mock.sql`
+- `docker exec -it postgres-db psql -U postgres -d sushi -f /mock.sql`
 - `\c`
 - `\dt`
 

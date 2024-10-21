@@ -1,3 +1,11 @@
+DROP TABLE IF EXISTS service_plugin;
+DROP TABLE IF EXISTS route_plugin;
+DROP TABLE IF EXISTS plugin;
+DROP TABLE IF EXISTS route_methods;
+DROP TABLE IF EXISTS route;
+DROP TABLE IF EXISTS upstream;
+DROP TABLE IF EXISTS service;
+
 CREATE TABLE service (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -29,7 +37,8 @@ CREATE TABLE route_methods (
 CREATE TABLE plugin (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    config JSON NOT NULL
+    config JSON NOT NULL,
+    enabled BOOLEAN NOT NULL
 );
 
 CREATE TABLE service_plugin (
@@ -43,3 +52,4 @@ CREATE TABLE route_plugin (
     plugin_id TEXT REFERENCES plugin(id),
     PRIMARY KEY (route_id, plugin_id)
 );
+

@@ -2,21 +2,23 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/lib/pq"
-	"log"
 	"log/slog"
 )
 
 func ConnectDb() {
-	// Connection details
-	connStr := "host=localhost port=5432 user=postgres password=mysecretpassword dbname=sushi sslmode=disable"
+
+	connStr := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		"localhost", "5432", "postgres", "mysecretpassword", "sushi",
+	)
 
 	// Connect to the database
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
 	}
-
 	defer db.Close()
 
 	// Test the connection
