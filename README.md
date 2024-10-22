@@ -65,7 +65,6 @@ web application.
 ## GETTING STARTED
 
 ### docker-compose
-
 - Go to `docker` folder
 - Ensure have required TLS certs
 - Run `docker compose up`
@@ -73,7 +72,7 @@ web application.
 ## TODO LIST
 
 - [x] design database schema
-- [ ] provide database configuration options
+- [ ] provide database configuration options ( env variables to inject database env in )
 - [x] sushi manager update logo
 - [x] Logout endpoint to delete httponly cookie
 - [ ] sushi manager update gateway state to get types and also domain object to retrieve from gateway state.
@@ -137,7 +136,7 @@ https/tls support has been added to the proxy, add cert and key into environment
 
 create a postgres database.
 - `docker run --name postgres-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres`
-- `docker exec -it postgres-db psql -U postgres`
+- `docker exec -it postgres-db psql -U postgres -d sushi`
 - `CREATE DATABASE sushi;`
 - `\c sushi`
 - `docker cp init.sql postgres-db:/init.sql`
@@ -145,7 +144,6 @@ create a postgres database.
 - `docker cp mock.sql postgres-db:/mock.sql`
 - `docker exec -it postgres-db psql -U postgres -d sushi -f /mock.sql`
 - `\c`
-- `\dt`
 
 ## Plugins
 

@@ -21,7 +21,6 @@ func ConnectDb() (*sql.DB, error) {
 		slog.Error(err.Error())
 		return nil, err
 	}
-	defer db.Close()
 
 	// Test the connection
 	err = db.Ping()

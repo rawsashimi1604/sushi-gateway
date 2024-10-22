@@ -65,8 +65,15 @@ func main() {
 		}
 	}()
 
-	db.ConnectDb()
-	
+	databaseConn, _ := db.ConnectDb()
+	serviceRepo := db.NewServiceRepository(databaseConn)
+	services, err := serviceRepo.GetAllServices()
+	if err != nil {
+		slog.Info(err.Error())
+	}
+	for _, svc := range services {
+		slog.Info("name: " + svc.Name)
+	}
 	// Block forever
 	select {}
 }

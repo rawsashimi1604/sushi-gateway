@@ -18,6 +18,14 @@ func GetPlugins(scope string) {
 
 }
 
-func AddPlugin() {
+func AddPlugin(scope string) {
+
+}
+
+func EditPlugin(scope string) {
+
+}
+
+func DeletePlugin(name string) {
 
 }
