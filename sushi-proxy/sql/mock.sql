@@ -1,3 +1,7 @@
+INSERT INTO gateway (name)
+VALUES ('sushi_gateway');
+
+
 -- Insert mock data into the service table
 INSERT INTO service (name, base_path, protocol, load_balancing_alg)
 VALUES

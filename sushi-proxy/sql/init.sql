@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS gateway;
 DROP TABLE IF EXISTS plugin_scope;
 DROP TABLE IF EXISTS service_plugin;
 DROP TABLE IF EXISTS route_plugin;
@@ -6,6 +7,10 @@ DROP TABLE IF EXISTS route_methods;
 DROP TABLE IF EXISTS route;
 DROP TABLE IF EXISTS upstream;
 DROP TABLE IF EXISTS service;
+
+CREATE TABLE gateway (
+    name TEXT PRIMARY KEY
+);
 
 CREATE TABLE service (
     name TEXT PRIMARY KEY,
