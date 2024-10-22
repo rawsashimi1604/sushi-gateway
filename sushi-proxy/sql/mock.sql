@@ -27,26 +27,26 @@ VALUES
     ('sushi-provision-jwt', 'GET');
 
 -- Insert mock data into the plugin table
-INSERT INTO plugin (id, name, config, enabled)
+INSERT INTO plugin (id, name, config, enabled, scope)
 VALUES
-    ('1', 'http_log', '{"http_endpoint": "http://localhost:3000/v1/log", "method": "POST", "content_type": "application/json"}', true),
-    ('2', 'mtls', '{}', false),
-    ('3', 'key_auth', '{"key": "123456"}', false),
-    ('4', 'rate_limit', '{"limit_second": 10, "limit_min": 10, "limit_hour": 10}', true),
-    ('5', 'basic_auth', '{"username": "admin", "password": "changeme"}', true),
-    ('6', 'jwt', '{"alg": "HS256", "iss": "someIssuerKey", "secret": "123secret456"}', false),
-    ('7', 'acl', '{"whitelist": ["127.0.0.1", "127.0.0.2"], "blacklist": ["192.168.0.1"]}', true),
-    ('8', 'bot_protection', '{"blacklist": ["googlebot", "bingbot", "yahoobot"]}', true),
-    ('9', 'request_size_limit', '{"max_payload_size": 10}', true),
-    ('10', 'cors', '{"allow_origins": ["*"], "allow_methods": ["GET", "POST"], "allow_headers": ["Authorization", "Content-Type"], "expose_headers": ["Authorization"], "allow_credentials": true, "allow_private_network": false, "preflight_continue": false, "max_age": 3600}', true);
+    ('1', 'http_log', '{"http_endpoint": "http://localhost:3000/v1/log", "method": "POST", "content_type": "application/json"}', true, 'global'),
+    ('2', 'mtls', '{}', false, 'service'),
+    ('3', 'key_auth', '{"key": "123456"}', false, 'service'),
+    ('4', 'rate_limit', '{"limit_second": 10, "limit_min": 10, "limit_hour": 10}', true, 'service'),
+    ('5', 'basic_auth', '{"username": "admin", "password": "changeme"}', true, 'service'),
+    ('6', 'jwt', '{"alg": "HS256", "iss": "someIssuerKey", "secret": "123secret456"}', false, 'route'),
+    ('7', 'acl', '{"whitelist": ["127.0.0.1", "127.0.0.2"], "blacklist": ["192.168.0.1"]}', true, 'route'),
+    ('8', 'bot_protection', '{"blacklist": ["googlebot", "bingbot", "yahoobot"]}', true, 'route'),
+    ('9', 'request_size_limit', '{"max_payload_size": 10}', true, 'route'),
+    ('10', 'cors', '{"allow_origins": ["*"], "allow_methods": ["GET", "POST"], "allow_headers": ["Authorization", "Content-Type"], "expose_headers": ["Authorization"], "allow_credentials": true, "allow_private_network": false, "preflight_continue": false, "max_age": 3600}', true, 'route');
 
 -- Insert mock data into the service_plugin table (associating plugins with the service)
-INSERT INTO service_plugin (service_name, plugin_id)
+INSERT INTO service_plugin (plugin_id, service_name)
 VALUES
-    ('sushi-svc', '4'), -- rate_limit plugin for sushi-svc
-    ('sushi-svc', '5'); -- basic_auth plugin for sushi-svc
+    ('4', 'sushi-svc'), -- rate_limit plugin for sushi-svc
+    ('5', 'sushi-svc'); -- basic_auth plugin for sushi-svc
 
 -- Insert mock data into the route_plugin table (associating plugins with specific routes)
-INSERT INTO route_plugin (route_name, plugin_id)
+INSERT INTO route_plugin (plugin_id, route_name)
 VALUES
-    ('get-sushi', '4'); -- rate_limit plugin for the get-sushi route
+    ('4', 'get-sushi'); -- rate_limit plugin for the "get-sushi" route

@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS plugin_scope;
 DROP TABLE IF EXISTS service_plugin;
 DROP TABLE IF EXISTS route_plugin;
 DROP TABLE IF EXISTS plugin;
@@ -37,7 +38,8 @@ CREATE TABLE plugin (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     config JSON NOT NULL,
-    enabled BOOLEAN NOT NULL
+    enabled BOOLEAN NOT NULL,
+    scope TEXT CHECK (scope IN ('global', 'service', 'route')) NOT NULL
 );
 
 CREATE TABLE service_plugin (
