@@ -139,3 +139,134 @@ func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error
 
 	return services, nil
 }
+
+func (serviceRepo *ServiceRepository) AddService(service gateway.Service) error {
+	tx, err := serviceRepo.db.Begin() // Start a transaction
+	if err != nil {
+		return fmt.Errorf("failed to start transaction: %w", err)
+	}
+
+	// Rollback if there's an error during the transaction
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// 1. Insert the service into the service table
+	serviceInsertQuery := `INSERT INTO service (name, base_path, protocol, load_balancing_alg) 
+						   VALUES ($1, $2, $3, $4)`
+	_, err = tx.Exec(serviceInsertQuery, service.Name, service.BasePath, service.Protocol, service.LoadBalancingStrategy)
+	if err != nil {
+		return fmt.Errorf("failed to insert service: %w", err)
+	}
+
+	// 2. Insert upstreams for the service
+	upstreamInsertQuery := `INSERT INTO upstream (id, service_name, host, port) VALUES ($1, $2, $3, $4)`
+	for _, upstream := range service.Upstreams {
+		_, err = tx.Exec(upstreamInsertQuery, upstream.Id, service.Name, upstream.Host, upstream.Port)
+		if err != nil {
+			return fmt.Errorf("failed to insert upstream for service %s: %w", service.Name, err)
+		}
+	}
+
+	// 3. Insert routes for the service
+	routeInsertQuery := `INSERT INTO route (name, service_name, path) VALUES ($1, $2, $3)`
+	for _, route := range service.Routes {
+		_, err = tx.Exec(routeInsertQuery, route.Name, service.Name, route.Path)
+		if err != nil {
+			return fmt.Errorf("failed to insert route for service %s: %w", service.Name, err)
+		}
+
+		// Insert route methods
+		methodInsertQuery := `INSERT INTO route_methods (route_name, method) VALUES ($1, $2)`
+		for _, method := range route.Methods {
+			_, err = tx.Exec(methodInsertQuery, route.Name, method)
+			if err != nil {
+				return fmt.Errorf("failed to insert method for route %s: %w", route.Name, err)
+			}
+		}
+
+		// Insert route plugins
+		routePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled) 
+		                           VALUES ($1, $2, $3, $4)
+								   ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, config = EXCLUDED.config, enabled = EXCLUDED.enabled`
+		routePluginMappingQuery := `INSERT INTO route_plugin (route_name, plugin_id) VALUES ($1, $2)`
+		for _, plugin := range route.Plugins {
+			pluginConfig, err := json.Marshal(plugin.Config)
+			if err != nil {
+				return fmt.Errorf("failed to marshal plugin config for route %s: %w", route.Name, err)
+			}
+
+			_, err = tx.Exec(routePluginInsertQuery, plugin.Id, plugin.Name, pluginConfig, plugin.Enabled)
+			if err != nil {
+				return fmt.Errorf("failed to insert plugin for route %s: %w", route.Name, err)
+			}
+
+			_, err = tx.Exec(routePluginMappingQuery, route.Name, plugin.Id)
+			if err != nil {
+				return fmt.Errorf("failed to associate plugin with route %s: %w", route.Name, err)
+			}
+		}
+	}
+
+	// 4. Insert service-level plugins
+	servicePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled) 
+		                        VALUES ($1, $2, $3, $4)
+								ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, config = EXCLUDED.config, enabled = EXCLUDED.enabled`
+	servicePluginMappingQuery := `INSERT INTO service_plugin (service_name, plugin_id) VALUES ($1, $2)`
+	for _, plugin := range service.Plugins {
+		pluginConfig, err := json.Marshal(plugin.Config)
+		if err != nil {
+			return fmt.Errorf("failed to marshal plugin config for service %s: %w", service.Name, err)
+		}
+
+		_, err = tx.Exec(servicePluginInsertQuery, plugin.Id, plugin.Name, pluginConfig, plugin.Enabled)
+		if err != nil {
+			return fmt.Errorf("failed to insert plugin for service %s: %w", service.Name, err)
+		}
+
+		_, err = tx.Exec(servicePluginMappingQuery, service.Name, plugin.Id)
+		if err != nil {
+			return fmt.Errorf("failed to associate plugin with service %s: %w", service.Name, err)
+		}
+	}
+
+	// Commit the transaction
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
+}
+
+// DeleteServiceByName deletes a service and all associated data (handled by DELETE CASCADE in DB)
+func (serviceRepo *ServiceRepository) DeleteServiceByName(serviceName string) error {
+	tx, err := serviceRepo.db.Begin() // Start a transaction
+	if err != nil {
+		return fmt.Errorf("failed to start transaction: %w", err)
+	}
+
+	// Rollback if an error occurs
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// Delete the service; CASCADE will delete associated upstreams, routes, plugins, etc.
+	serviceDeleteQuery := `DELETE FROM service WHERE name = $1`
+	_, err = tx.Exec(serviceDeleteQuery, serviceName)
+	if err != nil {
+		return fmt.Errorf("failed to delete service %s: %w", serviceName, err)
+	}
+
+	// Commit the transaction
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
+}
