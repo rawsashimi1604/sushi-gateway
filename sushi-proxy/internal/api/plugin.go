@@ -6,15 +6,6 @@ import (
 	"net/http"
 )
 
-package api
-
-import (
-"encoding/json"
-"github.com/gorilla/mux"
-"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
-"net/http"
-)
-
 type PluginController struct {
 }
 
