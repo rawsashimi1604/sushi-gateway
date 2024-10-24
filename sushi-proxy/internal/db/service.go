@@ -137,6 +137,18 @@ func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error
 		services = append(services, service)
 	}
 
+	// Ensure that plugins are not nil, and initialize as empty arrays where necessary
+	for i := range services {
+		if services[i].Plugins == nil {
+			services[i].Plugins = []gateway.PluginConfig{}
+		}
+		for j := range services[i].Routes {
+			if services[i].Routes[j].Plugins == nil {
+				services[i].Routes[j].Plugins = []gateway.PluginConfig{}
+			}
+		}
+	}
+
 	return services, nil
 }
 
@@ -196,7 +208,7 @@ func (serviceRepo *ServiceRepository) AddService(service gateway.Service) error 
 			// Insert or update the plugin in the plugin table
 			routePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled) 
 									   VALUES ($1, $2, $3, $4)
-									   ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, config = EXCLUDED.config, enabled = EXCLUDED.enabled`
+									   `
 			_, err = tx.Exec(routePluginInsertQuery, plugin.Id, plugin.Name, pluginConfig, plugin.Enabled)
 			if err != nil {
 				return fmt.Errorf("failed to insert plugin for route %s: %w", route.Name, err)
@@ -221,7 +233,7 @@ func (serviceRepo *ServiceRepository) AddService(service gateway.Service) error 
 		// Insert or update the plugin in the plugin table
 		servicePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled) 
 									 VALUES ($1, $2, $3, $4)
-									 ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, config = EXCLUDED.config, enabled = EXCLUDED.enabled`
+									 `
 		_, err = tx.Exec(servicePluginInsertQuery, plugin.Id, plugin.Name, pluginConfig, plugin.Enabled)
 		if err != nil {
 			return fmt.Errorf("failed to insert plugin for service %s: %w", service.Name, err)

@@ -46,7 +46,7 @@ func (routeRepo *RouteRepository) AddRoute(serviceName string, route gateway.Rou
 	// 3. Insert plugins for the route
 	routePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled) 
                                VALUES ($1, $2, $3, $4)
-                               ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, config = EXCLUDED.config, enabled = EXCLUDED.enabled`
+                               `
 	routePluginMappingQuery := `INSERT INTO route_plugin (route_name, plugin_id) VALUES ($1, $2)`
 	for _, plugin := range route.Plugins {
 		pluginConfig, err := json.Marshal(plugin.Config)

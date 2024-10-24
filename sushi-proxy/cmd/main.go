@@ -74,7 +74,7 @@ func main() {
 	for _, svc := range services {
 		slog.Info("name: " + svc.Name)
 	}
-
+	
 	//service2 := services[0]
 	//service2.Name = "svc2"
 	//service2.Plugins = make([]gateway.PluginConfig, 0)

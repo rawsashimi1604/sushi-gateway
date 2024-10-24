@@ -7,8 +7,8 @@ import (
 	"sync"
 )
 
-// TODO: move this file to config...
 // TODO: cron job to sync config in the case of db configuration.
+// TODO: add method to sync config.
 
 // Reads from gateway.json file from root directory...
 var GlobalProxyConfig ProxyConfig

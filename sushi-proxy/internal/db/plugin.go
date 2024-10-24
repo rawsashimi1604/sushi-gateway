@@ -90,7 +90,7 @@ func (pluginRepo *PluginRepository) AddPlugin(scope string, plugin gateway.Plugi
 	// Insert the plugin into the plugin table
 	pluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled, scope) 
 						  VALUES ($1, $2, $3, $4, $5)
-						  ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, config = EXCLUDED.config, enabled = EXCLUDED.enabled`
+						  `
 	_, err = tx.Exec(pluginInsertQuery, plugin.Id, plugin.Name, pluginConfig, plugin.Enabled, scope)
 	if err != nil {
 		return fmt.Errorf("failed to insert or update plugin: %w", err)

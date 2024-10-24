@@ -3,14 +3,16 @@ package api
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"net/http"
 )
 
 type RouteController struct {
+	routeRepo *db.RouteRepository
 }
 
-func NewRouteController() *RouteController {
-	return &RouteController{}
+func NewRouteController(routeRepo *db.RouteRepository) *RouteController {
+	return &RouteController{routeRepo: routeRepo}
 }
 
 func (r *RouteController) RegisterRoutes(router *mux.Router) {
