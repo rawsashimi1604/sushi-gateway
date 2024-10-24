@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Generates uuids for model objects.
 type UUIDGenerator struct {
 }
 

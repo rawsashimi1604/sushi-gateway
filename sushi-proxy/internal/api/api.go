@@ -22,7 +22,7 @@ func NewAdminApiRouter(database *sql.DB) http.Handler {
 	// Admin API only add routes if hosted in db mode.
 	// Service Resource
 	var serviceController *ServiceController
-	if database != nil {
+	if database == nil {
 		serviceController = NewServiceController(nil)
 	} else {
 		serviceController = NewServiceController(db.NewServiceRepository(database))

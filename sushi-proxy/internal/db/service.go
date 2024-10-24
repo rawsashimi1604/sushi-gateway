@@ -206,8 +206,8 @@ func (serviceRepo *ServiceRepository) AddService(service gateway.Service) error 
 			}
 
 			// Insert or update the plugin in the plugin table
-			routePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled) 
-									   VALUES ($1, $2, $3, $4)
+			routePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled, scope) 
+									   VALUES ($1, $2, $3, $4, 'route')
 									   `
 			_, err = tx.Exec(routePluginInsertQuery, plugin.Id, plugin.Name, pluginConfig, plugin.Enabled)
 			if err != nil {
@@ -231,8 +231,8 @@ func (serviceRepo *ServiceRepository) AddService(service gateway.Service) error 
 		}
 
 		// Insert or update the plugin in the plugin table
-		servicePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled) 
-									 VALUES ($1, $2, $3, $4)
+		servicePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled, scope) 
+									 VALUES ($1, $2, $3, $4, 'service')
 									 `
 		_, err = tx.Exec(servicePluginInsertQuery, plugin.Id, plugin.Name, pluginConfig, plugin.Enabled)
 		if err != nil {

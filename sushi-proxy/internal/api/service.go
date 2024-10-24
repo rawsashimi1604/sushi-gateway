@@ -18,10 +18,9 @@ func NewServiceController(serviceRepo *db.ServiceRepository) *ServiceController 
 }
 
 func (s *ServiceController) RegisterRoutes(router *mux.Router) {
-	router.PathPrefix("/service").
-		Methods("GET").Handler(ProtectRouteUsingJWT(s.GetServices())).
-		Methods("POST").Handler(ProtectRouteUsingJWT(s.AddService())).
-		Methods("DELETE").Handler(ProtectRouteUsingJWT(s.DeleteServiceByName()))
+	router.PathPrefix("/service").Methods("GET").Handler(ProtectRouteUsingJWT(s.GetServices()))
+	router.PathPrefix("/service").Methods("POST").Handler(ProtectRouteUsingJWT(s.AddService()))
+	router.PathPrefix("/service").Methods("DELETE").Handler(ProtectRouteUsingJWT(s.DeleteServiceByName()))
 }
 
 func (s *ServiceController) GetServices() http.HandlerFunc {
@@ -55,7 +54,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 			slog.Info(err.Error())
 			httperr := &gateway.HttpError{
 				Code:     "CREATE_SERVICE_ERR",
-				Message:  "failed to decode service from request",
+				Message:  "failed to decode service from request body",
 				HttpCode: http.StatusBadRequest,
 			}
 			httperr.WriteLogMessage()
