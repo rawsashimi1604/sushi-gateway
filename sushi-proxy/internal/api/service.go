@@ -6,6 +6,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/validator"
 	"log/slog"
 	"net/http"
 )
@@ -63,7 +64,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 			return
 		}
 
-		// Call the service repository to add the service
+		// Check service exists.
 		services, err := s.serviceRepo.GetAllServices()
 		for _, svc := range services {
 			if svc.Name == newService.Name {
@@ -87,6 +88,20 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 				httperr.WriteJSONResponse(w)
 				return
 			}
+		}
+
+		// Validate the service
+		serviceValidator := validator.NewServiceValidator()
+		if err := serviceValidator.ValidateService(newService); err != nil {
+			slog.Info("service validation failed")
+			httperr := &model.HttpError{
+				Code:     "CREATE_SERVICE_ERR",
+				Message:  err.Error(),
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
 		}
 
 		// Generate UUIDs
