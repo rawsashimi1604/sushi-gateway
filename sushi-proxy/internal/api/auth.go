@@ -29,8 +29,8 @@ func NewAuthController() *AuthController {
 }
 
 func (c *AuthController) RegisterRoutes(router *mux.Router) {
-	router.PathPrefix("/login").Methods("POST").HandlerFunc(c.Login())
-	router.PathPrefix("/logout").Methods("DELETE").HandlerFunc(c.Logout())
+	router.Path("/login").Methods("POST").HandlerFunc(c.Login())
+	router.Path("/logout").Methods("DELETE").HandlerFunc(c.Logout())
 }
 
 func (c *AuthController) Login() http.HandlerFunc {

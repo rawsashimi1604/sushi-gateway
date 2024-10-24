@@ -22,8 +22,8 @@ func NewRouteController(routeRepo *db.RouteRepository,
 }
 
 func (r *RouteController) RegisterRoutes(router *mux.Router) {
-	router.PathPrefix("/route").Methods("POST").Handler(ProtectRouteUsingJWT(r.AddRoute()))
-	router.PathPrefix("/route").Methods("DELETE").Handler(ProtectRouteUsingJWT(r.DeleteRouteByName()))
+	router.Path("/route").Methods("POST").Handler(ProtectRouteUsingJWT(r.AddRoute()))
+	router.Path("/route").Methods("DELETE").Handler(ProtectRouteUsingJWT(r.DeleteRouteByName()))
 }
 
 // RouteDTO represents the structure for adding a new route, including the service name.
