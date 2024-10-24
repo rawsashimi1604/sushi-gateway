@@ -3,6 +3,7 @@ package gateway
 import (
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 	"sync"
@@ -32,10 +33,10 @@ type RateLimitStore struct {
 
 type RateLimitPlugin struct {
 	config      map[string]interface{}
-	proxyConfig *ProxyConfig
+	proxyConfig *model.ProxyConfig
 }
 
-func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *ProxyConfig) *Plugin {
+func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *model.ProxyConfig) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_RATE_LIMIT,
 		Priority: 10,
@@ -46,7 +47,7 @@ func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *ProxyConfig)
 	}
 }
 
-func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *Service, route *Route, r *http.Request) (string, *HttpError) {
+func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *model.Service, route *model.Route, r *http.Request) (string, *HttpError) {
 	// Check whether global, service or route level rate limit.
 	for _, servicePlugin := range service.Plugins {
 		name := servicePlugin.Name
@@ -65,7 +66,7 @@ func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *Service, ro
 	return "global", nil
 }
 
-func (plugin RateLimitPlugin) getMapKeyEntry(configLevel string, service *Service, route *Route) string {
+func (plugin RateLimitPlugin) getMapKeyEntry(configLevel string, service *model.Service, route *model.Route) string {
 	if configLevel == "global" {
 		return "global"
 	}

@@ -1,4 +1,4 @@
-package gateway
+package model
 
 type ProxyConfig struct {
 	Global struct {

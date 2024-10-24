@@ -2,12 +2,14 @@ package gateway
 
 import (
 	"fmt"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-func GetServiceAndRouteFromRequest(proxyConfig *ProxyConfig, req *http.Request) (*Service, *Route, *HttpError) {
+func GetServiceAndRouteFromRequest(proxyConfig *model.ProxyConfig, req *http.Request) (*model.Service, *model.Route, *HttpError) {
 	path := req.URL.Path
 	parts := strings.Split(path, "/")
 
@@ -27,7 +29,7 @@ func GetServiceAndRouteFromRequest(proxyConfig *ProxyConfig, req *http.Request) 
 	for _, service := range proxyConfig.Services {
 		if service.BasePath == serviceBasePath {
 			for _, route := range service.Routes {
-				routeContainsMethod := SliceContainsString(route.Methods, req.Method)
+				routeContainsMethod := util.SliceContainsString(route.Methods, req.Method)
 				if MatchRoute(&route, routePath) && routeContainsMethod {
 					return &service, &route, nil
 				}
@@ -49,7 +51,7 @@ func GetServiceAndRouteFromRequest(proxyConfig *ProxyConfig, req *http.Request) 
 }
 
 // Check whether the route exists in the service, match either static or dynamic routes
-func MatchRoute(route *Route, requestPath string) bool {
+func MatchRoute(route *model.Route, requestPath string) bool {
 	// if not contains any {param} in route path, do a simple static match
 	isStaticRoute := !strings.Contains(route.Path, "{") && !strings.Contains(route.Path, "}")
 	if isStaticRoute {

@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 type RouteRepository struct {
@@ -15,7 +15,79 @@ func NewRouteRepository(db *sql.DB) *RouteRepository {
 	return &RouteRepository{db: db}
 }
 
-func (routeRepo *RouteRepository) AddRoute(serviceName string, route gateway.Route) error {
+// GetAllRoutes retrieves all routes from the database, including their methods and plugins.
+func (routeRepo *RouteRepository) GetAllRoutes(serviceName string) ([]model.Route, error) {
+	var routes []model.Route
+
+	// 1. Query to get all routes associated with the service
+	routeQuery := `SELECT name, path FROM route WHERE service_name = $1`
+	routeRows, err := routeRepo.db.Query(routeQuery, serviceName)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch routes: %w", err)
+	}
+	defer routeRows.Close()
+
+	for routeRows.Next() {
+		var route model.Route
+		err := routeRows.Scan(&route.Name, &route.Path)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan route: %w", err)
+		}
+
+		// 2. Query to get the methods for the current route
+		methodQuery := `SELECT method FROM route_methods WHERE route_name = $1`
+		methodRows, err := routeRepo.db.Query(methodQuery, route.Name)
+		if err != nil {
+			return nil, fmt.Errorf("failed to fetch methods for route %s: %w", route.Name, err)
+		}
+		defer methodRows.Close()
+
+		for methodRows.Next() {
+			var method string
+			err := methodRows.Scan(&method)
+			if err != nil {
+				return nil, fmt.Errorf("failed to scan method: %w", err)
+			}
+			route.Methods = append(route.Methods, method)
+		}
+
+		// 3. Query to get the plugins for the current route
+		pluginQuery := `
+			SELECT p.id, p.name, p.config, p.enabled
+			FROM plugin p
+			JOIN route_plugin rp ON p.id = rp.plugin_id
+			WHERE rp.route_name = $1`
+		pluginRows, err := routeRepo.db.Query(pluginQuery, route.Name)
+		if err != nil {
+			return nil, fmt.Errorf("failed to fetch plugins for route %s: %w", route.Name, err)
+		}
+		defer pluginRows.Close()
+
+		for pluginRows.Next() {
+			var plugin model.PluginConfig
+			var configBytes []byte // Temporary variable to hold JSON bytes
+
+			// Scan the plugin data and config JSON
+			if err := pluginRows.Scan(&plugin.Id, &plugin.Name, &configBytes, &plugin.Enabled); err != nil {
+				return nil, fmt.Errorf("failed to scan plugin for route %s: %w", route.Name, err)
+			}
+
+			// Unmarshal JSON config into plugin's config map
+			if err := json.Unmarshal(configBytes, &plugin.Config); err != nil {
+				return nil, fmt.Errorf("failed to unmarshal plugin config for route %s: %w", route.Name, err)
+			}
+
+			route.Plugins = append(route.Plugins, plugin)
+		}
+
+		// Add the route with its methods and plugins to the list of routes
+		routes = append(routes, route)
+	}
+
+	return routes, nil
+}
+
+func (routeRepo *RouteRepository) AddRoute(serviceName string, route model.Route) error {
 	tx, err := routeRepo.db.Begin() // Start a transaction
 	if err != nil {
 		return fmt.Errorf("failed to start transaction: %w", err)

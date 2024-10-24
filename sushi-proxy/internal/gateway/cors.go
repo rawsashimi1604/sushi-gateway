@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -72,10 +73,10 @@ func (plugin CorsPlugin) parseCORSConfig() CORSConfig {
 	config := plugin.config
 
 	corsConfig := CORSConfig{
-		AllowOrigins:        ToStringSlice(config["allow_origins"].([]interface{})),
-		AllowMethods:        ToStringSlice(config["allow_methods"].([]interface{})),
-		AllowHeaders:        ToStringSlice(config["allow_headers"].([]interface{})),
-		ExposeHeaders:       ToStringSlice(config["expose_headers"].([]interface{})),
+		AllowOrigins:        util.ToStringSlice(config["allow_origins"].([]interface{})),
+		AllowMethods:        util.ToStringSlice(config["allow_methods"].([]interface{})),
+		AllowHeaders:        util.ToStringSlice(config["allow_headers"].([]interface{})),
+		ExposeHeaders:       util.ToStringSlice(config["expose_headers"].([]interface{})),
 		AllowCredentials:    config["allow_credentials"].(bool),
 		AllowPrivateNetwork: config["allow_private_network"].(bool),
 		PreflightContinue:   config["preflight_continue"].(bool),

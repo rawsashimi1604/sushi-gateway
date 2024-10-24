@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"net/http"
 	"sort"
 )
@@ -54,7 +55,7 @@ func NewPluginManagerFromConfig(req *http.Request) (*PluginManager, *HttpError) 
 }
 
 // Load the plugin configuration from the gateway file
-func (pm *PluginManager) loadConfig(pc PluginConfig) *HttpError {
+func (pm *PluginManager) loadConfig(pc model.PluginConfig) *HttpError {
 	// Skip as not enabled.
 	if !pc.Enabled {
 		return nil

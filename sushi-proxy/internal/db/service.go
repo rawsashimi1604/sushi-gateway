@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log"
 )
 
@@ -16,9 +16,9 @@ func NewServiceRepository(db *sql.DB) *ServiceRepository {
 	return &ServiceRepository{db: db}
 }
 
-func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error) {
+func (serviceRepo *ServiceRepository) GetAllServices() ([]model.Service, error) {
 
-	var services []gateway.Service
+	var services []model.Service
 	serviceRows, err := serviceRepo.db.Query("SELECT name, base_path, protocol, load_balancing_alg FROM service")
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch services: %w", err)
@@ -26,7 +26,7 @@ func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error
 	defer serviceRows.Close()
 
 	for serviceRows.Next() {
-		var service gateway.Service
+		var service model.Service
 		err := serviceRows.Scan(&service.Name, &service.BasePath, &service.Protocol, &service.LoadBalancingStrategy)
 		if err != nil {
 			log.Printf("failed to scan service: %v\n", err)
@@ -39,7 +39,7 @@ func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error
 			return nil, fmt.Errorf("failed to fetch upstreams for service %s: %w", service.Name, err)
 		}
 		for upstreamRows.Next() {
-			var upstream gateway.Upstream
+			var upstream model.Upstream
 			if err := upstreamRows.Scan(&upstream.Id, &upstream.Host, &upstream.Port); err != nil {
 				log.Printf("failed to scan upstream: %v\n", err)
 				continue
@@ -54,7 +54,7 @@ func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error
 			return nil, fmt.Errorf("failed to fetch routes for service %s: %w", service.Name, err)
 		}
 		for routeRows.Next() {
-			var route gateway.Route
+			var route model.Route
 			if err := routeRows.Scan(&route.Name, &route.Path); err != nil {
 				log.Printf("failed to scan route: %v\n", err)
 				continue
@@ -86,7 +86,7 @@ func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error
 				continue
 			}
 			for pluginRows.Next() {
-				var plugin gateway.PluginConfig
+				var plugin model.PluginConfig
 				var configBytes []byte // Temporary byte slice to hold the JSON data
 
 				// Scan the basic fields and the raw JSON into configBytes
@@ -117,7 +117,7 @@ func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error
 			return nil, fmt.Errorf("failed to fetch plugins for service %s: %w", service.Name, err)
 		}
 		for servicePluginRows.Next() {
-			var plugin gateway.PluginConfig
+			var plugin model.PluginConfig
 			var configBytes []byte // Temporary byte slice to hold the JSON data
 
 			// Scan the basic fields and the raw JSON into configBytes
@@ -140,11 +140,11 @@ func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error
 	// Ensure that plugins are not nil, and initialize as empty arrays where necessary
 	for i := range services {
 		if services[i].Plugins == nil {
-			services[i].Plugins = []gateway.PluginConfig{}
+			services[i].Plugins = []model.PluginConfig{}
 		}
 		for j := range services[i].Routes {
 			if services[i].Routes[j].Plugins == nil {
-				services[i].Routes[j].Plugins = []gateway.PluginConfig{}
+				services[i].Routes[j].Plugins = []model.PluginConfig{}
 			}
 		}
 	}
@@ -152,7 +152,7 @@ func (serviceRepo *ServiceRepository) GetAllServices() ([]gateway.Service, error
 	return services, nil
 }
 
-func (serviceRepo *ServiceRepository) AddService(service gateway.Service) error {
+func (serviceRepo *ServiceRepository) AddService(service model.Service) error {
 	tx, err := serviceRepo.db.Begin()
 	if err != nil {
 		return fmt.Errorf("failed to start transaction: %w", err)

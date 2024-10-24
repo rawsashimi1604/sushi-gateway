@@ -1,29 +1,13 @@
 package gateway
 
 import (
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"sync"
 )
 
 // Contains all logic related to getting the upstream for load balancing based on the load balancing strategy.
 type LoadBalancer struct {
 	mu sync.Mutex
-}
-
-type LoadBalancingAlgorithm string
-
-const (
-	RoundRobin LoadBalancingAlgorithm = "round_robin"
-	Weighted   LoadBalancingAlgorithm = "weighted"
-	IPHash     LoadBalancingAlgorithm = "ip_hash"
-)
-
-func (alg LoadBalancingAlgorithm) IsValid() bool {
-	switch alg {
-	case RoundRobin, Weighted, IPHash:
-		return true
-	default:
-		return false
-	}
 }
 
 // Create a round robin cache based on service name
@@ -35,9 +19,9 @@ func NewLoadBalancer() *LoadBalancer {
 }
 
 // Gets the index of upstream to forward the request to based on the load balancing algorithm
-func (lb *LoadBalancer) GetNextUpstream(service Service) int {
+func (lb *LoadBalancer) GetNextUpstream(service model.Service) int {
 	switch service.LoadBalancingStrategy {
-	case RoundRobin:
+	case model.RoundRobin:
 		return lb.handleRoundRobin(service)
 	default:
 		return 0
@@ -45,9 +29,9 @@ func (lb *LoadBalancer) GetNextUpstream(service Service) int {
 }
 
 // Get the current upstream request is routed to.
-func (lb *LoadBalancer) GetCurrentUpstream(service Service) int {
+func (lb *LoadBalancer) GetCurrentUpstream(service model.Service) int {
 	switch service.LoadBalancingStrategy {
-	case RoundRobin:
+	case model.RoundRobin:
 		return roundRobinCache[service.Name]
 	default:
 		return 0
@@ -59,7 +43,7 @@ func Reset() {
 	roundRobinCache = make(map[string]int)
 }
 
-func (lb *LoadBalancer) handleRoundRobin(service Service) int {
+func (lb *LoadBalancer) handleRoundRobin(service model.Service) int {
 	lb.mu.Lock()
 	defer lb.mu.Unlock()
 	if len(service.Upstreams) == 1 {

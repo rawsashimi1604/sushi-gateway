@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"github.com/fsnotify/fsnotify"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"os"
 	"sync"
@@ -11,7 +12,7 @@ import (
 // TODO: add method to sync config.
 
 // Reads from gateway.json file from root directory...
-var GlobalProxyConfig ProxyConfig
+var GlobalProxyConfig model.ProxyConfig
 var configLock = &sync.RWMutex{}
 
 func LoadProxyConfig(filePath string) {

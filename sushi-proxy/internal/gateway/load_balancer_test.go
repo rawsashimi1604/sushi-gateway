@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"testing"
 )
 
@@ -9,9 +10,9 @@ import (
 func TestRoundRobin(t *testing.T) {
 	Reset()
 	lb := NewLoadBalancer()
-	service := Service{
+	service := model.Service{
 		Name: "test",
-		Upstreams: []Upstream{
+		Upstreams: []model.Upstream{
 			{
 				Host: "localhost",
 				Port: 8080,

@@ -1,4 +1,4 @@
-package gateway
+package util
 
 func SliceContainsString(slice []string, s string) bool {
 	for _, str := range slice {

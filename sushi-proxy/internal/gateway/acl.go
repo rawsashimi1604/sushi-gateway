@@ -3,6 +3,7 @@ package gateway
 import (
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 )
@@ -62,7 +63,7 @@ func ValidateACLPlugin(config map[string]interface{}) {
 func (plugin AclPlugin) isWhitelisted(ip string) bool {
 	// TODO: add validation for this plugin in the gateway file
 	config := plugin.config
-	whitelist := ToStringSlice(config["whitelist"].([]interface{}))
+	whitelist := util.ToStringSlice(config["whitelist"].([]interface{}))
 
 	for _, whitelistedIP := range whitelist {
 		if ip == whitelistedIP {
@@ -75,7 +76,7 @@ func (plugin AclPlugin) isWhitelisted(ip string) bool {
 func (plugin AclPlugin) isBlacklisted(ip string) bool {
 	// TODO: add validation for this plugin in the gateway file
 	config := plugin.config
-	blacklist := ToStringSlice(config["blacklist"].([]interface{}))
+	blacklist := util.ToStringSlice(config["blacklist"].([]interface{}))
 
 	for _, blacklistedIP := range blacklist {
 		if ip == blacklistedIP {

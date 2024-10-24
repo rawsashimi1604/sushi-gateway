@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -43,7 +44,7 @@ func (plugin BotProtectionPlugin) Execute(next http.Handler) http.Handler {
 func (plugin BotProtectionPlugin) verifyIsBot(userAgent string) *HttpError {
 	// TODO: add validation for this plugin in the gateway file
 	config := plugin.config
-	blacklist := ToStringSlice(config["blacklist"].([]interface{}))
+	blacklist := util.ToStringSlice(config["blacklist"].([]interface{}))
 
 	for _, bot := range blacklist {
 		if strings.Contains(userAgent, bot) {

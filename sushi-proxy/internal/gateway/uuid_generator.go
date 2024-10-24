@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"github.com/google/uuid"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 // Generates uuids for model objects.
@@ -12,7 +13,7 @@ func NewUUIDGenerator() *UUIDGenerator {
 	return &UUIDGenerator{}
 }
 
-func (u *UUIDGenerator) GenerateUUIDForService(service Service) {
+func (u *UUIDGenerator) GenerateUUIDForService(service model.Service) {
 	for i := range service.Upstreams {
 		service.Upstreams[i].Id = uuid.New().String()
 	}
@@ -26,7 +27,7 @@ func (u *UUIDGenerator) GenerateUUIDForService(service Service) {
 	}
 }
 
-func (u *UUIDGenerator) GenerateUUIDForRoute(route Route) {
+func (u *UUIDGenerator) GenerateUUIDForRoute(route model.Route) {
 	for i := range route.Plugins {
 		route.Plugins[i].Id = uuid.New().String()
 	}

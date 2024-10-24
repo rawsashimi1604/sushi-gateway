@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log"
 )
 
@@ -18,8 +18,8 @@ func NewPluginRepository(db *sql.DB) *PluginRepository {
 
 // TODO: add methods
 // GetPlugins fetches plugins based on the scope: global, service, or route
-func (pluginRepo *PluginRepository) GetPlugins(scope string, targetName string) ([]gateway.PluginConfig, error) {
-	var plugins []gateway.PluginConfig
+func (pluginRepo *PluginRepository) GetPlugins(scope string, targetName string) ([]model.PluginConfig, error) {
+	var plugins []model.PluginConfig
 	var query string
 
 	switch scope {
@@ -49,7 +49,7 @@ func (pluginRepo *PluginRepository) GetPlugins(scope string, targetName string) 
 	defer rows.Close()
 
 	for rows.Next() {
-		var plugin gateway.PluginConfig
+		var plugin model.PluginConfig
 		var configBytes []byte
 
 		err := rows.Scan(&plugin.Id, &plugin.Name, &configBytes, &plugin.Enabled)
@@ -71,7 +71,7 @@ func (pluginRepo *PluginRepository) GetPlugins(scope string, targetName string) 
 }
 
 // AddPlugin adds a new plugin at the global, service, or route level
-func (pluginRepo *PluginRepository) AddPlugin(scope string, plugin gateway.PluginConfig, targetName string) error {
+func (pluginRepo *PluginRepository) AddPlugin(scope string, plugin model.PluginConfig, targetName string) error {
 	tx, err := pluginRepo.db.Begin()
 	if err != nil {
 		return fmt.Errorf("failed to start transaction: %w", err)

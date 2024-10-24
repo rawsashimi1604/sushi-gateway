@@ -4,12 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/validator"
 	"log/slog"
 	"strings"
 )
 
-func ValidateAndParseSchema(raw []byte) (*ProxyConfig, error) {
-	var config ProxyConfig
+func ValidateAndParseSchema(raw []byte) (*model.ProxyConfig, error) {
+	var config model.ProxyConfig
 	err := json.Unmarshal(raw, &config)
 	if err != nil {
 		slog.Info("Error parsing gateway file", err)
@@ -19,7 +22,7 @@ func ValidateAndParseSchema(raw []byte) (*ProxyConfig, error) {
 	return &config, nil
 }
 
-func ValidateConfig(config *ProxyConfig) error {
+func ValidateConfig(config *model.ProxyConfig) error {
 	if err := validateGeneralConfigs(config); err != nil {
 		return err
 	}
@@ -39,16 +42,17 @@ func ValidateConfig(config *ProxyConfig) error {
 	return nil
 }
 
-func validateGeneralConfigs(config *ProxyConfig) error {
+func validateGeneralConfigs(config *model.ProxyConfig) error {
 	if config.Global.Name == "" {
 		return fmt.Errorf("global name is required")
 	}
 	return nil
 }
 
-func validatePlugins(config *ProxyConfig) error {
+func validatePlugins(config *model.ProxyConfig) error {
 	// Aggregate plugins in the gateway
-	var plugins []PluginConfig
+	var plugins []model.PluginConfig
+	pluginValidator := validator.NewPluginValidator()
 
 	for _, globalPlugin := range config.Global.Plugins {
 		plugins = append(plugins, globalPlugin)
@@ -68,28 +72,22 @@ func validatePlugins(config *ProxyConfig) error {
 
 	// Validate each plugin
 	for _, plugin := range plugins {
-		if plugin.Name == "" {
-			return fmt.Errorf("plugin name is required")
+		err := pluginValidator.ValidatePlugin(plugin)
+		if err != nil {
+			return err
 		}
-
-		if !SliceContainsString(constant.AVAILABLE_PLUGINS, plugin.Name) {
-			return fmt.Errorf("plugin name is invalid. "+
-				"Available plugins: %v", constant.AVAILABLE_PLUGINS)
-		}
-
-		// TODO: validate each plugin data/gateway schema
 	}
 
 	return nil
 }
 
-func validateServices(config *ProxyConfig) error {
+func validateServices(config *model.ProxyConfig) error {
 	var serviceNames []string
 	var servicePaths []string
 
 	for _, service := range config.Services {
 		// Name
-		if SliceContainsString(serviceNames, service.Name) {
+		if util.SliceContainsString(serviceNames, service.Name) {
 			return fmt.Errorf("service name: %s must be unique", service.Name)
 		}
 
@@ -99,7 +97,7 @@ func validateServices(config *ProxyConfig) error {
 		}
 
 		// Path
-		if SliceContainsString(servicePaths, service.BasePath) {
+		if util.SliceContainsString(servicePaths, service.BasePath) {
 			return fmt.Errorf("service path: %s must be unique", service.BasePath)
 		}
 
@@ -112,7 +110,7 @@ func validateServices(config *ProxyConfig) error {
 		}
 
 		// Protocol
-		if !SliceContainsString(constant.AVAILABLE_PROXY_PROTOCOLS, service.Protocol) {
+		if !util.SliceContainsString(constant.AVAILABLE_PROXY_PROTOCOLS, service.Protocol) {
 			return fmt.Errorf("service protocol: %s is invalid, "+
 				"only http and https supported", service.Protocol)
 		}
@@ -128,15 +126,15 @@ func validateServices(config *ProxyConfig) error {
 	return nil
 }
 
-func validateServiceLoadBalancing(service *Service) error {
-	isLoadBalancingAlgValid := LoadBalancingAlgorithm(service.LoadBalancingStrategy).IsValid()
+func validateServiceLoadBalancing(service *model.Service) error {
+	isLoadBalancingAlgValid := service.LoadBalancingStrategy.IsValid()
 	if !isLoadBalancingAlgValid {
 		return fmt.Errorf("service load balancing strategy: %s is invalid", service.LoadBalancingStrategy)
 	}
 	return nil
 }
 
-func validateRoutes(config *ProxyConfig) error {
+func validateRoutes(config *model.ProxyConfig) error {
 
 	var validMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"}
 
@@ -145,12 +143,12 @@ func validateRoutes(config *ProxyConfig) error {
 		var routeNames []string
 		for _, route := range service.Routes {
 			// Path
-			if SliceContainsString(routePaths, route.Path) {
+			if util.SliceContainsString(routePaths, route.Path) {
 				return fmt.Errorf("route path: %s must be unique", route.Path)
 			}
 
 			// Name
-			if SliceContainsString(routeNames, route.Name) {
+			if util.SliceContainsString(routeNames, route.Name) {
 				return fmt.Errorf("route name: %s must be unique", route.Name)
 			}
 
@@ -168,7 +166,7 @@ func validateRoutes(config *ProxyConfig) error {
 			}
 
 			for _, method := range route.Methods {
-				if !SliceContainsString(validMethods, method) {
+				if !util.SliceContainsString(validMethods, method) {
 					return fmt.Errorf("route method: %s is invalid", method)
 				}
 			}

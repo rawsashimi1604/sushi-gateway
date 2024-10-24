@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -63,7 +64,7 @@ func TestRateLimitPluginBypass(t *testing.T) {
 	}
 }
 
-func createMockProxyConfig(t *testing.T) *ProxyConfig {
+func createMockProxyConfig(t *testing.T) *model.ProxyConfig {
 
 	//rateLimitPlugin, err := CreatePluginConfigInput(map[string]interface{}{
 	//	"name":    "rate_limit",
@@ -75,7 +76,7 @@ func createMockProxyConfig(t *testing.T) *ProxyConfig {
 	//	},
 	//})
 
-	rateLimitPlugin := PluginConfig{
+	rateLimitPlugin := model.PluginConfig{
 		Id:      "someId",
 		Name:    "rate_limit",
 		Enabled: true,
@@ -89,28 +90,28 @@ func createMockProxyConfig(t *testing.T) *ProxyConfig {
 	//	t.Fatal(err)
 	//}
 
-	service := Service{
+	service := model.Service{
 		Name:                  "mockService",
 		BasePath:              "/mockService",
 		Protocol:              "http",
 		LoadBalancingStrategy: RoundRobin,
-		Upstreams:             make([]Upstream, 0),
-		Plugins: []PluginConfig{
+		Upstreams:             make([]model.Upstream, 0),
+		Plugins: []model.PluginConfig{
 			rateLimitPlugin,
 		},
-		Routes: []Route{
+		Routes: []model.Route{
 			{
 				Name:    "mockRoute",
 				Path:    "/mockRoute",
 				Methods: []string{"GET"},
-				Plugins: make([]PluginConfig, 0),
+				Plugins: make([]model.PluginConfig, 0),
 			},
 		},
 	}
 
-	proxyConfig := &ProxyConfig{}
+	proxyConfig := &model.ProxyConfig{}
 	proxyConfig.Global.Name = "mockProxy"
-	proxyConfig.Services = []Service{service}
+	proxyConfig.Services = []model.Service{service}
 
 	return proxyConfig
 }

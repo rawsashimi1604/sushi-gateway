@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
@@ -47,12 +47,12 @@ func TestServiceController_AddService(t *testing.T) {
 	serviceRepo := db.NewServiceRepository(database)
 	serviceController := NewServiceController(serviceRepo)
 
-	newService := gateway.Service{
+	newService := model.Service{
 		Name:                  "sushi-svc-3",
 		BasePath:              "/sushi-service-3",
 		Protocol:              "http",
 		LoadBalancingStrategy: "round_robin",
-		Upstreams: []gateway.Upstream{
+		Upstreams: []model.Upstream{
 			{Host: "localhost", Port: 8001},
 		},
 	}

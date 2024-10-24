@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 )
@@ -49,7 +50,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
 		// Decode the incoming request body to a Service struct
-		var newService gateway.Service
+		var newService model.Service
 		if err := json.NewDecoder(req.Body).Decode(&newService); err != nil {
 			slog.Info(err.Error())
 			httperr := &gateway.HttpError{
