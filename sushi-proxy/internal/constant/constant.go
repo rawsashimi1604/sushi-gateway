@@ -12,6 +12,9 @@ const RSA_256 = "RS256"
 
 var AVAILABLE_PROXY_PROTOCOLS = []string{"http", "https"}
 
+// HTTP
+var VALID_METHODS = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"}
+
 // PLUGINS
 var AVAILABLE_PLUGINS = []string{
 	PLUGIN_BASIC_AUTH,

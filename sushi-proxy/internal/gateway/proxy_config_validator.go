@@ -7,7 +7,6 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/validator"
 	"log/slog"
-	"strings"
 )
 
 func ValidateAndParseSchema(raw []byte) (*model.ProxyConfig, error) {
@@ -109,39 +108,20 @@ func validateServices(config *model.ProxyConfig) error {
 
 func validateRoutes(config *model.ProxyConfig) error {
 
-	var validMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"}
-
 	for _, service := range config.Services {
 		var routePaths []string
 		var routeNames []string
-		for _, route := range service.Routes {
-			// Path
-			if util.SliceContainsString(routePaths, route.Path) {
-				return fmt.Errorf("route path: %s must be unique", route.Path)
-			}
+		routeValidator := validator.NewRouteValidator()
 
+		for _, route := range service.Routes {
 			// Name
 			if util.SliceContainsString(routeNames, route.Name) {
 				return fmt.Errorf("route name: %s must be unique", route.Name)
 			}
 
-			if !strings.HasPrefix(route.Path, "/") {
-				return fmt.Errorf("route path: %s must start with /", route.Path)
-			}
-
-			if strings.HasSuffix(route.Path, "/") {
-				return fmt.Errorf("route path: %s must not end with /", route.Path)
-			}
-
-			// Methods
-			if len(route.Methods) == 0 {
-				return fmt.Errorf("route methods must be specified")
-			}
-
-			for _, method := range route.Methods {
-				if !util.SliceContainsString(validMethods, method) {
-					return fmt.Errorf("route method: %s is invalid", method)
-				}
+			// Generic route validations
+			if err := routeValidator.ValidateRoute(route); err != nil {
+				return err
 			}
 
 			routePaths = append(routePaths, route.Path)
