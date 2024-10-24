@@ -7,6 +7,9 @@ import (
 	"sync"
 )
 
+// TODO: move this file to config...
+// TODO: cron job to sync config in the case of db configuration.
+
 // Reads from gateway.json file from root directory...
 var GlobalProxyConfig ProxyConfig
 var configLock = &sync.RWMutex{}

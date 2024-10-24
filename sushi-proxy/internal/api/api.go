@@ -16,7 +16,7 @@ func NewAdminApiRouter() http.Handler {
 
 	authController := NewAuthController()
 	authController.RegisterRoutes(router)
-
+	
 	corsRouter := cors.New(cors.Options{
 		// TODO: externalize manager url
 		AllowedOrigins:   []string{"http://localhost:5173"},
