@@ -18,7 +18,7 @@ func NewServiceController(serviceRepo *db.ServiceRepository) *ServiceController 
 }
 
 func (s *ServiceController) RegisterRoutes(router *mux.Router) {
-	router.PathPrefix("/").
+	router.PathPrefix("/service").
 		Methods("GET").Handler(ProtectRouteUsingJWT(s.GetServices())).
 		Methods("POST").Handler(ProtectRouteUsingJWT(s.AddService())).
 		Methods("DELETE").Handler(ProtectRouteUsingJWT(s.DeleteServiceByName()))

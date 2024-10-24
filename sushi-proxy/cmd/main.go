@@ -56,7 +56,12 @@ func main() {
 
 	// Setup admin api
 	go func() {
-		adminApiRouter := api.NewAdminApiRouter()
+		// TODO: If dbless mode, nil, if db mode set db connection...
+		database, err := db.ConnectDb()
+		if err != nil {
+			panic("unable to connect to database.")
+		}
+		adminApiRouter := api.NewAdminApiRouter(database)
 
 		slog.Info("Started another API server on port: " + constant.PORT_ADMIN_API)
 		if err := http.ListenAndServe(":"+constant.PORT_ADMIN_API, adminApiRouter); err != nil {
@@ -64,26 +69,6 @@ func main() {
 			log.Fatal(err)
 		}
 	}()
-
-	databaseConn, _ := db.ConnectDb()
-	serviceRepo := db.NewServiceRepository(databaseConn)
-	services, err := serviceRepo.GetAllServices()
-	if err != nil {
-		slog.Info(err.Error())
-	}
-	for _, svc := range services {
-		slog.Info("name: " + svc.Name)
-	}
-	
-	//service2 := services[0]
-	//service2.Name = "svc2"
-	//service2.Plugins = make([]gateway.PluginConfig, 0)
-	//service2.Upstreams = make([]gateway.Upstream, 0)
-	//service2.Routes = make([]gateway.Route, 0)
-	//err = serviceRepo.AddService(service2)
-	//if err != nil {
-	//	slog.Info(err.Error())
-	//}
 
 	// Block forever
 	select {}

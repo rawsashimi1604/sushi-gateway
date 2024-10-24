@@ -3,14 +3,16 @@ package api
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"net/http"
 )
 
 type PluginController struct {
+	pluginRepo *db.PluginRepository
 }
 
-func NewPluginController() *PluginController {
-	return &PluginController{}
+func NewPluginController(pluginRepo *db.PluginRepository) *PluginController {
+	return &PluginController{pluginRepo: pluginRepo}
 }
 
 func (p *PluginController) RegisterRoutes(router *mux.Router) {
