@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestServiceController_GetServices(t *testing.T) {
@@ -24,9 +26,7 @@ func TestServiceController_GetServices(t *testing.T) {
 	t.Run("success - get all services", func(t *testing.T) {
 
 		req, err := http.NewRequest("GET", "/", nil)
-		if err != nil {
-			t.Fatal(err)
-		}
+		assert.NoError(t, err)
 
 		rr := httptest.NewRecorder()
 		handler := serviceController.GetServices()
