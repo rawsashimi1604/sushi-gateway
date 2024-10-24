@@ -1,5 +1,6 @@
 package model
 
+// Domain Model of objects in Sushi Gateway
 type ProxyConfig struct {
 	Global struct {
 		Name    string         `json:"name"`

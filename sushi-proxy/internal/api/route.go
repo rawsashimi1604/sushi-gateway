@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
@@ -34,7 +33,7 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 		var routeDTO RouteDTO
 		if err := json.NewDecoder(req.Body).Decode(&routeDTO); err != nil {
 			slog.Info("Failed to decode route DTO from request: " + err.Error())
-			httperr := &gateway.HttpError{
+			httperr := &model.HttpError{
 				Code:     "CREATE_SERVICE_ERR",
 				Message:  "failed to decode route from request body",
 				HttpCode: http.StatusBadRequest,

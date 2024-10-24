@@ -3,6 +3,7 @@ package gateway
 import (
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 )
@@ -35,13 +36,13 @@ func (plugin RequestSizeLimitPlugin) Execute(next http.Handler) http.Handler {
 	})
 }
 
-func (plugin RequestSizeLimitPlugin) checkRequestLength(r *http.Request) *HttpError {
+func (plugin RequestSizeLimitPlugin) checkRequestLength(r *http.Request) *model.HttpError {
 	config := plugin.config
 	maxPayloadSize := config["max_payload_size"].(float64)
 
 	if r.ContentLength > int64(maxPayloadSize) {
 		slog.Info(fmt.Sprintf("Request size too large: %vB", r.ContentLength))
-		return NewHttpError(http.StatusRequestEntityTooLarge,
+		return model.NewHttpError(http.StatusRequestEntityTooLarge,
 			"REQUEST_TOO_LARGE", "Request size too large.")
 	}
 

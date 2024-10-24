@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"sync"
@@ -47,7 +48,7 @@ func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *model.ProxyC
 	}
 }
 
-func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *model.Service, route *model.Route, r *http.Request) (string, *HttpError) {
+func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *model.Service, route *model.Route, r *http.Request) (string, *model.HttpError) {
 	// Check whether global, service or route level rate limit.
 	for _, servicePlugin := range service.Plugins {
 		name := servicePlugin.Name
@@ -86,7 +87,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing rate limit function...")
 
-		service, route, err := GetServiceAndRouteFromRequest(plugin.proxyConfig, r)
+		service, route, err := util.GetServiceAndRouteFromRequest(plugin.proxyConfig, r)
 		rateLimitOperationLevel, err := plugin.detectRateLimitOperationLevel(service, route, r)
 		if err != nil {
 			err.WriteJSONResponse(w)
@@ -160,7 +161,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		globalRateLimitHourStore.mu.Unlock()
 
 		if int64(secCount) > limitSec {
-			err := NewHttpError(http.StatusTooManyRequests,
+			err := model.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_SECOND_EXCEEDED",
 				"Rate limit exceeded for "+mapEntry)
 			err.WriteJSONResponse(w)
@@ -168,7 +169,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		}
 
 		if int64(minCount) > limitMin {
-			err := NewHttpError(http.StatusTooManyRequests,
+			err := model.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_MINUTE_EXCEEDED",
 				"Rate limit exceeded for "+mapEntry)
 			err.WriteJSONResponse(w)
@@ -176,7 +177,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		}
 
 		if int64(hourCount) > limitHour {
-			err := NewHttpError(http.StatusTooManyRequests,
+			err := model.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_HOUR_EXCEEDED",
 				"Rate limit exceeded for "+mapEntry)
 			err.WriteJSONResponse(w)

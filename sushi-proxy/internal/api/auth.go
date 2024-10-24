@@ -6,6 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -36,13 +37,13 @@ func (c *AuthController) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		authHeader := req.Header.Get("Authorization")
 		if authHeader == "" {
-			gateway.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
+			model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
 				"Authorization header missing").WriteJSONResponse(w)
 			return
 		}
 
 		if !strings.HasPrefix(authHeader, "Basic ") {
-			gateway.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
+			model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
 				"Invalid Authorization scheme").WriteJSONResponse(w)
 			return
 		}
@@ -50,7 +51,7 @@ func (c *AuthController) Login() http.HandlerFunc {
 		encodedCredentials := strings.TrimPrefix(authHeader, "Basic ")
 		decodedBytes, err := base64.StdEncoding.DecodeString(encodedCredentials)
 		if err != nil {
-			gateway.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
+			model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
 				"Invalid Base64 encoding").WriteJSONResponse(w)
 			return
 		}
@@ -58,21 +59,21 @@ func (c *AuthController) Login() http.HandlerFunc {
 		credentials := string(decodedBytes)
 		parts := strings.SplitN(credentials, ":", 2)
 		if len(parts) != 2 {
-			gateway.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
+			model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
 				"Invalid credentials format").WriteJSONResponse(w)
 			return
 		}
 
 		username, password := parts[0], parts[1]
 		if !validate(username, password) {
-			gateway.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
+			model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
 				"Invalid credentials").WriteJSONResponse(w)
 			return
 		}
 
 		tokenString, err := generateJWT("user")
 		if err != nil {
-			gateway.NewHttpError(http.StatusInternalServerError, "INTERNAL_SERVER_ERROR",
+			model.NewHttpError(http.StatusInternalServerError, "INTERNAL_SERVER_ERROR",
 				"Error generating JWT token").WriteJSONResponse(w)
 			return
 		}
@@ -133,16 +134,16 @@ func generateJWT(username string) (string, error) {
 	return tokenString, nil
 }
 
-func validateJWT(tokenString string) (*Claims, *gateway.HttpError) {
+func validateJWT(tokenString string) (*Claims, *model.HttpError) {
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
 	if err != nil {
-		return nil, gateway.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token")
+		return nil, model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token")
 	}
 	if !token.Valid {
-		return nil, gateway.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token")
+		return nil, model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token")
 	}
 
 	return claims, nil
@@ -153,10 +154,10 @@ func ProtectRouteUsingJWT(next http.Handler) http.Handler {
 		cookie, err := req.Cookie("token")
 		if err != nil {
 			if err == http.ErrNoCookie {
-				gateway.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token").WriteJSONResponse(w)
+				model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token").WriteJSONResponse(w)
 				return
 			}
-			gateway.NewHttpError(http.StatusBadRequest, "BAD_REQUEST", "Bad Request")
+			model.NewHttpError(http.StatusBadRequest, "BAD_REQUEST", "Bad Request")
 			return
 		}
 

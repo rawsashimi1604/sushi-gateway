@@ -3,6 +3,7 @@ package gateway
 import (
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
@@ -38,7 +39,7 @@ func (plugin AclPlugin) Execute(next http.Handler) http.Handler {
 
 		if plugin.isBlacklisted(clientIP) {
 			slog.Info(fmt.Sprintf("IP %s is blacklisted", clientIP))
-			err := NewHttpError(http.StatusForbidden,
+			err := model.NewHttpError(http.StatusForbidden,
 				"ACCESS_DENIED", "Access Denied")
 			err.WriteJSONResponse(w)
 			return
@@ -46,7 +47,7 @@ func (plugin AclPlugin) Execute(next http.Handler) http.Handler {
 
 		if plugin.isBlacklisted(forwardedIP) {
 			slog.Info(fmt.Sprintf("IP %s is blacklisted", clientIP))
-			err := NewHttpError(http.StatusForbidden,
+			err := model.NewHttpError(http.StatusForbidden,
 				"ACCESS_DENIED", "Access Denied")
 			err.WriteJSONResponse(w)
 			return

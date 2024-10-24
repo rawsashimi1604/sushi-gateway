@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 )
@@ -39,18 +40,18 @@ func (plugin KeyAuthPlugin) Execute(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-func (plugin KeyAuthPlugin) validateAPIKey(apiKey string) *HttpError {
+func (plugin KeyAuthPlugin) validateAPIKey(apiKey string) *model.HttpError {
 	config := plugin.config
 	key := config["key"].(string) // Assert to []interface{} first
 	if key == apiKey {
 		return nil
 	} else {
-		return NewHttpError(http.StatusUnauthorized,
+		return model.NewHttpError(http.StatusUnauthorized,
 			"INVALID_CREDENTIALS", "Invalid credentials.")
 	}
 }
 
-func extractAPIKey(r *http.Request) (string, *HttpError) {
+func extractAPIKey(r *http.Request) (string, *model.HttpError) {
 	// From query parameter
 	apiKey := r.URL.Query().Get("apiKey")
 	if apiKey != "" {
@@ -63,6 +64,6 @@ func extractAPIKey(r *http.Request) (string, *HttpError) {
 		return apiKey, nil
 	}
 
-	return "", NewHttpError(http.StatusUnauthorized,
+	return "", model.NewHttpError(http.StatusUnauthorized,
 		"MISSING_API_KEY", "API key is missing.")
 }

@@ -1,22 +1,21 @@
-package gateway
+package util
 
 import (
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-func GetServiceAndRouteFromRequest(proxyConfig *model.ProxyConfig, req *http.Request) (*model.Service, *model.Route, *HttpError) {
+func GetServiceAndRouteFromRequest(proxyConfig *model.ProxyConfig, req *http.Request) (*model.Service, *model.Route, *model.HttpError) {
 	path := req.URL.Path
 	parts := strings.Split(path, "/")
 
 	// Needs to have at least 3 parts for path to be valid:
 	// 1. empty string, 2. service base path, 3. route path
 	if len(parts) < 3 {
-		return nil, nil, &HttpError{
+		return nil, nil, &model.HttpError{
 			Code:     "INVALID_PATH",
 			Message:  "Invalid path format, needs at least /service_base_path/...",
 			HttpCode: http.StatusBadRequest,
@@ -29,13 +28,13 @@ func GetServiceAndRouteFromRequest(proxyConfig *model.ProxyConfig, req *http.Req
 	for _, service := range proxyConfig.Services {
 		if service.BasePath == serviceBasePath {
 			for _, route := range service.Routes {
-				routeContainsMethod := util.SliceContainsString(route.Methods, req.Method)
+				routeContainsMethod := SliceContainsString(route.Methods, req.Method)
 				if MatchRoute(&route, routePath) && routeContainsMethod {
 					return &service, &route, nil
 				}
 			}
 
-			return nil, nil, &HttpError{
+			return nil, nil, &model.HttpError{
 				Code:     "ROUTE_NOT_FOUND",
 				Message:  fmt.Sprintf("Route not found for path: %s. Check your HTTP Method and Route path", routePath),
 				HttpCode: http.StatusNotFound,
@@ -43,7 +42,7 @@ func GetServiceAndRouteFromRequest(proxyConfig *model.ProxyConfig, req *http.Req
 		}
 	}
 
-	return nil, nil, &HttpError{
+	return nil, nil, &model.HttpError{
 		Code:     "SERVICE_NOT_FOUND",
 		Message:  "Service not found",
 		HttpCode: http.StatusNotFound,

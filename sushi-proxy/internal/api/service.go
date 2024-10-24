@@ -32,7 +32,7 @@ func (s *ServiceController) GetServices() http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		if err != nil {
 			slog.Info("something went wrong when getting the services.")
-			httperr := &gateway.HttpError{
+			httperr := &model.HttpError{
 				Code:     "GET_SERVICE_ERR",
 				Message:  "something went wrong when getting the services.",
 				HttpCode: http.StatusBadRequest,
@@ -53,7 +53,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 		var newService model.Service
 		if err := json.NewDecoder(req.Body).Decode(&newService); err != nil {
 			slog.Info(err.Error())
-			httperr := &gateway.HttpError{
+			httperr := &model.HttpError{
 				Code:     "CREATE_SERVICE_ERR",
 				Message:  "failed to decode service from request body",
 				HttpCode: http.StatusBadRequest,
@@ -67,7 +67,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 		services, err := s.serviceRepo.GetAllServices()
 		for _, svc := range services {
 			if svc.Name == newService.Name {
-				httperr := &gateway.HttpError{
+				httperr := &model.HttpError{
 					Code:     "CREATE_SERVICE_ERR",
 					Message:  "name already exists.",
 					HttpCode: http.StatusBadRequest,
@@ -78,7 +78,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 			}
 
 			if svc.BasePath == newService.BasePath {
-				httperr := &gateway.HttpError{
+				httperr := &model.HttpError{
 					Code:     "CREATE_SERVICE_ERR",
 					Message:  "base_path already exists.",
 					HttpCode: http.StatusBadRequest,
@@ -97,7 +97,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 		err = s.serviceRepo.AddService(newService)
 		if err != nil {
 			slog.Info(err.Error())
-			httperr := &gateway.HttpError{
+			httperr := &model.HttpError{
 				Code:     "CREATE_SERVICE_ERR",
 				Message:  "failed to add service into database",
 				HttpCode: http.StatusBadRequest,
@@ -122,7 +122,7 @@ func (s *ServiceController) DeleteServiceByName() http.HandlerFunc {
 		serviceName := req.URL.Query().Get("name")
 
 		if serviceName == "" {
-			httperr := &gateway.HttpError{
+			httperr := &model.HttpError{
 				Code:     "DELETE_SERVICE_ERR",
 				Message:  "service name is missing in the request",
 				HttpCode: http.StatusInternalServerError,
@@ -136,7 +136,7 @@ func (s *ServiceController) DeleteServiceByName() http.HandlerFunc {
 		err := s.serviceRepo.DeleteServiceByName(serviceName)
 		if err != nil {
 			slog.Info("failed to delete service: " + err.Error())
-			httperr := &gateway.HttpError{
+			httperr := &model.HttpError{
 				Code:     "DELETE_SERVICE_ERR",
 				Message:  "Failed to delete service from the database",
 				HttpCode: http.StatusInternalServerError,

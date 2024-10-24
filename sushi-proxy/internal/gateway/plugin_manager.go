@@ -3,6 +3,7 @@ package gateway
 import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"net/http"
 	"sort"
 )
@@ -17,7 +18,7 @@ func NewPluginManager() *PluginManager {
 	}
 }
 
-func NewPluginManagerFromConfig(req *http.Request) (*PluginManager, *HttpError) {
+func NewPluginManagerFromConfig(req *http.Request) (*PluginManager, *model.HttpError) {
 	// Load the plugin configuration from the gateway file
 	// Based on the plugins loaded from http request
 	// Order of precedence: route.plugins > service.plugins > global.plugins
@@ -32,7 +33,7 @@ func NewPluginManagerFromConfig(req *http.Request) (*PluginManager, *HttpError) 
 	}
 
 	// Search for service.plugins and route.plugins
-	service, route, err := GetServiceAndRouteFromRequest(&GlobalProxyConfig, req)
+	service, route, err := util.GetServiceAndRouteFromRequest(&GlobalProxyConfig, req)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +56,7 @@ func NewPluginManagerFromConfig(req *http.Request) (*PluginManager, *HttpError) 
 }
 
 // Load the plugin configuration from the gateway file
-func (pm *PluginManager) loadConfig(pc model.PluginConfig) *HttpError {
+func (pm *PluginManager) loadConfig(pc model.PluginConfig) *model.HttpError {
 	// Skip as not enabled.
 	if !pc.Enabled {
 		return nil

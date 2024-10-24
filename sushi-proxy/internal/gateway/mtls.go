@@ -3,6 +3,7 @@ package gateway
 import (
 	"crypto/x509"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 )
@@ -24,7 +25,7 @@ func (plugin MtlsPlugin) Execute(next http.Handler) http.Handler {
 		slog.Info("Executing mtls function...")
 
 		if r.TLS == nil || len(r.TLS.PeerCertificates) == 0 {
-			err := NewHttpError(http.StatusUnauthorized,
+			err := model.NewHttpError(http.StatusUnauthorized,
 				"MISSING_CERTIFICATE", "Missing client certificate in request.")
 			err.WriteJSONResponse(w)
 			return
@@ -36,7 +37,7 @@ func (plugin MtlsPlugin) Execute(next http.Handler) http.Handler {
 		}
 
 		if _, err := r.TLS.PeerCertificates[0].Verify(opts); err != nil {
-			err := NewHttpError(http.StatusUnauthorized,
+			err := model.NewHttpError(http.StatusUnauthorized,
 				"INVALID_CLIENT_CERTIFICATE", "Invalid client cert")
 			err.WriteJSONResponse(w)
 			return

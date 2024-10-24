@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -58,7 +59,7 @@ func writeWWWAuthenticateHeaderJwt(w http.ResponseWriter) {
 			"Access to sushi gateway", constant.UTF_8))
 }
 
-func verifyAndParseAuthHeaderJwt(req *http.Request) (string, *HttpError) {
+func verifyAndParseAuthHeaderJwt(req *http.Request) (string, *model.HttpError) {
 	authHeader := req.Header.Get("Authorization")
 	bits := strings.Split(authHeader, " ")
 
@@ -66,15 +67,15 @@ func verifyAndParseAuthHeaderJwt(req *http.Request) (string, *HttpError) {
 	isValidAuthFormat := authHeader != "" && len(bits) == 2
 	if !isValidAuthFormat {
 		slog.Info("Invalid jwt auth format passed in.")
-		return "", NewHttpError(http.StatusUnauthorized,
+		return "", model.NewHttpError(http.StatusUnauthorized,
 			"MALFORMED_AUTH_HEADER", "Invalid auth format passed in.")
 	}
 
 	return bits[1], nil
 }
 
-func (plugin JwtPlugin) validateToken(token string) (*jwt.Token, *HttpError) {
-	tokenInvalidErr := NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
+func (plugin JwtPlugin) validateToken(token string) (*jwt.Token, *model.HttpError) {
+	tokenInvalidErr := model.NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
 
 	config := plugin.config
 	credentials := JwtCredentials{

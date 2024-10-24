@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -50,7 +51,7 @@ func writeWWWAuthenticateHeader(w http.ResponseWriter) {
 		fmt.Sprintf("Basic realm=\"%s\", charset=%s", "Access to sushi gateway", constant.UTF_8))
 }
 
-func verifyAndParseAuthHeader(r *http.Request) (username string, password string, error *HttpError) {
+func verifyAndParseAuthHeader(r *http.Request) (username string, password string, error *model.HttpError) {
 	authHeader := r.Header.Get("Authorization")
 	bits := strings.Split(authHeader, " ")
 
@@ -58,21 +59,21 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 	isValidAuthFormat := authHeader != "" && len(bits) == 2
 	if !isValidAuthFormat {
 		slog.Info("Invalid basic auth format passed in.")
-		return "", "", NewHttpError(http.StatusUnauthorized,
+		return "", "", model.NewHttpError(http.StatusUnauthorized,
 			"MALFORMED_AUTH_HEADER", "Invalid auth format passed in.")
 	}
 
 	decoded, err := base64.StdEncoding.DecodeString(bits[1])
 	if err != nil {
 		slog.Info("Unable to decode base64 token.")
-		return "", "", NewHttpError(http.StatusUnauthorized,
+		return "", "", model.NewHttpError(http.StatusUnauthorized,
 			"DECODE_TOKEN_ERROR", "Unable to decode base64 token.")
 	}
 
 	tokenVals := strings.Split(string(decoded), ":")
 	if len(tokenVals) != 2 {
 		slog.Info("Invalid basic auth format passed in.")
-		return "", "", NewHttpError(http.StatusUnauthorized,
+		return "", "", model.NewHttpError(http.StatusUnauthorized,
 			"MALFORMED_AUTH_HEADER", "Invalid basic auth format passed in.")
 	}
 
@@ -80,9 +81,9 @@ func verifyAndParseAuthHeader(r *http.Request) (username string, password string
 }
 
 // Get from configurations
-func (plugin BasicAuthPlugin) authorize(username string, password string) *HttpError {
+func (plugin BasicAuthPlugin) authorize(username string, password string) *model.HttpError {
 
-	invalidCredsErr := NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
+	invalidCredsErr := model.NewHttpError(http.StatusUnauthorized, "INVALID_CREDENTIALS", "invalid credentials, please try again.")
 
 	config := plugin.config
 

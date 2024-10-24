@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
@@ -41,7 +42,7 @@ func (plugin BotProtectionPlugin) Execute(next http.Handler) http.Handler {
 	})
 }
 
-func (plugin BotProtectionPlugin) verifyIsBot(userAgent string) *HttpError {
+func (plugin BotProtectionPlugin) verifyIsBot(userAgent string) *model.HttpError {
 	// TODO: add validation for this plugin in the gateway file
 	config := plugin.config
 	blacklist := util.ToStringSlice(config["blacklist"].([]interface{}))
@@ -49,7 +50,7 @@ func (plugin BotProtectionPlugin) verifyIsBot(userAgent string) *HttpError {
 	for _, bot := range blacklist {
 		if strings.Contains(userAgent, bot) {
 			slog.Info("Bot detected: " + userAgent)
-			return NewHttpError(http.StatusForbidden, "BOT_DETECTED", "Bot detected.")
+			return model.NewHttpError(http.StatusForbidden, "BOT_DETECTED", "Bot detected.")
 		}
 	}
 	return nil

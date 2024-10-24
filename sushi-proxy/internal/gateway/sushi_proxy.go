@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"net/http/httputil"
@@ -81,7 +83,7 @@ func (proxy *SushiProxy) RouteRequest() http.HandlerFunc {
 	}
 }
 
-func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *HttpError {
+func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *model.HttpError {
 
 	path, convertErr := s.convertPathToProxyPassUrl(req)
 	if convertErr != nil {
@@ -90,7 +92,7 @@ func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *
 	target, err := url.Parse(path)
 
 	if err != nil {
-		return &HttpError{
+		return &model.HttpError{
 			Code:     "ERROR_PARSING_PROXY_URL",
 			Message:  "Error parsing URL when handling request.",
 			HttpCode: http.StatusInternalServerError,
@@ -119,8 +121,8 @@ func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *
 }
 
 // Routing logic, get the URL to proxy the request to.
-func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *HttpError) {
-	matchedService, _, err := GetServiceAndRouteFromRequest(&GlobalProxyConfig, req)
+func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *model.HttpError) {
+	matchedService, _, err := util.GetServiceAndRouteFromRequest(&GlobalProxyConfig, req)
 	if err != nil {
 		return "", err
 	}

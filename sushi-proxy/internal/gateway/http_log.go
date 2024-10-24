@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"time"
@@ -62,12 +64,12 @@ func (plugin HttpLogPlugin) parseConfig() *HttpLogConfig {
 	}
 }
 
-func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface{}, *HttpError) {
+func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface{}, *model.HttpError) {
 
 	// Get the service and route from the request
-	service, route, err := GetServiceAndRouteFromRequest(&GlobalProxyConfig, r)
+	service, route, err := util.GetServiceAndRouteFromRequest(&GlobalProxyConfig, r)
 	if err != nil {
-		return nil, NewHttpError(500, "ERR_PARSING_SERVICE_ROUTE",
+		return nil, model.NewHttpError(500, "ERR_PARSING_SERVICE_ROUTE",
 			"Error parsing service and route from request")
 	}
 
@@ -92,7 +94,7 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 			"path":     r.URL.Path,
 			"url":      r.URL.String(),
 			"uri":      r.RequestURI,
-			"size":     GetContentLength(r.Header.Get("Content-Length")),
+			"size":     util.GetContentLength(r.Header.Get("Content-Length")),
 			"headers":  r.Header,
 		},
 		"client_ip":  r.RemoteAddr,
@@ -101,18 +103,18 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 	return log, nil
 }
 
-func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogConfig) *HttpError {
+func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogConfig) *model.HttpError {
 
 	// Convert the payload to JSON
 	body, err := json.Marshal(log)
 	if err != nil {
-		return NewHttpError(http.StatusBadGateway, "ERR_PARSING_LOG", "Error sending log when serializing log to JSON")
+		return model.NewHttpError(http.StatusBadGateway, "ERR_PARSING_LOG", "Error sending log when serializing log to JSON")
 	}
 
 	// Create a new request with POST method, URL, and payload
 	req, err := http.NewRequest(config.method, config.httpEndpoint, bytes.NewBuffer(body))
 	if err != nil {
-		return NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log when creating http request")
+		return model.NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log when creating http request")
 	}
 
 	// Set request headers (optional)
@@ -122,7 +124,7 @@ func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogC
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log")
+		return model.NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log")
 	}
 	defer resp.Body.Close()
 	return nil
