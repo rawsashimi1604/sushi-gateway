@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/validator"
 	"log/slog"
 	"net/http"
 )
@@ -43,18 +44,59 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 			return
 		}
 
-		// Validate the route data
-		if routeDTO.ServiceName == "" || routeDTO.Route.Name == "" || routeDTO.Route.Path == "" || len(routeDTO.Route.Methods) == 0 {
-			slog.Info("Invalid route data, missing required fields")
-			http.Error(w, "Missing required route fields", http.StatusBadRequest)
+		// Validate the route
+		// Check route does not exist...
+		routes, err := r.routeRepo.GetAllRoutes(routeDTO.ServiceName)
+		if err != nil {
+			slog.Info(err.Error())
+			httperr := &model.HttpError{
+				Code:     "CREATE_ROUTE_ERR",
+				Message:  "failed to add route into database",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		for _, route := range routes {
+			if route.Name == routeDTO.Route.Name {
+				httperr := &model.HttpError{
+					Code:     "CREATE_ROUTE_ERR",
+					Message:  "route name already exits.",
+					HttpCode: http.StatusBadRequest,
+				}
+				httperr.WriteLogMessage()
+				httperr.WriteJSONResponse(w)
+				return
+			}
+		}
+
+		// Generic route validations
+		routeValidator := validator.NewRouteValidator()
+		if err := routeValidator.ValidateRoute(routeDTO.Route); err != nil {
+			slog.Info("service validation failed")
+			httperr := &model.HttpError{
+				Code:     "CREATE_SERVICE_ERR",
+				Message:  err.Error(),
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
 			return
 		}
 
 		// Call the repository to add the route
-		err := r.routeRepo.AddRoute(routeDTO.ServiceName, routeDTO.Route)
+		err = r.routeRepo.AddRoute(routeDTO.ServiceName, routeDTO.Route)
 		if err != nil {
 			slog.Info("Failed to add route to the repository: " + err.Error())
-			http.Error(w, "Failed to add route", http.StatusInternalServerError)
+			httperr := &model.HttpError{
+				Code:     "CREATE_SERVICE_ERR",
+				Message:  "failed to add route to the repository.",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
 			return
 		}
 
@@ -67,10 +109,42 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 	}
 }
 
+// DeleteRoute handles deleting a route by its name (DELETE request)
 func (r *RouteController) DeleteRoute() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		payload, _ := json.Marshal("hello")
+		// Extract the route name from the query parameters
+		routeName := req.URL.Query().Get("name")
+
+		if routeName == "" {
+			httperr := &model.HttpError{
+				Code:     "DELETE_ROUTE_ERR",
+				Message:  "route name is missing in the request",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Call the repository to delete the route by name
+		err := r.routeRepo.DeleteRoute(routeName)
+		if err != nil {
+			slog.Info("failed to delete route: " + err.Error())
+			httperr := &model.HttpError{
+				Code:     "DELETE_ROUTE_ERR",
+				Message:  "Failed to delete route from the database",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Send a success response
 		w.Header().Set("Content-Type", "application/json")
-		w.Write(payload)
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "Route deleted successfully",
+		})
 	}
 }

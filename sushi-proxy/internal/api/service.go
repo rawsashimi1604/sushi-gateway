@@ -66,6 +66,18 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 
 		// Check service exists.
 		services, err := s.serviceRepo.GetAllServices()
+		if err != nil {
+			slog.Info(err.Error())
+			httperr := &model.HttpError{
+				Code:     "CREATE_SERVICE_ERR",
+				Message:  "failed to add service into database",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
 		for _, svc := range services {
 			if svc.Name == newService.Name {
 				httperr := &model.HttpError{
@@ -115,7 +127,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 			httperr := &model.HttpError{
 				Code:     "CREATE_SERVICE_ERR",
 				Message:  "failed to add service into database",
-				HttpCode: http.StatusBadRequest,
+				HttpCode: http.StatusInternalServerError,
 			}
 			httperr.WriteLogMessage()
 			httperr.WriteJSONResponse(w)
