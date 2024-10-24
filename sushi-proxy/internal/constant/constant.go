@@ -10,6 +10,8 @@ const UTF_8 = "UTF-8"
 const HS_256 = "HS256"
 const RSA_256 = "RS256"
 
+var AVAILABLE_PROXY_PROTOCOLS = []string{"http", "https"}
+
 // PLUGINS
 var AVAILABLE_PLUGINS = []string{
 	PLUGIN_BASIC_AUTH,

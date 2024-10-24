@@ -86,7 +86,6 @@ func validatePlugins(config *ProxyConfig) error {
 func validateServices(config *ProxyConfig) error {
 	var serviceNames []string
 	var servicePaths []string
-	var availableProtocols = []string{"http", "https"}
 
 	for _, service := range config.Services {
 		// Name
@@ -113,7 +112,7 @@ func validateServices(config *ProxyConfig) error {
 		}
 
 		// Protocol
-		if !SliceContainsString(availableProtocols, service.Protocol) {
+		if !SliceContainsString(constant.AVAILABLE_PROXY_PROTOCOLS, service.Protocol) {
 			return fmt.Errorf("service protocol: %s is invalid, "+
 				"only http and https supported", service.Protocol)
 		}
