@@ -11,11 +11,13 @@ import (
 )
 
 type RouteController struct {
-	routeRepo *db.RouteRepository
+	routeRepo   *db.RouteRepository
+	serviceRepo *db.ServiceRepository
 }
 
-func NewRouteController(routeRepo *db.RouteRepository) *RouteController {
-	return &RouteController{routeRepo: routeRepo}
+func NewRouteController(routeRepo *db.RouteRepository,
+	serviceRepo *db.ServiceRepository) *RouteController {
+	return &RouteController{routeRepo: routeRepo, serviceRepo: serviceRepo}
 }
 
 func (r *RouteController) RegisterRoutes(router *mux.Router) {
@@ -23,13 +25,14 @@ func (r *RouteController) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/route").Methods("DELETE").Handler(ProtectRouteUsingJWT(r.DeleteRoute()))
 }
 
+// RouteDTO represents the structure for adding a new route, including the service name.
+type RouteDTO struct {
+	ServiceName string      `json:"service_name"`
+	Route       model.Route `json:"route"`
+}
+
 func (r *RouteController) AddRoute() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		// RouteDTO represents the structure for adding a new route, including the service name.
-		type RouteDTO struct {
-			ServiceName string      `json:"service_name"`
-			Route       model.Route `json:"route"`
-		}
 
 		var routeDTO RouteDTO
 		if err := json.NewDecoder(req.Body).Decode(&routeDTO); err != nil {
@@ -38,6 +41,31 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 				Code:     "CREATE_SERVICE_ERR",
 				Message:  "failed to decode route from request body",
 				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Validate the service exists
+		service, err := r.serviceRepo.GetServiceByName(routeDTO.ServiceName)
+		if service == nil {
+			httperr := &model.HttpError{
+				Code:     "CREATE_ROUTE_ERR",
+				Message:  "service name does not exist.",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		if err != nil {
+			slog.Info(err.Error())
+			httperr := &model.HttpError{
+				Code:     "CREATE_ROUTE_ERR",
+				Message:  "failed to add route into database",
+				HttpCode: http.StatusInternalServerError,
 			}
 			httperr.WriteLogMessage()
 			httperr.WriteJSONResponse(w)

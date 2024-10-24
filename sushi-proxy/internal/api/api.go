@@ -32,9 +32,10 @@ func NewAdminApiRouter(database *sql.DB) http.Handler {
 	// Route Resource
 	var routeController *RouteController
 	if database != nil {
-		routeController = NewRouteController(nil)
+		routeController = NewRouteController(nil, nil)
 	} else {
-		routeController = NewRouteController(db.NewRouteRepository(database))
+		routeController = NewRouteController(db.NewRouteRepository(database),
+			db.NewServiceRepository(database))
 	}
 	routeController.RegisterRoutes(router)
 

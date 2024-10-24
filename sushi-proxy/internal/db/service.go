@@ -16,6 +16,143 @@ func NewServiceRepository(db *sql.DB) *ServiceRepository {
 	return &ServiceRepository{db: db}
 }
 
+// GetServiceByName retrieves a service by its name along with its upstreams, routes, methods, and plugins
+func (serviceRepo *ServiceRepository) GetServiceByName(serviceName string) (*model.Service, error) {
+	// Query to get the service by name
+	serviceQuery := `SELECT name, base_path, protocol, load_balancing_alg FROM service WHERE name = $1`
+	row := serviceRepo.db.QueryRow(serviceQuery, serviceName)
+
+	var service model.Service
+	err := row.Scan(&service.Name, &service.BasePath, &service.Protocol, &service.LoadBalancingStrategy)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("service %s not found", serviceName)
+		}
+		return nil, fmt.Errorf("failed to fetch service %s: %w", serviceName, err)
+	}
+
+	// Fetch upstreams associated with the service
+	upstreamQuery := `SELECT id, host, port FROM upstream WHERE service_name = $1`
+	upstreamRows, err := serviceRepo.db.Query(upstreamQuery, service.Name)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch upstreams for service %s: %w", service.Name, err)
+	}
+	defer upstreamRows.Close()
+
+	for upstreamRows.Next() {
+		var upstream model.Upstream
+		if err := upstreamRows.Scan(&upstream.Id, &upstream.Host, &upstream.Port); err != nil {
+			log.Printf("failed to scan upstream: %v\n", err)
+			continue
+		}
+		service.Upstreams = append(service.Upstreams, upstream)
+	}
+
+	// Fetch routes associated with the service
+	routeQuery := `SELECT name, path FROM route WHERE service_name = $1`
+	routeRows, err := serviceRepo.db.Query(routeQuery, service.Name)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch routes for service %s: %w", service.Name, err)
+	}
+	defer routeRows.Close()
+
+	for routeRows.Next() {
+		var route model.Route
+		if err := routeRows.Scan(&route.Name, &route.Path); err != nil {
+			log.Printf("failed to scan route: %v\n", err)
+			continue
+		}
+
+		// Fetch methods for each route
+		methodQuery := `SELECT method FROM route_methods WHERE route_name = $1`
+		methodRows, err := serviceRepo.db.Query(methodQuery, route.Name)
+		if err != nil {
+			log.Printf("failed to fetch methods for route %s: %v\n", route.Name, err)
+			continue
+		}
+		for methodRows.Next() {
+			var method string
+			if err := methodRows.Scan(&method); err != nil {
+				log.Printf("failed to scan method: %v\n", err)
+				continue
+			}
+			route.Methods = append(route.Methods, method)
+		}
+		methodRows.Close()
+
+		// Fetch plugins for each route
+		routePluginQuery := `
+			SELECT p.id, p.name, p.config, p.enabled
+			FROM plugin p
+			JOIN route_plugin rp ON p.id = rp.plugin_id
+			WHERE rp.route_name = $1`
+		pluginRows, err := serviceRepo.db.Query(routePluginQuery, route.Name)
+		if err != nil {
+			log.Printf("failed to fetch plugins for route %s: %v\n", route.Name, err)
+			continue
+		}
+		for pluginRows.Next() {
+			var plugin model.PluginConfig
+			var configBytes []byte
+
+			if err := pluginRows.Scan(&plugin.Id, &plugin.Name, &configBytes, &plugin.Enabled); err != nil {
+				log.Printf("failed to scan plugin: %v\n", err)
+				continue
+			}
+
+			if err := json.Unmarshal(configBytes, &plugin.Config); err != nil {
+				log.Printf("failed to unmarshal plugin config: %v\n", err)
+				continue
+			}
+
+			route.Plugins = append(route.Plugins, plugin)
+		}
+		pluginRows.Close()
+		service.Routes = append(service.Routes, route)
+	}
+
+	// Fetch service-level plugins
+	servicePluginQuery := `
+		SELECT p.id, p.name, p.config, p.enabled
+		FROM plugin p
+		JOIN service_plugin sp ON p.id = sp.plugin_id
+		WHERE sp.service_name = $1`
+	servicePluginRows, err := serviceRepo.db.Query(servicePluginQuery, service.Name)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch plugins for service %s: %w", service.Name, err)
+	}
+	defer servicePluginRows.Close()
+
+	for servicePluginRows.Next() {
+		var plugin model.PluginConfig
+		var configBytes []byte
+
+		if err := servicePluginRows.Scan(&plugin.Id, &plugin.Name, &configBytes, &plugin.Enabled); err != nil {
+			log.Printf("failed to scan plugin: %v\n", err)
+			continue
+		}
+
+		if err := json.Unmarshal(configBytes, &plugin.Config); err != nil {
+			log.Printf("failed to unmarshal plugin config: %v\n", err)
+			continue
+		}
+
+		service.Plugins = append(service.Plugins, plugin)
+	}
+
+	// Ensure plugins and routes are not nil
+	if service.Plugins == nil {
+		service.Plugins = []model.PluginConfig{}
+	}
+	for i := range service.Routes {
+		if service.Routes[i].Plugins == nil {
+			service.Routes[i].Plugins = []model.PluginConfig{}
+		}
+	}
+
+	return &service, nil
+}
+
 func (serviceRepo *ServiceRepository) GetAllServices() ([]model.Service, error) {
 
 	var services []model.Service

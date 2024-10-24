@@ -116,8 +116,8 @@ func (routeRepo *RouteRepository) AddRoute(serviceName string, route model.Route
 	}
 
 	// 3. Insert plugins for the route
-	routePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled) 
-                               VALUES ($1, $2, $3, $4)
+	routePluginInsertQuery := `INSERT INTO plugin (id, name, config, enabled, scope) 
+                               VALUES ($1, $2, $3, $4, 'route')
                                `
 	routePluginMappingQuery := `INSERT INTO route_plugin (route_name, plugin_id) VALUES ($1, $2)`
 	for _, plugin := range route.Plugins {
