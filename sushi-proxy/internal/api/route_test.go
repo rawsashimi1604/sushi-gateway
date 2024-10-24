@@ -46,6 +46,7 @@ func TestRouteController_AddRoute(t *testing.T) {
 
 	// Marshal the RouteDTO to JSON
 	jsonPayload, _ := json.Marshal(newRouteDTO)
+	slog.Info(string(jsonPayload))
 
 	// Create a POST request for adding the route
 	req, err := http.NewRequest("POST", "/routes", bytes.NewBuffer(jsonPayload))
