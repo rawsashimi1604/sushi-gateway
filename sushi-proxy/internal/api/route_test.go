@@ -32,7 +32,6 @@ func TestRouteController_AddRoute(t *testing.T) {
 			Methods: []string{"GET"},
 			Plugins: []model.PluginConfig{
 				{
-					Id:   "rate_limit",
 					Name: "rate_limit",
 					Config: map[string]interface{}{
 						"limit_hour":   10,
@@ -58,4 +57,32 @@ func TestRouteController_AddRoute(t *testing.T) {
 	slog.Info(rr.Body.String())
 	assert.Equal(t, http.StatusCreated, rr.Code)
 	assert.Contains(t, rr.Body.String(), "Route created successfully")
+}
+
+func TestRouteController_DeleteRouteByName(t *testing.T) {
+	// Setup database and repository for the controller.
+	database, err := db.ConnectDb()
+	if err != nil {
+		t.Fatal("unable to connect to database")
+	}
+
+	routeRepo := db.NewRouteRepository(database)
+	serviceRepo := db.NewServiceRepository(database)
+	routeController := NewRouteController(routeRepo, serviceRepo)
+
+	routeName := "get-sushi-2"
+	// Create a test HTTP request for DELETE /?name=get-sushi
+	req, err := http.NewRequest("DELETE", "/?name="+routeName, nil)
+	assert.NoError(t, err)
+
+	// Create a ResponseRecorder to capture the response
+	rr := httptest.NewRecorder()
+
+	// Call the DeleteRouteByName handler
+	handler := routeController.DeleteRouteByName()
+	handler.ServeHTTP(rr, req)
+	slog.Info(rr.Body.String())
+	assert.Equal(t, http.StatusOK, rr.Code)
+	assert.Contains(t, rr.Body.String(), "Route deleted successfully")
+
 }

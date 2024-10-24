@@ -1,7 +1,6 @@
 INSERT INTO gateway (name)
 VALUES ('sushi_gateway');
 
-
 -- Insert mock data into the service table
 INSERT INTO service (name, base_path, protocol, load_balancing_alg)
 VALUES
@@ -47,10 +46,19 @@ VALUES
 -- Insert mock data into the service_plugin table (associating plugins with the service)
 INSERT INTO service_plugin (plugin_id, service_name)
 VALUES
+    ('2', 'sushi-svc'), -- mtls plugin for sushi-svc
+    ('3', 'sushi-svc'), -- key_auth plugin for sushi-svc
     ('4', 'sushi-svc'), -- rate_limit plugin for sushi-svc
     ('5', 'sushi-svc'); -- basic_auth plugin for sushi-svc
 
 -- Insert mock data into the route_plugin table (associating plugins with specific routes)
 INSERT INTO route_plugin (plugin_id, route_name)
 VALUES
-    ('4', 'get-sushi'); -- rate_limit plugin for the "get-sushi" route
+    ('6', 'get-sushi'), -- jwt plugin for the "get-sushi" route
+    ('7', 'get-sushi'), -- acl plugin for the "get-sushi" route
+    ('8', 'get-sushi'), -- bot_protection plugin for the "get-sushi" route
+    ('9', 'get-sushi'), -- request_size_limit plugin for the "get-sushi" route
+    ('10', 'get-sushi'), -- cors plugin for the "get-sushi" route
+    -- Removed duplicate plugins for the other routes
+    ('9', 'get-sushi-restaurants'), -- request_size_limit plugin for the "get-sushi-restaurants" route
+    ('10', 'sushi-provision-jwt'); -- cors plugin for the "sushi-provision-jwt" route

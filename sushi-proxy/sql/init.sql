@@ -49,13 +49,13 @@ CREATE TABLE plugin (
 
 CREATE TABLE service_plugin (
     service_name TEXT REFERENCES service(name) ON DELETE CASCADE,
-    plugin_id TEXT REFERENCES plugin(id),
+    plugin_id TEXT REFERENCES plugin(id) ON DELETE CASCADE,
     PRIMARY KEY (service_name, plugin_id)
 );
 
 CREATE TABLE route_plugin (
     route_name TEXT REFERENCES route(name) ON DELETE CASCADE,
-    plugin_id TEXT REFERENCES plugin(id),
+    plugin_id TEXT REFERENCES plugin(id) ON DELETE CASCADE,
     PRIMARY KEY (route_name, plugin_id)
 );
 

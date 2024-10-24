@@ -7,6 +7,8 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 )
 
+// TODO: move validation logic to model.
+
 type PluginValidator struct {
 }
 

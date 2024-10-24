@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/validator"
 	"log/slog"
@@ -22,7 +23,7 @@ func NewRouteController(routeRepo *db.RouteRepository,
 
 func (r *RouteController) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/route").Methods("POST").Handler(ProtectRouteUsingJWT(r.AddRoute()))
-	router.PathPrefix("/route").Methods("DELETE").Handler(ProtectRouteUsingJWT(r.DeleteRoute()))
+	router.PathPrefix("/route").Methods("DELETE").Handler(ProtectRouteUsingJWT(r.DeleteRouteByName()))
 }
 
 // RouteDTO represents the structure for adding a new route, including the service name.
@@ -100,6 +101,10 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 			}
 		}
 
+		// Generate uuid for route model
+		uuidGenerator := gateway.NewUUIDGenerator()
+		uuidGenerator.GenerateUUIDForRoute(routeDTO.Route)
+
 		// Generic route validations
 		routeValidator := validator.NewRouteValidator()
 		if err := routeValidator.ValidateRoute(routeDTO.Route); err != nil {
@@ -137,8 +142,8 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 	}
 }
 
-// DeleteRoute handles deleting a route by its name (DELETE request)
-func (r *RouteController) DeleteRoute() http.HandlerFunc {
+// DeleteRouteByName handles deleting a route by its name (DELETE request)
+func (r *RouteController) DeleteRouteByName() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		// Extract the route name from the query parameters
 		routeName := req.URL.Query().Get("name")

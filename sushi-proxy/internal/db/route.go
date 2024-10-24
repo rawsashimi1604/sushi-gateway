@@ -178,6 +178,17 @@ func (routeRepo *RouteRepository) DeleteRoute(routeName string) error {
 		return fmt.Errorf("failed to delete route %s: %w", routeName, err)
 	}
 
+	// 4. Cleanup orphaned plugins
+	orphanedPluginCleanupQuery := `
+		DELETE FROM plugin 
+		WHERE id NOT IN (SELECT plugin_id FROM route_plugin)
+		AND id NOT IN (SELECT plugin_id FROM service_plugin)
+		AND scope != 'global'`
+	_, err = tx.Exec(orphanedPluginCleanupQuery)
+	if err != nil {
+		return fmt.Errorf("failed to cleanup orphaned plugins: %w", err)
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		return fmt.Errorf("failed to commit transaction: %w", err)
