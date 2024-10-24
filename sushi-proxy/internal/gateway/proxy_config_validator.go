@@ -3,7 +3,6 @@ package gateway
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/validator"
@@ -84,6 +83,7 @@ func validatePlugins(config *model.ProxyConfig) error {
 func validateServices(config *model.ProxyConfig) error {
 	var serviceNames []string
 	var servicePaths []string
+	serviceValidator := validator.NewServiceValidator()
 
 	for _, service := range config.Services {
 		// Name
@@ -91,45 +91,18 @@ func validateServices(config *model.ProxyConfig) error {
 			return fmt.Errorf("service name: %s must be unique", service.Name)
 		}
 
-		// Load Balancing Alg
-		if err := validateServiceLoadBalancing(&service); err != nil {
-			return err
-		}
-
 		// Path
 		if util.SliceContainsString(servicePaths, service.BasePath) {
 			return fmt.Errorf("service path: %s must be unique", service.BasePath)
 		}
 
-		if !strings.HasPrefix(service.BasePath, "/") {
-			return fmt.Errorf("service path: %s must start with /", service.BasePath)
-		}
-
-		if strings.HasSuffix(service.BasePath, "/") {
-			return fmt.Errorf("service path: %s must not end with /", service.BasePath)
-		}
-
-		// Protocol
-		if !util.SliceContainsString(constant.AVAILABLE_PROXY_PROTOCOLS, service.Protocol) {
-			return fmt.Errorf("service protocol: %s is invalid, "+
-				"only http and https supported", service.Protocol)
-		}
-
-		// Upstreams
-		if len(service.Upstreams) == 0 {
-			return fmt.Errorf("service :%s must have at least one upstream", service.Name)
+		// Generic service validations
+		if err := serviceValidator.ValidateService(service); err != nil {
+			return err
 		}
 
 		serviceNames = append(serviceNames, service.Name)
 		servicePaths = append(servicePaths, service.BasePath)
-	}
-	return nil
-}
-
-func validateServiceLoadBalancing(service *model.Service) error {
-	isLoadBalancingAlgValid := service.LoadBalancingStrategy.IsValid()
-	if !isLoadBalancingAlgValid {
-		return fmt.Errorf("service load balancing strategy: %s is invalid", service.LoadBalancingStrategy)
 	}
 	return nil
 }
