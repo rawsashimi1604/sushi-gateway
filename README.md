@@ -72,7 +72,7 @@ web application.
 ## TODO LIST
 
 - [x] design database schema
-- [ ] provide database configuration options ( env variables to inject database env in )
+- [x] provide database configuration options ( env variables to inject database env in )
 - [x] sushi manager update logo
 - [x] Logout endpoint to delete httponly cookie
 - [ ] sushi manager update gateway state to get types and also domain object to retrieve from gateway state.
@@ -82,8 +82,8 @@ web application.
 - [ ] Add stateful gateway configurations (good to have)
   - [x] Postgres DB (Externalise option)
   - [ ] Postgres DB docker
-  - [ ] Admin API for CRUD operations
-  - [ ] global domain object config state retrieval from db.
+  - [x] Admin API for CRUD operations
+  - [x] global domain object config state retrieval from db.
   - [ ] add time created and time updated to schema.
 - [x] Update readme with latest architecture diagrams and logos
 - [ ] Add CI github actions
@@ -117,7 +117,6 @@ web application.
 - [ ] Add more tests for the proxy
 - [x] Dockerizing proxy
 - [ ] Create kube deployment (helm)
-- [x] Admin API development and design
 - [ ] Load balancing to upstreams
   - [x] Round robin
   - [ ] IP hash
