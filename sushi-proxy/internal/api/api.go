@@ -44,7 +44,7 @@ func NewAdminApiRouter(database *sql.DB) http.Handler {
 
 	// Plugin Resource
 	var pluginController *PluginController
-	if database != nil {
+	if database == nil {
 		pluginController = NewPluginController(nil)
 	} else {
 		pluginController = NewPluginController(db.NewPluginRepository(database))

@@ -22,13 +22,13 @@ func NewPluginController(pluginRepo *db.PluginRepository) *PluginController {
 }
 
 func (p *PluginController) RegisterRoutes(router *mux.Router) {
-	router.Path("/").Methods("PUT").Handler(
+	router.Path("/plugin").Methods("PUT").Handler(
 		ProtectRouteUsingJWT(
 			ProtectRouteWhenUsingDblessMode(p.UpdatePlugin())))
-	router.Path("/").Methods("POST").Handler(
+	router.Path("/plugin").Methods("POST").Handler(
 		ProtectRouteUsingJWT(
 			ProtectRouteWhenUsingDblessMode(p.AddPlugin())))
-	router.Path("/").Methods("DELETE").Handler(
+	router.Path("/plugin").Methods("DELETE").Handler(
 		ProtectRouteUsingJWT(
 			ProtectRouteWhenUsingDblessMode(p.DeletePlugin())))
 }
@@ -40,23 +40,6 @@ type PluginDTO struct {
 	Plugin model.PluginConfig `json:"plugin"`
 }
 
-/*
-	As a developer i want to update plugin.
-
-	update plugin to global configuration
-	update plugin to service
-	update plugin to route
-
-	add new plugin to global configuration
-	add new plugin to service
-	add new plugin to route
-
-	delete plugin from global configuration
-	delete plugin from service
-	delete plugin from route.
-*/
-
-// TODO: create these routes.
 func (p *PluginController) UpdatePlugin() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
@@ -239,7 +222,7 @@ func (p *PluginController) AddPlugin() http.HandlerFunc {
 				httperr := &model.HttpError{
 					Code:     "CREATE_PLUGIN_ERR",
 					Message:  "plugin already exists.",
-					HttpCode: http.StatusInternalServerError,
+					HttpCode: http.StatusBadRequest,
 				}
 				httperr.WriteLogMessage()
 				httperr.WriteJSONResponse(w)

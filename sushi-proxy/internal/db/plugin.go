@@ -145,33 +145,46 @@ func (pluginRepo *PluginRepository) DeletePlugin(scope string, pluginName string
 		}
 	}()
 
+	var pluginID string
+	// Find the unique ID of the plugin based on scope and name
+	pluginIDQuery := `SELECT id FROM plugin WHERE name = $1 AND scope = $2`
+	err = tx.QueryRow(pluginIDQuery, pluginName, scope).Scan(&pluginID)
+	if err != nil {
+		return fmt.Errorf("failed to find plugin: %w", err)
+	}
+
 	// Delete plugin association based on the scope
 	switch scope {
 	case "global":
 		// Global plugins are only in the plugin table, no associations
-		pluginDeleteQuery := `DELETE FROM plugin WHERE name = $1 AND scope = 'global'`
-		_, err = tx.Exec(pluginDeleteQuery, pluginName)
+		pluginDeleteQuery := `DELETE FROM plugin WHERE id = $1 AND scope = 'global'`
+		_, err = tx.Exec(pluginDeleteQuery, pluginID)
 	case "service":
 		// Delete service-level plugin association
-		pluginDeleteQuery := `DELETE FROM service_plugin WHERE service_name = $1 AND plugin_id = 
-							  (SELECT id FROM plugin WHERE name = $2 AND scope = 'service')`
-		_, err = tx.Exec(pluginDeleteQuery, targetName, pluginName)
+		servicePluginDeleteQuery := `DELETE FROM service_plugin WHERE service_name = $1 AND plugin_id = $2`
+		_, err = tx.Exec(servicePluginDeleteQuery, targetName, pluginID)
 	case "route":
 		// Delete route-level plugin association
-		pluginDeleteQuery := `DELETE FROM route_plugin WHERE route_name = $1 AND plugin_id = 
-							  (SELECT id FROM plugin WHERE name = $2 AND scope = 'route')`
-		_, err = tx.Exec(pluginDeleteQuery, targetName, pluginName)
+		routePluginDeleteQuery := `DELETE FROM route_plugin WHERE route_name = $1 AND plugin_id = $2`
+		_, err = tx.Exec(routePluginDeleteQuery, targetName, pluginID)
 	default:
 		return fmt.Errorf("invalid scope: %s", scope)
 	}
 
 	if err != nil {
-		return fmt.Errorf("failed to delete plugin: %w", err)
+		return fmt.Errorf("failed to delete plugin association: %w", err)
 	}
 
-	// Delete the plugin itself from the plugin table if it exists
-	pluginDeleteQuery := `DELETE FROM plugin WHERE name = $1 AND scope = $2`
-	_, err = tx.Exec(pluginDeleteQuery, pluginName, scope)
+	// Delete the plugin itself from the plugin table if no remaining associations
+	pluginDeleteQuery := `
+		DELETE FROM plugin
+		WHERE id = $1 AND scope = $2
+		AND NOT EXISTS (
+			SELECT 1 FROM service_plugin WHERE plugin_id = plugin.id
+		) AND NOT EXISTS (
+			SELECT 1 FROM route_plugin WHERE plugin_id = plugin.id
+		)`
+	_, err = tx.Exec(pluginDeleteQuery, pluginID, scope)
 	if err != nil {
 		return fmt.Errorf("failed to delete plugin from plugin table: %w", err)
 	}
