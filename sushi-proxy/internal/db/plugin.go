@@ -42,7 +42,14 @@ func (pluginRepo *PluginRepository) GetPlugins(scope string, targetName string) 
 		return nil, fmt.Errorf("invalid scope: %s", scope)
 	}
 
-	rows, err := pluginRepo.db.Query(query, targetName)
+	var rows *sql.Rows
+	var err error
+	if scope == "global" {
+		rows, err = pluginRepo.db.Query(query)
+	} else {
+		rows, err = pluginRepo.db.Query(query, targetName)
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch plugins: %w", err)
 	}

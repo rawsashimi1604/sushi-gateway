@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
@@ -30,6 +31,13 @@ func (p *PluginController) RegisterRoutes(router *mux.Router) {
 	router.Path("/").Methods("DELETE").Handler(
 		ProtectRouteUsingJWT(
 			ProtectRouteWhenUsingDblessMode(p.DeletePlugin())))
+}
+
+// PluginDTO represents the structure for adding a new route, including the service name.
+type PluginDTO struct {
+	Scope  string             `json:"scope"`
+	Name   string             `json:"name"`
+	Plugin model.PluginConfig `json:"plugin"`
 }
 
 /*
@@ -59,13 +67,6 @@ func (p *PluginController) UpdatePlugin() http.HandlerFunc {
 
 func (p *PluginController) AddPlugin() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-
-		// RouteDTO represents the structure for adding a new route, including the service name.
-		type PluginDTO struct {
-			Scope  string             `json:"scope"`
-			Name   string             `json:"name"`
-			Plugin model.PluginConfig `json:"plugin"`
-		}
 
 		// Decode the request
 		var pluginDTO PluginDTO
@@ -123,6 +124,7 @@ func (p *PluginController) AddPlugin() http.HandlerFunc {
 		// Validate that the plugin does not exist already
 		checkPlugins, err := p.pluginRepo.GetPlugins(pluginDTO.Scope, pluginDTO.Name)
 		if err != nil {
+			slog.Info("failed to get plugins")
 			slog.Info(err.Error())
 			httperr := &model.HttpError{
 				Code:     "CREATE_PLUGIN_ERR",
@@ -133,16 +135,23 @@ func (p *PluginController) AddPlugin() http.HandlerFunc {
 			httperr.WriteJSONResponse(w)
 			return
 		}
-		if len(checkPlugins) > 0 {
-			httperr := &model.HttpError{
-				Code:     "CREATE_PLUGIN_ERR",
-				Message:  "plugin already exists.",
-				HttpCode: http.StatusInternalServerError,
+
+		for _, pluginToCheck := range checkPlugins {
+			if pluginToCheck.Name == pluginDTO.Plugin.Name {
+				httperr := &model.HttpError{
+					Code:     "CREATE_PLUGIN_ERR",
+					Message:  "plugin already exists.",
+					HttpCode: http.StatusInternalServerError,
+				}
+				httperr.WriteLogMessage()
+				httperr.WriteJSONResponse(w)
+				return
 			}
-			httperr.WriteLogMessage()
-			httperr.WriteJSONResponse(w)
-			return
 		}
+
+		// Inject UUID into plugin
+		uuidGenerator := gateway.NewUUIDGenerator()
+		uuidGenerator.GenerateUUIDForPlugin(&pluginDTO.Plugin)
 
 		// Add the plugin
 		err = p.pluginRepo.AddPlugin(pluginDTO.Scope, pluginDTO.Plugin, pluginDTO.Name)

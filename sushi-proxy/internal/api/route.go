@@ -107,7 +107,7 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 
 		// Generate uuid for route model
 		uuidGenerator := gateway.NewUUIDGenerator()
-		uuidGenerator.GenerateUUIDForRoute(routeDTO.Route)
+		uuidGenerator.GenerateUUIDForRoute(&routeDTO.Route)
 
 		// Generic route validations
 		routeValidator := validator.NewRouteValidator()

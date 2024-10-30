@@ -121,7 +121,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 
 		// Generate UUIDs
 		uuid := gateway.NewUUIDGenerator()
-		uuid.GenerateUUIDForService(newService)
+		uuid.GenerateUUIDForService(&newService)
 
 		// Add to the database
 		err = s.serviceRepo.AddService(newService)

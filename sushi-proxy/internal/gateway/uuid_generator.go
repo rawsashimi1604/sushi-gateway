@@ -13,7 +13,11 @@ func NewUUIDGenerator() *UUIDGenerator {
 	return &UUIDGenerator{}
 }
 
-func (u *UUIDGenerator) GenerateUUIDForService(service model.Service) {
+func (u *UUIDGenerator) GenerateUUIDForPlugin(plugin *model.PluginConfig) {
+	plugin.Id = uuid.New().String()
+}
+
+func (u *UUIDGenerator) GenerateUUIDForService(service *model.Service) {
 	for i := range service.Upstreams {
 		service.Upstreams[i].Id = uuid.New().String()
 	}
@@ -27,7 +31,7 @@ func (u *UUIDGenerator) GenerateUUIDForService(service model.Service) {
 	}
 }
 
-func (u *UUIDGenerator) GenerateUUIDForRoute(route model.Route) {
+func (u *UUIDGenerator) GenerateUUIDForRoute(route *model.Route) {
 	for i := range route.Plugins {
 		route.Plugins[i].Id = uuid.New().String()
 	}
