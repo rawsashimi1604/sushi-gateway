@@ -59,9 +59,107 @@ type PluginDTO struct {
 // TODO: create these routes.
 func (p *PluginController) UpdatePlugin() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		payload, _ := json.Marshal("hello")
+
+		// Decode the request
+		var pluginDTO PluginDTO
+		if err := json.NewDecoder(req.Body).Decode(&pluginDTO); err != nil {
+			slog.Info("Failed to decode plugin DTO from request: " + err.Error())
+			httperr := &model.HttpError{
+				Code:     "UPDATE_PLUGIN_ERR",
+				Message:  "failed to decode plugin from request body",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Validate the DTO contents
+		if strings.ToLower(pluginDTO.Scope) != "global" &&
+			strings.ToLower(pluginDTO.Scope) != "service" &&
+			strings.ToLower(pluginDTO.Scope) != "route" {
+			httperr := &model.HttpError{
+				Code:     "UPDATE_PLUGIN_ERR",
+				Message:  "scope is required and must be global, service or route",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// If the scope is service or route,
+		// then we must check for a service name or route name to update the plugin to.
+		if pluginDTO.Scope != "global" && pluginDTO.Name == "" {
+			httperr := &model.HttpError{
+				Code:     "UPDATE_PLUGIN_ERR",
+				Message:  "name is required when we are adding plugin to service or route scope.",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Validate that the plugin exist already
+		checkPlugins, err := p.pluginRepo.GetPlugins(pluginDTO.Scope, pluginDTO.Name)
+		if err != nil {
+			slog.Info("failed to get plugins")
+			slog.Info(err.Error())
+			httperr := &model.HttpError{
+				Code:     "UPDATE_PLUGIN_ERR",
+				Message:  "failed to add plugin into database",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		found := false
+		var foundPlugin model.PluginConfig
+		for _, pluginToCheck := range checkPlugins {
+			if pluginToCheck.Name == pluginDTO.Plugin.Name {
+				foundPlugin = pluginToCheck
+				found = true
+				break
+			}
+		}
+		if !found {
+			httperr := &model.HttpError{
+				Code:     "UPDATE_PLUGIN_ERR",
+				Message:  "plugin not found",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Update the plugin model
+		foundPlugin.Config = pluginDTO.Plugin.Config
+		foundPlugin.Enabled = pluginDTO.Plugin.Enabled
+
+		err = p.pluginRepo.UpdatePlugin(pluginDTO.Scope, foundPlugin)
+		if err != nil {
+			slog.Info("failed to update plugin")
+			slog.Info(err.Error())
+			httperr := &model.HttpError{
+				Code:     "UPDATE_PLUGIN_ERR",
+				Message:  "failed to add plugin into database",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Send a success response
 		w.Header().Set("Content-Type", "application/json")
-		w.Write(payload)
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "Plugin updated successfully",
+		})
 	}
 }
 

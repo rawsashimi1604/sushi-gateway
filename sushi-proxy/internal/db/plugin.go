@@ -183,3 +183,69 @@ func (pluginRepo *PluginRepository) DeletePlugin(scope string, pluginName string
 
 	return nil
 }
+
+// UpdatePlugin updates an existing plugin at the global, service, or route level
+func (pluginRepo *PluginRepository) UpdatePlugin(scope string, plugin model.PluginConfig) error {
+	tx, err := pluginRepo.db.Begin()
+	if err != nil {
+		return fmt.Errorf("failed to start transaction: %w", err)
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// Marshal the plugin configuration to JSON format
+	pluginConfig, err := json.Marshal(plugin.Config)
+	if err != nil {
+		return fmt.Errorf("failed to marshal plugin config: %w", err)
+	}
+
+	// Update the plugin in the plugin table based on the scope
+	switch scope {
+	case "global":
+		// Directly update the global plugin
+		pluginUpdateQuery := `UPDATE plugin SET config = $1, enabled = $2 WHERE id = $3 AND scope = 'global'`
+		_, err = tx.Exec(pluginUpdateQuery, pluginConfig, plugin.Enabled, plugin.Id)
+		if err != nil {
+			return fmt.Errorf("failed to update global plugin: %w", err)
+		}
+	case "service":
+		// Update service-level plugin by finding the associated service
+		servicePluginUpdateQuery := `
+			UPDATE plugin
+			SET config = $1, enabled = $2
+			WHERE id = $3 AND scope = 'service'
+			AND EXISTS (
+				SELECT 1 FROM service_plugin WHERE service_plugin.plugin_id = plugin.id
+			)`
+		_, err = tx.Exec(servicePluginUpdateQuery, pluginConfig, plugin.Enabled, plugin.Id)
+		if err != nil {
+			return fmt.Errorf("failed to update service-level plugin: %w", err)
+		}
+	case "route":
+		// Update route-level plugin by finding the associated route
+		routePluginUpdateQuery := `
+			UPDATE plugin
+			SET config = $1, enabled = $2
+			WHERE id = $3 AND scope = 'route'
+			AND EXISTS (
+				SELECT 1 FROM route_plugin WHERE route_plugin.plugin_id = plugin.id
+			)`
+		_, err = tx.Exec(routePluginUpdateQuery, pluginConfig, plugin.Enabled, plugin.Id)
+		if err != nil {
+			return fmt.Errorf("failed to update route-level plugin: %w", err)
+		}
+	default:
+		return fmt.Errorf("invalid scope: %s", scope)
+	}
+
+	// Commit the transaction
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
+}
