@@ -1,7 +1,9 @@
 package gateway
 
 import (
+	"database/sql"
 	"github.com/fsnotify/fsnotify"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"os"
@@ -15,8 +17,38 @@ import (
 var GlobalProxyConfig model.ProxyConfig
 var configLock = &sync.RWMutex{}
 
-func LoadProxyConfig(filePath string) {
-	slog.Info("Loading proxy_pass gateway")
+// TODO: load proxy config from database
+func LoadProxyConfigFromDb(database *sql.DB) {
+
+	slog.Info("Refreshing global proxy gateway configurations from database.")
+	serviceRepo := db.NewServiceRepository(database)
+	services, err := serviceRepo.GetAllServices()
+	if err != nil {
+		slog.Info("Error reading services from database during proxy config sync", err)
+		// We don't terminate here as we can still run with the existing cached config.
+	}
+
+	pluginRepo := db.NewPluginRepository(database)
+	globalPlugins, err := pluginRepo.GetPlugins("global", "mock")
+	if err != nil {
+		slog.Info("Error reading plugins from database during proxy config sync", err)
+		// We don't terminate here as we can still run with the existing cached config.
+	}
+
+	// Update the global proxy config
+	GlobalProxyConfig = model.ProxyConfig{
+		Global: model.Global{
+			Name:    "someRandomName",
+			Plugins: globalPlugins,
+		},
+		Services: services,
+	}
+
+}
+
+func LoadProxyConfigFromConfigFile(filePath string) {
+
+	slog.Info("Loading proxy_pass gateway from config file.")
 	configFile, err := os.ReadFile(filePath)
 	if err != nil {
 		slog.Info("Error reading gateway file", err)
@@ -65,7 +97,7 @@ func WatchConfigFile(filePath string) {
 					return
 				}
 				if event.Op&fsnotify.Write != 0 {
-					LoadProxyConfig(filePath)
+					LoadProxyConfigFromConfigFile(filePath)
 				}
 			case err, ok := <-watcher.Errors:
 				if !ok {

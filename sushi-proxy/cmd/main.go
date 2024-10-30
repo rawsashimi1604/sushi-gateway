@@ -14,8 +14,25 @@ import (
 
 func main() {
 	gateway.GlobalAppConfig = gateway.LoadGlobalConfig()
-	gateway.LoadProxyConfig(gateway.GlobalAppConfig.ConfigFilePath)
-	go gateway.WatchConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
+
+	// TMP for development purpose.
+	//gateway.LoadProxyConfigFromConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
+	//go gateway.WatchConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
+
+	// DB MODE run a thread to sync the config file from db.
+	if gateway.GlobalAppConfig.PersistanceConfig == constant.DB_MODE {
+		database, err := db.ConnectDb()
+		if err != nil {
+			panic("unable to connect to database.")
+		}
+		gateway.LoadProxyConfigFromDb(database)
+	}
+
+	// DB LESS MODE run a thread to monitor the config file for changes and do an initial boot up...
+	if gateway.GlobalAppConfig.PersistanceConfig == constant.DBLESS_MODE {
+		gateway.LoadProxyConfigFromConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
+		go gateway.WatchConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
+	}
 
 	appRouter := gateway.NewRouter()
 

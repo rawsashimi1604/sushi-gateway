@@ -2,11 +2,12 @@ package model
 
 // Domain Model of objects in Sushi Gateway
 type ProxyConfig struct {
-	Global struct {
-		Name    string         `json:"name"`
-		Plugins []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
-	} `json:"global"`
+	Global   Global    `json:"global"`
 	Services []Service `json:"services"`
+}
+type Global struct {
+	Name    string         `json:"name"`
+	Plugins []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
 }
 
 type PluginConfig struct {
