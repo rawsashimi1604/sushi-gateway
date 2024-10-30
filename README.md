@@ -75,7 +75,7 @@ web application.
 - [x] provide database configuration options ( env variables to inject database env in )
 - [x] sushi manager update logo
 - [x] Logout endpoint to delete httponly cookie
-- [ ] sushi manager update gateway state to get types and also domain object to retrieve from gateway state.
+- [x] sushi manager update gateway state to get types and also domain object to retrieve from gateway state.
 - [x] sushi manager create screens
 - [ ] Add gateway metadata (last configuration update, total requests)
   - [ ] gateway logs middleware
@@ -85,6 +85,7 @@ web application.
   - [x] Admin API for CRUD operations
   - [x] global domain object config state retrieval from db.
   - [ ] add time created and time updated to schema.
+  - [x] add simple gateway table to store gateway configurations.
 - [x] Update readme with latest architecture diagrams and logos
 - [ ] Add CI github actions
 - [ ] Add CD for each release to push to dockerhub

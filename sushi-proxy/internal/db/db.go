@@ -32,7 +32,3 @@ func ConnectDb() (*sql.DB, error) {
 	slog.Info("Successfully connected to the database!")
 	return db, nil
 }
-
-func RefreshGlobalProxyConfig() {
-	// TODO: refresh global proxy config after any db write updates.
-}

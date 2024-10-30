@@ -7,7 +7,7 @@ type ProxyConfig struct {
 }
 type Global struct {
 	Name    string         `json:"name"`
-	Plugins []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
+	Plugins []PluginConfig `json:"plugins"`
 }
 
 type PluginConfig struct {
@@ -27,7 +27,7 @@ type Route struct {
 	Name    string         `json:"name"`
 	Path    string         `json:"path"`
 	Methods []string       `json:"methods"`
-	Plugins []PluginConfig `json:"plugins"` // Adjusted to use the Plugin struct
+	Plugins []PluginConfig `json:"plugins"`
 }
 
 type Service struct {
@@ -36,6 +36,6 @@ type Service struct {
 	Protocol              string                 `json:"protocol"`
 	LoadBalancingStrategy LoadBalancingAlgorithm `json:"load_balancing_strategy"`
 	Upstreams             []Upstream             `json:"upstreams"`
-	Plugins               []PluginConfig         `json:"plugins"` // Adjusted to use the Plugin struct
+	Plugins               []PluginConfig         `json:"plugins"`
 	Routes                []Route                `json:"routes"`
 }

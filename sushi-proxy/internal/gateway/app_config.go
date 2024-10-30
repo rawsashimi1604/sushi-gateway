@@ -28,6 +28,8 @@ var GlobalAppConfig *AppConfig
 
 func LoadGlobalConfig() *AppConfig {
 	slog.Info("Loading global app gateway")
+	// TODO: should be able to load from system environment vars too.
+	// check if it works if use dockerfile to set env
 	godotenv.Load()
 
 	errors := make([]string, 0)

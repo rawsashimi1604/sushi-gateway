@@ -5,9 +5,11 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"log"
 	"log/slog"
 	"os"
 	"sync"
+	"time"
 )
 
 // TODO: cron job to sync config in the case of db configuration.
@@ -17,7 +19,6 @@ import (
 var GlobalProxyConfig model.ProxyConfig
 var configLock = &sync.RWMutex{}
 
-// TODO: load proxy config from database
 func LoadProxyConfigFromDb(database *sql.DB) {
 
 	slog.Info("Refreshing global proxy gateway configurations from database.")
@@ -28,19 +29,16 @@ func LoadProxyConfigFromDb(database *sql.DB) {
 		// We don't terminate here as we can still run with the existing cached config.
 	}
 
-	pluginRepo := db.NewPluginRepository(database)
-	globalPlugins, err := pluginRepo.GetPlugins("global", "mock")
+	gatewayRepo := db.NewGatewayRepository(database)
+	gatewayGlobalConfig, err := gatewayRepo.GetGatewayInfo()
 	if err != nil {
-		slog.Info("Error reading plugins from database during proxy config sync", err)
+		slog.Info("Error reading gateway global config from database during proxy config sync", err)
 		// We don't terminate here as we can still run with the existing cached config.
 	}
 
 	// Update the global proxy config
 	GlobalProxyConfig = model.ProxyConfig{
-		Global: model.Global{
-			Name:    "someRandomName",
-			Plugins: globalPlugins,
-		},
+		Global:   gatewayGlobalConfig,
 		Services: services,
 	}
 }
@@ -76,6 +74,23 @@ func LoadProxyConfigFromConfigFile(filePath string) {
 
 	configLock.Unlock()
 
+}
+
+func StartProxyConfigCronJob(database *sql.DB, interval int) {
+	ticker := time.NewTicker(time.Duration(interval) * time.Second)
+	quit := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				log.Println("Cron job triggered: Refreshing proxy config.")
+				LoadProxyConfigFromDb(database)
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
 }
 
 func WatchConfigFile(filePath string) {

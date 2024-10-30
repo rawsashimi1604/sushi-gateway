@@ -3,21 +3,16 @@ package main
 import (
 	"crypto/tls"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/api"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
 	"log"
 	"log/slog"
 	"net/http"
-
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 )
 
 func main() {
 	gateway.GlobalAppConfig = gateway.LoadGlobalConfig()
-
-	// TMP for development purpose.
-	//gateway.LoadProxyConfigFromConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
-	//go gateway.WatchConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
 
 	// DB MODE run a thread to sync the config file from db.
 	if gateway.GlobalAppConfig.PersistenceConfig == constant.DB_MODE {
@@ -25,7 +20,10 @@ func main() {
 		if err != nil {
 			panic("unable to connect to database.")
 		}
+
+		// Load the initial config file.
 		gateway.LoadProxyConfigFromDb(database)
+
 		// On first load, if the config file is empty, means that the config is not in sync...
 		// Means we could not get the config from the db
 		// We should therefore terminate the application.
@@ -35,8 +33,8 @@ func main() {
 		}
 
 		// Thereafter we should run a cron job to sync the config from the db.
-		// TODO: add sync interval
-
+		// TODO: externalize this interval in env variables.
+		gateway.StartProxyConfigCronJob(database, 5)
 	}
 
 	// DB LESS MODE run a thread to monitor the config file for changes and do an initial boot up...
