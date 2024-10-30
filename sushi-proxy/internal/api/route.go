@@ -138,6 +138,7 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 		}
 
 		// Send a success response
+		slog.Info("Route created successfully")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(map[string]string{
@@ -178,6 +179,7 @@ func (r *RouteController) DeleteRouteByName() http.HandlerFunc {
 		}
 
 		// Send a success response
+		slog.Info("Route deleted successfully")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]string{

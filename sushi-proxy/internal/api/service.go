@@ -47,7 +47,9 @@ func (s *ServiceController) GetServices() http.HandlerFunc {
 			return
 		}
 		payload, _ := json.Marshal(services)
+		slog.Info("Got services successfully")
 		w.Write(payload)
+
 	}
 }
 
@@ -138,6 +140,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 		}
 
 		// Send a success response
+		slog.Info("Service created successfully")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(map[string]string{
@@ -177,6 +180,7 @@ func (s *ServiceController) DeleteServiceByName() http.HandlerFunc {
 		}
 
 		// Send a success response
+		slog.Info("Service deketed successfully")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]string{

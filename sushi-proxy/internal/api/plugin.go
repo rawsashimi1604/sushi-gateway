@@ -138,6 +138,7 @@ func (p *PluginController) UpdatePlugin() http.HandlerFunc {
 		}
 
 		// Send a success response
+		slog.Info("Plugin updated successfully")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(map[string]string{
@@ -249,6 +250,7 @@ func (p *PluginController) AddPlugin() http.HandlerFunc {
 		}
 
 		// Send a success response
+		slog.Info("Plugin added successfully")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(map[string]string{
@@ -318,6 +320,7 @@ func (p *PluginController) DeletePlugin() http.HandlerFunc {
 		}
 
 		// Send a success response
+		slog.Info("Plugin deleted successfully")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]string{
