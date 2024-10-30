@@ -16,13 +16,35 @@ func NewPluginController(pluginRepo *db.PluginRepository) *PluginController {
 }
 
 func (p *PluginController) RegisterRoutes(router *mux.Router) {
-	router.Path("/").Methods("GET").Handler(
+	router.Path("/").Methods("PUT").Handler(
 		ProtectRouteUsingJWT(
-			ProtectRouteWhenUsingDblessMode(p.GetPlugin())))
+			ProtectRouteWhenUsingDblessMode(p.UpdatePlugin())))
+	router.Path("/").Methods("POST").Handler(
+		ProtectRouteUsingJWT(
+			ProtectRouteWhenUsingDblessMode(p.AddPlugin())))
+	router.Path("/").Methods("DELETE").Handler(
+		ProtectRouteUsingJWT(
+			ProtectRouteWhenUsingDblessMode(p.DeletePlugin())))
 }
 
+/*
+	As a developer i want to update plugin.
+
+	update plugin to global configuration
+	update plugin to service
+	update plugin to route
+
+	add new plugin to global configuration
+	add new plugin to service
+	add new plugin to route
+
+	delete plugin from global configuration
+	delete plugin from service
+	delete plugin from route.
+*/
+
 // TODO: create these routes.
-func (p *PluginController) GetPlugin() http.HandlerFunc {
+func (p *PluginController) UpdatePlugin() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		payload, _ := json.Marshal("hello")
 		w.Header().Set("Content-Type", "application/json")
