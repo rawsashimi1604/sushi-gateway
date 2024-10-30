@@ -20,6 +20,7 @@ func (p *PluginController) RegisterRoutes(router *mux.Router) {
 		ProtectRouteUsingJWT(p.GetPlugin()))
 }
 
+// TODO: create these routes.
 func (p *PluginController) GetPlugin() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		payload, _ := json.Marshal("hello")
