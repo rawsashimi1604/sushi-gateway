@@ -4,24 +4,26 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"log/slog"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/joho/godotenv"
 )
 
 type AppConfig struct {
-	ServerCertPath    string
-	ServerKeyPath     string
-	CACertPath        string
-	AdminUser         string
-	AdminPassword     string
-	PersistenceConfig string
-	ConfigFilePath    string
-	DbConnectionHost  string
-	DbConnectionName  string
-	DbConnectionUser  string
-	DbConnectionPass  string
-	DbConnectionPort  string
+	ServerCertPath          string
+	ServerKeyPath           string
+	CACertPath              string
+	AdminUser               string
+	AdminPassword           string
+	PersistenceConfig       string
+	PersistenceSyncInterval int
+	ConfigFilePath          string
+	DbConnectionHost        string
+	DbConnectionName        string
+	DbConnectionUser        string
+	DbConnectionPass        string
+	DbConnectionPort        string
 }
 
 var GlobalAppConfig *AppConfig
@@ -69,6 +71,20 @@ func LoadGlobalConfig() *AppConfig {
 			"PERSISTENCE_CONFIG must be \"db\" or \"dbless\".")
 	}
 
+	var syncIntervalInteger int
+	persistenceSyncInterval := os.Getenv("PERSISTENCE_SYNC_INTERVAL")
+	if persistenceConfig == constant.DB_MODE {
+		if persistenceSyncInterval == "" {
+			errors = append(errors, "PERSISTENCE_SYNC_INTERVAL is required.")
+		}
+		if val, err := strconv.Atoi(persistenceSyncInterval); err != nil {
+			syncIntervalInteger = 0
+			errors = append(errors, "PERSISTENCE_SYNC_INTERVAL must be a valid integer.")
+		} else {
+			syncIntervalInteger = val
+		}
+	}
+
 	configFilePath := os.Getenv("CONFIG_FILE_PATH")
 	if persistenceConfig == constant.DBLESS_MODE && configFilePath == "" {
 		errors = append(errors, "CONFIG_FILE_PATH is required.")
@@ -99,18 +115,19 @@ func LoadGlobalConfig() *AppConfig {
 	}
 
 	config := &AppConfig{
-		ServerCertPath:    serverCertPath,
-		ServerKeyPath:     serverKeyPath,
-		CACertPath:        caCertPath,
-		AdminUser:         adminUser,
-		AdminPassword:     adminPassword,
-		PersistenceConfig: persistenceConfig,
-		ConfigFilePath:    configFilePath,
-		DbConnectionHost:  dbConnectionHost,
-		DbConnectionName:  dbConnectionName,
-		DbConnectionUser:  dbConnectionUser,
-		DbConnectionPass:  dbConnectionPass,
-		DbConnectionPort:  dbConnectionPort,
+		ServerCertPath:          serverCertPath,
+		ServerKeyPath:           serverKeyPath,
+		CACertPath:              caCertPath,
+		AdminUser:               adminUser,
+		AdminPassword:           adminPassword,
+		PersistenceConfig:       persistenceConfig,
+		PersistenceSyncInterval: syncIntervalInteger,
+		ConfigFilePath:          configFilePath,
+		DbConnectionHost:        dbConnectionHost,
+		DbConnectionName:        dbConnectionName,
+		DbConnectionUser:        dbConnectionUser,
+		DbConnectionPass:        dbConnectionPass,
+		DbConnectionPort:        dbConnectionPort,
 	}
 
 	if len(errors) > 0 {

@@ -34,7 +34,7 @@ func main() {
 
 		// Thereafter we should run a cron job to sync the config from the db.
 		// TODO: externalize this interval in env variables.
-		gateway.StartProxyConfigCronJob(database, 5)
+		gateway.StartProxyConfigCronJob(database, gateway.GlobalAppConfig.PersistenceSyncInterval)
 	}
 
 	// DB LESS MODE run a thread to monitor the config file for changes and do an initial boot up...
