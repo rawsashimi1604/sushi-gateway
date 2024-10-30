@@ -3,8 +3,13 @@ package api
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
+	"log/slog"
 	"net/http"
+	"strings"
 )
 
 type PluginController struct {
@@ -54,9 +59,111 @@ func (p *PluginController) UpdatePlugin() http.HandlerFunc {
 
 func (p *PluginController) AddPlugin() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		payload, _ := json.Marshal("hello")
+
+		// RouteDTO represents the structure for adding a new route, including the service name.
+		type PluginDTO struct {
+			Scope  string             `json:"scope"`
+			Name   string             `json:"name"`
+			Plugin model.PluginConfig `json:"plugin"`
+		}
+
+		// Decode the request
+		var pluginDTO PluginDTO
+		if err := json.NewDecoder(req.Body).Decode(&pluginDTO); err != nil {
+			slog.Info("Failed to decode plugin DTO from request: " + err.Error())
+			httperr := &model.HttpError{
+				Code:     "CREATE_PLUGIN_ERR",
+				Message:  "failed to decode plugin from request body",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Validate the DTO contents
+		if strings.ToLower(pluginDTO.Scope) != "global" &&
+			strings.ToLower(pluginDTO.Scope) != "service" &&
+			strings.ToLower(pluginDTO.Scope) != "route" {
+			httperr := &model.HttpError{
+				Code:     "CREATE_PLUGIN_ERR",
+				Message:  "scope is required and must be global, service or route",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// If the scope is service or route,
+		// then we must check for a service name or route name to add the plugin to.
+		if pluginDTO.Scope != "global" && pluginDTO.Name == "" {
+			httperr := &model.HttpError{
+				Code:     "CREATE_PLUGIN_ERR",
+				Message:  "name is required when we are adding plugin to service or route scope.",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Validate that plugin is one of the available plugins
+		if !util.SliceContainsString(constant.AVAILABLE_PLUGINS, pluginDTO.Plugin.Name) {
+			httperr := &model.HttpError{
+				Code:     "CREATE_PLUGIN_ERR",
+				Message:  "plugin configuration name is not available: " + pluginDTO.Plugin.Name,
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Validate that the plugin does not exist already
+		checkPlugins, err := p.pluginRepo.GetPlugins(pluginDTO.Scope, pluginDTO.Name)
+		if err != nil {
+			slog.Info(err.Error())
+			httperr := &model.HttpError{
+				Code:     "CREATE_PLUGIN_ERR",
+				Message:  "failed to add plugin into database",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+		if len(checkPlugins) > 0 {
+			httperr := &model.HttpError{
+				Code:     "CREATE_PLUGIN_ERR",
+				Message:  "plugin already exists.",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Add the plugin
+		err = p.pluginRepo.AddPlugin(pluginDTO.Scope, pluginDTO.Plugin, pluginDTO.Name)
+		if err != nil {
+			slog.Info(err.Error())
+			httperr := &model.HttpError{
+				Code:     "CREATE_PLUGIN_ERR",
+				Message:  "failed to add plugin into database",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Send a success response
 		w.Header().Set("Content-Type", "application/json")
-		w.Write(payload)
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "Plugin created successfully",
+		})
 	}
 }
 

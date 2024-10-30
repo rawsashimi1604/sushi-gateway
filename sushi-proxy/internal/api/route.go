@@ -43,7 +43,7 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 		if err := json.NewDecoder(req.Body).Decode(&routeDTO); err != nil {
 			slog.Info("Failed to decode route DTO from request: " + err.Error())
 			httperr := &model.HttpError{
-				Code:     "CREATE_SERVICE_ERR",
+				Code:     "CREATE_ROUTE_ERR",
 				Message:  "failed to decode route from request body",
 				HttpCode: http.StatusBadRequest,
 			}
