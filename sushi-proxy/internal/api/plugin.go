@@ -276,8 +276,66 @@ func (p *PluginController) AddPlugin() http.HandlerFunc {
 
 func (p *PluginController) DeletePlugin() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		payload, _ := json.Marshal("hello")
+
+		// Decode the request body to get the scope and plugin details
+		var pluginDTO PluginDTO
+		if err := json.NewDecoder(req.Body).Decode(&pluginDTO); err != nil {
+			slog.Info("Failed to decode plugin DTO from request: " + err.Error())
+			httperr := &model.HttpError{
+				Code:     "DELETE_PLUGIN_ERR",
+				Message:  "failed to decode plugin from request body",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Validate the scope
+		if strings.ToLower(pluginDTO.Scope) != "global" &&
+			strings.ToLower(pluginDTO.Scope) != "service" &&
+			strings.ToLower(pluginDTO.Scope) != "route" {
+			httperr := &model.HttpError{
+				Code:     "DELETE_PLUGIN_ERR",
+				Message:  "scope is required and must be global, service, or route",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Check that the plugin name is provided if it’s service or route scoped
+		if pluginDTO.Scope != "global" && pluginDTO.Name == "" {
+			httperr := &model.HttpError{
+				Code:     "DELETE_PLUGIN_ERR",
+				Message:  "name is required when deleting plugin at service or route scope",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Call the repository to delete the plugin based on scope
+		err := p.pluginRepo.DeletePlugin(pluginDTO.Scope, pluginDTO.Plugin.Name, pluginDTO.Name)
+		if err != nil {
+			slog.Info("failed to delete plugin: " + err.Error())
+			httperr := &model.HttpError{
+				Code:     "DELETE_PLUGIN_ERR",
+				Message:  "failed to delete plugin from the database",
+				HttpCode: http.StatusInternalServerError,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Send a success response
 		w.Header().Set("Content-Type", "application/json")
-		w.Write(payload)
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "Plugin deleted successfully",
+		})
 	}
 }

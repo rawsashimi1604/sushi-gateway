@@ -91,3 +91,38 @@ func TestPluginController_UpdatePlugin(t *testing.T) {
 	assert.Equal(t, http.StatusCreated, rr.Code)
 	assert.Contains(t, rr.Body.String(), "Plugin updated successfully")
 }
+
+func TestPluginController_DeletePlugin(t *testing.T) {
+	// Setup database and repository for the controller.
+	database, err := db.ConnectDb()
+	if err != nil {
+		t.Fatal("unable to connect to database")
+	}
+
+	pluginRepo := db.NewPluginRepository(database)
+	pluginController := NewPluginController(pluginRepo)
+
+	// Create the PluginDTO for testing
+	newPluginDTO := PluginDTO{
+		Scope: "route",
+		Name:  "get-sushi-restaurants",
+		Plugin: model.PluginConfig{
+			Name: "basic_auth",
+		},
+	}
+
+	// Marshal the RouteDTO to JSON
+	jsonPayload, _ := json.Marshal(newPluginDTO)
+	slog.Info(string(jsonPayload))
+
+	// Create a POST request for adding the route
+	req, err := http.NewRequest("DELETE", "/plugin", bytes.NewBuffer(jsonPayload))
+	assert.NoError(t, err)
+
+	rr := httptest.NewRecorder()
+	handler := pluginController.DeletePlugin()
+	handler.ServeHTTP(rr, req)
+	slog.Info(rr.Body.String())
+	assert.Equal(t, http.StatusOK, rr.Code)
+	assert.Contains(t, rr.Body.String(), "Plugin deleted successfully")
+}
