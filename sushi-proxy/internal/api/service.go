@@ -20,16 +20,20 @@ func NewServiceController(serviceRepo *db.ServiceRepository) *ServiceController 
 }
 
 func (s *ServiceController) RegisterRoutes(router *mux.Router) {
-	router.Path("/service").Methods("GET").Handler(ProtectRouteUsingJWT(s.GetServices()))
-	router.Path("/service").Methods("POST").Handler(ProtectRouteUsingJWT(s.AddService()))
-	router.Path("/service").Methods("DELETE").Handler(ProtectRouteUsingJWT(s.DeleteServiceByName()))
+	router.Path("/service").Methods("GET").Handler(
+		ProtectRouteUsingJWT(
+			ProtectRouteWhenUsingDblessMode(s.GetServices())))
+	router.Path("/service").Methods("POST").Handler(
+		ProtectRouteUsingJWT(
+			ProtectRouteWhenUsingDblessMode(s.AddService())))
+	router.Path("/service").Methods("DELETE").Handler(
+		ProtectRouteUsingJWT(
+			ProtectRouteWhenUsingDblessMode(s.DeleteServiceByName())))
 }
 
 func (s *ServiceController) GetServices() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-
 		services, err := s.serviceRepo.GetAllServices()
-
 		w.Header().Set("Content-Type", "application/json")
 		if err != nil {
 			slog.Info("something went wrong when getting the services.")
@@ -49,7 +53,6 @@ func (s *ServiceController) GetServices() http.HandlerFunc {
 
 func (s *ServiceController) AddService() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-
 		// Decode the incoming request body to a Service struct
 		var newService model.Service
 		if err := json.NewDecoder(req.Body).Decode(&newService); err != nil {

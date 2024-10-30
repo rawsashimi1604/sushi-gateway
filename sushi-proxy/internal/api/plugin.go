@@ -17,7 +17,8 @@ func NewPluginController(pluginRepo *db.PluginRepository) *PluginController {
 
 func (p *PluginController) RegisterRoutes(router *mux.Router) {
 	router.Path("/").Methods("GET").Handler(
-		ProtectRouteUsingJWT(p.GetPlugin()))
+		ProtectRouteUsingJWT(
+			ProtectRouteWhenUsingDblessMode(p.GetPlugin())))
 }
 
 // TODO: create these routes.
