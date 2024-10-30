@@ -67,7 +67,7 @@ func NewAdminApiRouter(database *sql.DB) http.Handler {
 // Configuration should only be injected from config.json.
 func ProtectRouteWhenUsingDblessMode(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		if gateway.GlobalAppConfig.PersistanceConfig == constant.DBLESS_MODE {
+		if gateway.GlobalAppConfig.PersistenceConfig == constant.DBLESS_MODE {
 			slog.Info("Dbless mode detected, request not available!")
 			w.Header().Set("Content-Type", "application/json")
 			httperr := &model.HttpError{

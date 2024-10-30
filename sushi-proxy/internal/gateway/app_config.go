@@ -10,13 +10,13 @@ import (
 )
 
 type AppConfig struct {
-	ConfigFilePath    string
 	ServerCertPath    string
 	ServerKeyPath     string
 	CACertPath        string
 	AdminUser         string
 	AdminPassword     string
-	PersistanceConfig string
+	PersistenceConfig string
+	ConfigFilePath    string
 	DbConnectionHost  string
 	DbConnectionName  string
 	DbConnectionUser  string
@@ -31,11 +31,6 @@ func LoadGlobalConfig() *AppConfig {
 	godotenv.Load()
 
 	errors := make([]string, 0)
-
-	configFilePath := os.Getenv("CONFIG_FILE_PATH")
-	if configFilePath == "" {
-		errors = append(errors, "CONFIG_FILE_PATH is required.")
-	}
 
 	serverCertPath := os.Getenv("SERVER_CERT_PATH")
 	if serverCertPath == "" {
@@ -72,6 +67,11 @@ func LoadGlobalConfig() *AppConfig {
 			"PERSISTENCE_CONFIG must be \"db\" or \"dbless\".")
 	}
 
+	configFilePath := os.Getenv("CONFIG_FILE_PATH")
+	if persistenceConfig == constant.DBLESS_MODE && configFilePath == "" {
+		errors = append(errors, "CONFIG_FILE_PATH is required.")
+	}
+
 	dbConnectionHost := os.Getenv("DB_CONNECTION_HOST")
 	dbConnectionName := os.Getenv("DB_CONNECTION_NAME")
 	dbConnectionUser := os.Getenv("DB_CONNECTION_USER")
@@ -97,13 +97,13 @@ func LoadGlobalConfig() *AppConfig {
 	}
 
 	config := &AppConfig{
-		ConfigFilePath:    configFilePath,
 		ServerCertPath:    serverCertPath,
 		ServerKeyPath:     serverKeyPath,
 		CACertPath:        caCertPath,
 		AdminUser:         adminUser,
 		AdminPassword:     adminPassword,
-		PersistanceConfig: persistenceConfig,
+		PersistenceConfig: persistenceConfig,
+		ConfigFilePath:    configFilePath,
 		DbConnectionHost:  dbConnectionHost,
 		DbConnectionName:  dbConnectionName,
 		DbConnectionUser:  dbConnectionUser,

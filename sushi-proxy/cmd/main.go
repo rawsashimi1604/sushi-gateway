@@ -20,16 +20,27 @@ func main() {
 	//go gateway.WatchConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
 
 	// DB MODE run a thread to sync the config file from db.
-	if gateway.GlobalAppConfig.PersistanceConfig == constant.DB_MODE {
+	if gateway.GlobalAppConfig.PersistenceConfig == constant.DB_MODE {
 		database, err := db.ConnectDb()
 		if err != nil {
 			panic("unable to connect to database.")
 		}
 		gateway.LoadProxyConfigFromDb(database)
+		// On first load, if the config file is empty, means that the config is not in sync...
+		// Means we could not get the config from the db
+		// We should therefore terminate the application.
+		if gateway.GlobalProxyConfig.Global.Name == "" {
+			slog.Info("Unable to sync config from database on first load. Terminating...")
+			panic("unable to sync config from database.")
+		}
+
+		// Thereafter we should run a cron job to sync the config from the db.
+		// TODO: add sync interval
+
 	}
 
 	// DB LESS MODE run a thread to monitor the config file for changes and do an initial boot up...
-	if gateway.GlobalAppConfig.PersistanceConfig == constant.DBLESS_MODE {
+	if gateway.GlobalAppConfig.PersistenceConfig == constant.DBLESS_MODE {
 		gateway.LoadProxyConfigFromConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
 		go gateway.WatchConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
 	}
@@ -74,15 +85,15 @@ func main() {
 	// Setup admin api
 	go func() {
 		var adminApiRouter http.Handler
-		if gateway.GlobalAppConfig.PersistanceConfig == constant.DB_MODE {
+		if gateway.GlobalAppConfig.PersistenceConfig == constant.DB_MODE {
 			database, err := db.ConnectDb()
 			if err != nil {
 				panic("unable to connect to database.")
 			}
-			slog.Info("PersistanceConfig:: Starting gateway in DB mode.")
+			slog.Info("PersistenceConfig:: Starting gateway in DB mode.")
 			adminApiRouter = api.NewAdminApiRouter(database)
 		} else {
-			slog.Info("PersistanceConfig:: Starting gateway in DB-less mode.")
+			slog.Info("PersistenceConfig:: Starting gateway in DB-less mode.")
 			adminApiRouter = api.NewAdminApiRouter(nil)
 		}
 

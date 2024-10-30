@@ -43,7 +43,6 @@ func LoadProxyConfigFromDb(database *sql.DB) {
 		},
 		Services: services,
 	}
-
 }
 
 func LoadProxyConfigFromConfigFile(filePath string) {
