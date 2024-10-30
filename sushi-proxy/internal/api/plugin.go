@@ -260,24 +260,13 @@ func (p *PluginController) AddPlugin() http.HandlerFunc {
 func (p *PluginController) DeletePlugin() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
-		// Decode the request body to get the scope and plugin details
-		var pluginDTO PluginDTO
-		if err := json.NewDecoder(req.Body).Decode(&pluginDTO); err != nil {
-			slog.Info("Failed to decode plugin DTO from request: " + err.Error())
-			httperr := &model.HttpError{
-				Code:     "DELETE_PLUGIN_ERR",
-				Message:  "failed to decode plugin from request body",
-				HttpCode: http.StatusBadRequest,
-			}
-			httperr.WriteLogMessage()
-			httperr.WriteJSONResponse(w)
-			return
-		}
+		// Extract query parameters
+		scope := strings.ToLower(req.URL.Query().Get("scope"))
+		name := req.URL.Query().Get("name")
+		pluginName := req.URL.Query().Get("plugin_name")
 
 		// Validate the scope
-		if strings.ToLower(pluginDTO.Scope) != "global" &&
-			strings.ToLower(pluginDTO.Scope) != "service" &&
-			strings.ToLower(pluginDTO.Scope) != "route" {
+		if scope != "global" && scope != "service" && scope != "route" {
 			httperr := &model.HttpError{
 				Code:     "DELETE_PLUGIN_ERR",
 				Message:  "scope is required and must be global, service, or route",
@@ -288,8 +277,22 @@ func (p *PluginController) DeletePlugin() http.HandlerFunc {
 			return
 		}
 
-		// Check that the plugin name is provided if it’s service or route scoped
-		if pluginDTO.Scope != "global" && pluginDTO.Name == "" {
+		// Validate the scope
+		if strings.ToLower(scope) != "global" &&
+			strings.ToLower(scope) != "service" &&
+			strings.ToLower(scope) != "route" {
+			httperr := &model.HttpError{
+				Code:     "DELETE_PLUGIN_ERR",
+				Message:  "scope is required and must be global, service, or route",
+				HttpCode: http.StatusBadRequest,
+			}
+			httperr.WriteLogMessage()
+			httperr.WriteJSONResponse(w)
+			return
+		}
+
+		// Check that the route/service name is provided if it’s service or route scoped
+		if scope != "global" && name == "" {
 			httperr := &model.HttpError{
 				Code:     "DELETE_PLUGIN_ERR",
 				Message:  "name is required when deleting plugin at service or route scope",
@@ -301,7 +304,7 @@ func (p *PluginController) DeletePlugin() http.HandlerFunc {
 		}
 
 		// Call the repository to delete the plugin based on scope
-		err := p.pluginRepo.DeletePlugin(pluginDTO.Scope, pluginDTO.Plugin.Name, pluginDTO.Name)
+		err := p.pluginRepo.DeletePlugin(scope, pluginName, name)
 		if err != nil {
 			slog.Info("failed to delete plugin: " + err.Error())
 			httperr := &model.HttpError{
