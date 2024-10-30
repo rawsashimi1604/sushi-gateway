@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"log/slog"
 	"os"
 	"strings"
@@ -65,8 +66,8 @@ func LoadGlobalConfig() *AppConfig {
 	if persistenceConfig == "" {
 		errors = append(errors, "PERSISTENCE_CONFIG is required.")
 	}
-	if strings.ToLower(persistenceConfig) != "db" &&
-		strings.ToLower(persistenceConfig) != "dbless" {
+	if strings.ToLower(persistenceConfig) != constant.DB_MODE &&
+		strings.ToLower(persistenceConfig) != constant.DBLESS_MODE {
 		errors = append(errors,
 			"PERSISTENCE_CONFIG must be \"db\" or \"dbless\".")
 	}

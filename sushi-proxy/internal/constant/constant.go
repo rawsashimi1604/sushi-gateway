@@ -1,5 +1,9 @@
 package constant
 
+// DB CONFIG
+const DB_MODE = "db"
+const DBLESS_MODE = "dbless"
+
 // PORTS
 const PORT_ADMIN_API = "8081"
 const PORT_HTTP = "8008"

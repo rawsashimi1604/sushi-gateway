@@ -56,12 +56,18 @@ func main() {
 
 	// Setup admin api
 	go func() {
-		// TODO: If dbless mode, nil, if db mode set db connection...
-		database, err := db.ConnectDb()
-		if err != nil {
-			panic("unable to connect to database.")
+		var adminApiRouter http.Handler
+		if gateway.GlobalAppConfig.PersistanceConfig == constant.DB_MODE {
+			database, err := db.ConnectDb()
+			if err != nil {
+				panic("unable to connect to database.")
+			}
+			slog.Info("PersistanceConfig:: Starting gateway in DB mode.")
+			adminApiRouter = api.NewAdminApiRouter(database)
+		} else {
+			slog.Info("PersistanceConfig:: Starting gateway in DB-less mode.")
+			adminApiRouter = api.NewAdminApiRouter(nil)
 		}
-		adminApiRouter := api.NewAdminApiRouter(database)
 
 		slog.Info("Started another API server on port: " + constant.PORT_ADMIN_API)
 		if err := http.ListenAndServe(":"+constant.PORT_ADMIN_API, adminApiRouter); err != nil {
