@@ -27,7 +27,7 @@ type CorsPlugin struct {
 func NewCorsPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_CORS,
-		Priority: 20,
+		Priority: 2000,
 		Handler:  CorsPlugin{config: config},
 	}
 }

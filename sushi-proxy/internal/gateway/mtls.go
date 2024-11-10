@@ -15,7 +15,7 @@ type MtlsPlugin struct {
 func NewMtlsPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_MTLS,
-		Priority: 12,
+		Priority: 1600,
 		Handler:  MtlsPlugin{config: config},
 	}
 }

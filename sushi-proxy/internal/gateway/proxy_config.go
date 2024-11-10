@@ -5,7 +5,6 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
-	"log"
 	"log/slog"
 	"os"
 	"sync"
@@ -83,7 +82,6 @@ func StartProxyConfigCronJob(database *sql.DB, interval int) {
 		for {
 			select {
 			case <-ticker.C:
-				log.Println("Cron job triggered: Refreshing proxy config.")
 				LoadProxyConfigFromDb(database)
 			case <-quit:
 				ticker.Stop()

@@ -40,7 +40,7 @@ type RateLimitPlugin struct {
 func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *model.ProxyConfig) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_RATE_LIMIT,
-		Priority: 10,
+		Priority: 910,
 		Handler: RateLimitPlugin{
 			config:      config,
 			proxyConfig: proxyConfig,

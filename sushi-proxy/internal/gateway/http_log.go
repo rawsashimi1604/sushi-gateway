@@ -27,7 +27,7 @@ type HttpLogConfig struct {
 func NewHttpLogPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_HTTP_LOG,
-		Priority: 10000,
+		Priority: 12,
 		Handler: HttpLogPlugin{
 			config: config,
 		},

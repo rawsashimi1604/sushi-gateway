@@ -14,7 +14,7 @@ type KeyAuthPlugin struct {
 func NewKeyAuthPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_KEY_AUTH,
-		Priority: 10,
+		Priority: 1250,
 		Handler: KeyAuthPlugin{
 			config: config,
 		},

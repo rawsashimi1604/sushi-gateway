@@ -16,7 +16,7 @@ type BotProtectionPlugin struct {
 func NewBotProtectionPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_BOT_PROTECTION,
-		Priority: 10,
+		Priority: 2500,
 		Handler: BotProtectionPlugin{
 			config: config,
 		},
