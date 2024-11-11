@@ -94,7 +94,7 @@ func createMockProxyConfig(t *testing.T) *model.ProxyConfig {
 		Name:                  "mockService",
 		BasePath:              "/mockService",
 		Protocol:              "http",
-		LoadBalancingStrategy: RoundRobin,
+		LoadBalancingStrategy: model.RoundRobin,
 		Upstreams:             make([]model.Upstream, 0),
 		Plugins: []model.PluginConfig{
 			rateLimitPlugin,
