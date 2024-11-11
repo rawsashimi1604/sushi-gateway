@@ -96,7 +96,7 @@ func LoadGlobalConfig() *AppConfig {
 	dbConnectionPass := os.Getenv("DB_CONNECTION_PASS")
 	dbConnectionPort := os.Getenv("DB_CONNECTION_PORT")
 
-	if persistenceConfig != "" {
+	if persistenceConfig == constant.DB_MODE {
 		if dbConnectionHost == "" {
 			errors = append(errors, "DB_CONNECTION_HOST is required.")
 		}

@@ -1,8 +1,10 @@
 # Sushi Proxy
 
 ## Build docker image
-docker build -t rawsashimi/sushi-proxy:latest .
+```bash
+docker build -t rawsashimi/sushi-proxy:latest . && \ 
 docker push rawsashimi/sushi-proxy:latest 
+```
 
 ## Setting up TLS server for local development
 

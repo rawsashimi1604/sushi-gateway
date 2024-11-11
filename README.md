@@ -69,6 +69,189 @@ web application.
 - Ensure have required TLS certs
 - Run `docker compose up`
 
+## Quick Start using docker
+
+1. Pull the proxy image from dockerhub.
+
+```bash
+docker pull rawsashimi/sushi-proxy:latest
+```
+
+2. Create a config.json file with the following values
+```json
+{
+  "global": {
+    "name": "example-gateway",
+    "plugins": []
+  },
+  "services": [
+    {
+      "name": "example-service",
+      "base_path": "/example",
+      "protocol": "http",
+      "load_balancing_strategy": "round_robin",
+      "upstreams": [
+        { "id": "upstream_1", "host": "example-app", "port": 3000 }  
+      ],
+      "routes": [
+        {
+          "name": "example-route",
+          "path": "/v1/sushi",
+          "methods": ["GET"],
+          "plugins": [
+            {
+              "id": "example-plugin",
+              "name": "rate_limit",
+              "enabled": true,
+              "config": {
+                "limit_second": 10,
+                "limit_min": 10,
+                "limit_hour": 100
+              }
+            }
+          ]
+        }
+      ]
+    }
+  
+  ]
+}
+```
+
+3. Create a docker network
+```bash
+docker network create sushi-network
+```
+
+4. Create an API upstream, for this case, we wil use an example node.js service.
+```bash
+docker pull rawsashimi/express-sushi-app:latest
+```
+
+5. Run the example node.js container with the required environment variables.
+```bash
+docker run -d \
+--name example-app \
+--network sushi-network \
+-e APP_ID=3000 \
+-e JWT_ISSUER=someIssuerKey \
+-e JWT_SECRET=123secret456 \
+-p 3000:3000 \
+rawsashimi/express-sushi-app:latest
+```
+
+6. Test that the service works
+```bash
+curl http://localhost:3000/v1/sushi | jq
+
+
+```
+You should receive a response:
+```json
+{
+  "app_id": "3000",
+  "data": [
+    {
+      "id": 1,
+      "name": "California Roll",
+      "ingredients": [
+        "Crab",
+        "Avocado",
+        "Cucumber"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Tuna Roll",
+      "ingredients": [
+        "Tuna",
+        "Rice",
+        "Nori"
+      ]
+    }
+  ]
+}
+```
+
+7. Create the CA, self-signed cert and key for the proxy.
+- The CA is used for authenticating MTLS requests
+- The cert and key is used to host Sushi Proxy in HTTPs
+```bash
+# Generate ca private key 
+openssl genrsa -out ca.key 4096
+# Generate self signed CA cert
+openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
+
+# Generate server private key
+openssl genrsa -out server.key 2048
+# Generate server CSR
+openssl req -new -key server.key -out server.csr
+
+# Create Server certificate signed by your CA
+printf "[req_ext]\nsubjectAltName=DNS:localhost" > extfile.cnf
+openssl x509 -req -days 365 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt \
+-extensions req_ext -extfile extfile.cnf
+
+# Verify Certs
+openssl verify -CAfile ca.crt server.crt
+```
+
+8. Run the sushi proxy container with the required environment variables.
+```bash
+docker run \
+--name example-proxy \
+--network sushi-network \
+-v $(pwd)/config.json:/app/config.json \
+-v $(pwd)/server.crt:/app/server.crt \
+-v $(pwd)/server.key:/app/server.key \
+-v $(pwd)/ca.crt:/app/ca.crt \
+-e CONFIG_FILE_PATH="/app/config.json" \
+-e SERVER_CERT_PATH="/app/server.crt" \
+-e SERVER_KEY_PATH="/app/server.key" \
+-e CA_CERT_PATH="/app/ca.crt" \
+-e ADMIN_USER=admin \
+-e ADMIN_PASSWORD=changeme \
+-e PERSISTENCE_CONFIG=dbless \
+-p 8008:8008 \
+-p 8001:8001 \
+-p 8443:8443 \
+rawsashimi/sushi-proxy:latest
+```
+
+9. Test that the proxy works
+```bash
+curl http://localhost:8008/example/v1/sushi | jq
+```
+
+You will get the response:
+```json
+{
+  "app_id": "3000",
+  "data": [
+    {
+      "id": 1,
+      "name": "California Roll",
+      "ingredients": [
+        "Crab",
+        "Avocado",
+        "Cucumber"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Tuna Roll",
+      "ingredients": [
+        "Tuna",
+        "Rice",
+        "Nori"
+      ]
+    }
+  ]
+}
+```
+
+Congrats!! you have created your first proxy service!
+
 ## TODO LIST
 
 - [x] design database schema
@@ -81,7 +264,7 @@ web application.
   - [ ] gateway logs middleware
 - [ ] Add stateful gateway configurations (good to have)
   - [x] Postgres DB (Externalise option)
-  - [ ] Postgres DB docker
+  - [x] Postgres DB docker
   - [x] Admin API for CRUD operations
   - [x] global domain object config state retrieval from db.
   - [ ] add time created and time updated to schema.
@@ -125,9 +308,7 @@ web application.
 - [ ] Configure health checks for upstreams (good to have)
 - [x] UI Portal development and design
   - [ ] Update UI Portal to show services, routes, upstreams etc...
-- [ ] AI Component development and design
 - [x] Flatten file structure, cyclic imports
-- [ ] Add elastic logs support
 
 ## TLS
 
