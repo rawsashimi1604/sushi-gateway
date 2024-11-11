@@ -51,7 +51,6 @@ function Sidebar() {
             <SidebarItem item="Services" href="/services" />
             <SidebarItem item="Routes" href="/routes" />
             <SidebarItem item="Plugins" href="/plugins" />
-            <SidebarItem item="Sushi AI" href="/sushi-ai" />
           </ul>
         </div>
       </div>
