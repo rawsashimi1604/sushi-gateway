@@ -15,6 +15,7 @@ import (
 )
 
 func TestServiceController_GetServices(t *testing.T) {
+	IntegrationTestGuard(t)
 	// Setup database and repository for the controller.
 	database, err := db.ConnectDb()
 	if err != nil {
@@ -38,6 +39,7 @@ func TestServiceController_GetServices(t *testing.T) {
 }
 
 func TestServiceController_AddService(t *testing.T) {
+	IntegrationTestGuard(t)
 	// Setup database and repository for the controller.
 	database, err := db.ConnectDb()
 	if err != nil {
@@ -68,6 +70,7 @@ func TestServiceController_AddService(t *testing.T) {
 }
 
 func TestServiceController_DeleteServiceByName(t *testing.T) {
+	IntegrationTestGuard(t)
 	// Setup database and repository for the controller.
 	database, err := db.ConnectDb()
 	if err != nil {

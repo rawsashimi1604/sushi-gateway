@@ -13,6 +13,8 @@ import (
 )
 
 func TestPluginController_AddPlugin(t *testing.T) {
+	IntegrationTestGuard(t)
+
 	// Setup database and repository for the controller.
 	database, err := db.ConnectDb()
 	if err != nil {
@@ -53,6 +55,7 @@ func TestPluginController_AddPlugin(t *testing.T) {
 }
 
 func TestPluginController_UpdatePlugin(t *testing.T) {
+	IntegrationTestGuard(t)
 	// Setup database and repository for the controller.
 	database, err := db.ConnectDb()
 	if err != nil {
@@ -93,6 +96,7 @@ func TestPluginController_UpdatePlugin(t *testing.T) {
 }
 
 func TestPluginController_DeletePlugin(t *testing.T) {
+	IntegrationTestGuard(t)
 	// Setup database and repository for the controller.
 	database, err := db.ConnectDb()
 	if err != nil {

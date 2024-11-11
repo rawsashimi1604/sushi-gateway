@@ -13,6 +13,7 @@ import (
 )
 
 func TestRouteController_AddRoute(t *testing.T) {
+	IntegrationTestGuard(t)
 	// Setup database and repository for the controller.
 	database, err := db.ConnectDb()
 	if err != nil {
@@ -61,6 +62,7 @@ func TestRouteController_AddRoute(t *testing.T) {
 }
 
 func TestRouteController_DeleteRouteByName(t *testing.T) {
+	IntegrationTestGuard(t)
 	// Setup database and repository for the controller.
 	database, err := db.ConnectDb()
 	if err != nil {

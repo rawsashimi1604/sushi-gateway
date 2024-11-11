@@ -27,6 +27,8 @@ jobs:
           go build -o sushi-proxy ./cmd 
 
       - name: Run Tests
+        env:
+          SKIP_INTEGRATION_TESTS: true
         working-directory: ./sushi-proxy
         run: |
           go test -v ./...
