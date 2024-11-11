@@ -33,7 +33,7 @@ jobs:
         run: |
           go test -v ./...
 
-  docker:
+  deploy-docker:
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -50,7 +50,7 @@ jobs:
       - name: Build Docker image
         working-directory: ./sushi-proxy
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/sushi-proxy:latest ./sushi-proxy
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/sushi-proxy:latest . 
 
       - name: Push Docker image
         run: |
