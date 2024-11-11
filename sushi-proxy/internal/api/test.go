@@ -6,7 +6,7 @@ import (
 )
 
 func IntegrationTestGuard(t *testing.T) {
-	if os.Getenv("SKIP_INTEGRATION_TEST") == "true" {
-		t.Skip("Skipping test because SKIP_INTEGRATION_TEST is set")
+	if os.Getenv("SKIP_INTEGRATION_TESTS") == "true" {
+		t.Skip("Skipping test because SKIP_INTEGRATION_TESTS is set")
 	}
 }
