@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 interface ToggleInputProps {
   id: string;
@@ -8,7 +8,13 @@ interface ToggleInputProps {
   disabled?: boolean;
 }
 
-function ToggleInput({ id, name, checked, onChange, disabled = false }: ToggleInputProps) {
+function ToggleInput({
+  id,
+  name,
+  checked,
+  onChange,
+  disabled = false,
+}: ToggleInputProps) {
   const [isChecked, setIsChecked] = useState(checked || false);
 
   const handleInputChange = () => {

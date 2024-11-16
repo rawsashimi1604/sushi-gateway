@@ -40,7 +40,7 @@ function ServiceModal({ showModal, onClose, service }: ServiceModalProps) {
           </div>
           <ul className="flex flex-col gap-3">
             {service &&
-              service.upstreams.map((upstream, i) => {
+              service.upstreams.map((upstream: any, i: number) => {
                 const protocol = service.protocol;
                 const host = upstream.host;
                 const port = upstream.port;

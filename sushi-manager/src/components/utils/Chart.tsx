@@ -1,5 +1,5 @@
 import c3, { ChartConfiguration } from "c3";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 interface ChartProps {
   config: ChartConfiguration;

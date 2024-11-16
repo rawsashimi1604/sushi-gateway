@@ -52,7 +52,7 @@ function RouteModal({ showModal, onClose, route }: RouteModalProps) {
             {route && route.plugins.length > 0 ? (
               route.plugins.map((plugin: any, i: number) => {
                 return (
-                  <li>
+                  <li key={i}>
                     <Tag value={plugin.name} />
                   </li>
                 );

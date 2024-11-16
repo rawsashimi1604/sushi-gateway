@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface SelectInputProps {
   options: string[];
   onChange?: (value: string) => void;
@@ -24,7 +22,9 @@ function SelectInput({ options, onChange, error, value }: SelectInputProps) {
           );
         })}
       </select>
-      {error && <span className="tracking-wider text-red-500 text-xs">{error}</span>}
+      {error && (
+        <span className="tracking-wider text-red-500 text-xs">{error}</span>
+      )}
     </div>
   );
 }
