@@ -16,7 +16,7 @@ function EnvConfigurationItem({
 }: EnvConfigurationItemProps) {
   return (
     <div className="flex flex-row">
-      <div className="w-[150px] flex gap-3 items-start justify-start">
+      <div className="w-[200px] flex gap-3 items-start justify-start">
         <h2 className="tracking-wider text-sm">{item}</h2>
         {tooltip && <IoMdInformationCircle className="text-md mt-0.5" />}
       </div>
@@ -26,47 +26,27 @@ function EnvConfigurationItem({
   );
 }
 
-function EnvConfiguration() {
+interface EnvConfigurationProps {
+  config: any;
+}
+
+function EnvConfiguration({ config }: EnvConfigurationProps) {
   return (
     <DashboardCard className="flex flex-col gap-2 p-6 ">
       <div className="">
         <Header text="environment configuration" align="left" size="sm" />
         <div className="mt-4 flex flex-col gap-2">
-          <EnvConfigurationItem item="proxy_version" value="0.1" />
-          <EnvConfigurationItem
-            item="manager_url"
-            value="http://localhost:5173"
-          />
-          <EnvConfigurationItem
-            item="admin_api_url"
-            value="http://localhost:8081"
-          />
-          <EnvConfigurationItem
-            item="proxy_http_url"
-            value="http://localhost:8008"
-          />
-          <EnvConfigurationItem
-            item="proxy_https_url"
-            value="https://localhost:8443"
-          />
-          <EnvConfigurationItem item="proxy_version" value="0.1" />
-          <EnvConfigurationItem item="data_model" value="stateless" />
-          <EnvConfigurationItem
-            item="config_file_path"
-            value="./config/config.json"
-          />
-          <EnvConfigurationItem
-            item="server_cert_path"
-            value="./config/server.crt"
-          />
-          <EnvConfigurationItem
-            item="server_key_path"
-            value="./config/server.key"
-          />
-          <EnvConfigurationItem item="ca_cert_path" value="./config/ca.crt" />
-          <EnvConfigurationItem item="admin_user" value="admin" />
-          <EnvConfigurationItem item="admin_password" value="changeme" />
-          <EnvConfigurationItem item="config_format" value="json" />
+          {Object.keys(config).map((configKey, i) => {
+            console.log(configKey);
+            console.log(config[configKey]);
+            return (
+              <EnvConfigurationItem
+                key={i}
+                item={configKey}
+                value={config[configKey].toString()}
+              />
+            );
+          })}
         </div>
       </div>
     </DashboardCard>

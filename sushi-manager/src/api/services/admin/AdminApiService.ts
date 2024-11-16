@@ -18,7 +18,13 @@ function logout() {
 }
 
 function getGatewayData() {
-  return HttpRequest.get("/", {
+  return HttpRequest.get("/gateway", {
+    withCredentials: true,
+  });
+}
+
+function getGatewayConfig() {
+  return HttpRequest.get("/gateway/config", {
     withCredentials: true,
   });
 }
@@ -27,4 +33,5 @@ export default {
   login,
   logout,
   getGatewayData,
+  getGatewayConfig,
 };

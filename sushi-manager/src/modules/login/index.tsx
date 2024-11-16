@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
-import AdminAuth from "../../api/services/admin/AdminAuth";
+import AdminAuth from "../../api/services/admin/AdminApiService";
 import TextInput from "../../components/input/TextInput";
 import LoadingSpinner from "../../components/utils/LoadingSpinner";
 import { delay } from "../../utils/delay";

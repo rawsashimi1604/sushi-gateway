@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import GatewayInfo from "../sushi-gateway/GatewayInfo";
 import Logo from "../sushi-gateway/Logo";
 import SidebarItem from "./SidebarItem";
-import AdminAuth from "../../api/services/admin/AdminAuth";
+import AdminAuth from "../../api/services/admin/AdminApiService";
 import { useGatewayData } from "../../hooks/useGatewayState";
 
 function Sidebar() {
@@ -37,7 +37,7 @@ function Sidebar() {
         <div className="border-b border-gray-200 pb-5">
           {/* TODO: Get reverse proxy_pass name */}
           <GatewayInfo
-            gateway={gatewayInfo?.global?.name || "loading..."}
+            gateway={gatewayInfo?.gateway?.global?.name || "loading..."}
             user="admin"
           />
         </div>
