@@ -65,19 +65,22 @@ web application.
 ## GETTING STARTED
 
 ### docker-compose
+
 - Go to `docker` folder
 - Ensure have required TLS certs
 - Run `docker compose up`
 
 ## Quick Start using docker
 
-1. Pull the proxy image from dockerhub.
+1. Pull the proxy and manager image from dockerhub.
 
 ```bash
 docker pull rawsashimi/sushi-proxy:latest
+docker pull rawsashimi/sushi-manager:latest
 ```
 
 2. Create a config.json file with the following values
+
 ```json
 {
   "global": {
@@ -91,7 +94,7 @@ docker pull rawsashimi/sushi-proxy:latest
       "protocol": "http",
       "load_balancing_strategy": "round_robin",
       "upstreams": [
-        { "id": "upstream_1", "host": "example-app", "port": 3000 }  
+        { "id": "upstream_1", "host": "example-app", "port": 3000 }
       ],
       "routes": [
         {
@@ -113,22 +116,24 @@ docker pull rawsashimi/sushi-proxy:latest
         }
       ]
     }
-  
   ]
 }
 ```
 
 3. Create a docker network
+
 ```bash
 docker network create sushi-network
 ```
 
 4. Create an API upstream, for this case, we wil use an example node.js service.
+
 ```bash
 docker pull rawsashimi/express-sushi-app:latest
 ```
 
 5. Run the example node.js container with the required environment variables.
+
 ```bash
 docker run -d \
 --name example-app \
@@ -141,12 +146,15 @@ rawsashimi/express-sushi-app:latest
 ```
 
 6. Test that the service works
+
 ```bash
 curl http://localhost:3000/v1/sushi | jq
 
 
 ```
+
 You should receive a response:
+
 ```json
 {
   "app_id": "3000",
@@ -154,30 +162,24 @@ You should receive a response:
     {
       "id": 1,
       "name": "California Roll",
-      "ingredients": [
-        "Crab",
-        "Avocado",
-        "Cucumber"
-      ]
+      "ingredients": ["Crab", "Avocado", "Cucumber"]
     },
     {
       "id": 2,
       "name": "Tuna Roll",
-      "ingredients": [
-        "Tuna",
-        "Rice",
-        "Nori"
-      ]
+      "ingredients": ["Tuna", "Rice", "Nori"]
     }
   ]
 }
 ```
 
 7. Create the CA, self-signed cert and key for the proxy.
+
 - The CA is used for authenticating MTLS requests
 - The cert and key is used to host Sushi Proxy in HTTPs
+
 ```bash
-# Generate ca private key 
+# Generate ca private key
 openssl genrsa -out ca.key 4096
 # Generate self signed CA cert
 openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
@@ -197,6 +199,7 @@ openssl verify -CAfile ca.crt server.crt
 ```
 
 8. Run the sushi proxy container with the required environment variables.
+
 ```bash
 docker run \
 --name example-proxy \
@@ -219,11 +222,13 @@ rawsashimi/sushi-proxy:latest
 ```
 
 9. Test that the proxy works
+
 ```bash
 curl http://localhost:8008/example/v1/sushi | jq
 ```
 
 You will get the response:
+
 ```json
 {
   "app_id": "3000",
@@ -231,23 +236,23 @@ You will get the response:
     {
       "id": 1,
       "name": "California Roll",
-      "ingredients": [
-        "Crab",
-        "Avocado",
-        "Cucumber"
-      ]
+      "ingredients": ["Crab", "Avocado", "Cucumber"]
     },
     {
       "id": 2,
       "name": "Tuna Roll",
-      "ingredients": [
-        "Tuna",
-        "Rice",
-        "Nori"
-      ]
+      "ingredients": ["Tuna", "Rice", "Nori"]
     }
   ]
 }
+```
+
+10. Run Sushi Manager - an interactive UI used to view the gateway configuration.
+
+```bash
+docker run --rm -p 5173:5173 \
+-e SUSHI_MANAGER_BACKEND_API_URL=http://localhost:8081 \
+sushi-manager:latest
 ```
 
 Congrats!! you have created your first proxy service!
@@ -317,6 +322,7 @@ https/tls support has been added to the proxy, add cert and key into environment
 ## Start a database
 
 create a postgres database.
+
 - `docker run --name postgres-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres`
 - `docker exec -it postgres-db psql -U postgres -d sushi`
 - `CREATE DATABASE sushi;`
