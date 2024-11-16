@@ -1,49 +1,18 @@
-import { useState } from "react";
 import Modal from "../../components/layout/Modal";
 import { IoMdInformationCircle } from "react-icons/io";
 import JsonView from "react18-json-view";
 import Tag from "../../components/typography/Tag";
 import HttpMethodTag from "../routes/HttpMethodTag";
 
-function ServiceModal() {
-  const [isServiceModalOpen, setIsServiceModalOpen] = useState(true);
-  const openModal = () => setIsServiceModalOpen(true);
-  const closeModal = () => setIsServiceModalOpen(false);
+interface ServiceModalProps {
+  showModal: boolean;
+  onClose: () => void;
+  service: any;
+}
 
-  const data = {
-    name: "sushi-svc",
-    base_path: "/sushi-service",
-    protocol: "http",
-    load_balancing_strategy: "round_robin",
-    upstreams: [
-      { host: "sushi-svc-1", port: 3000 },
-      { host: "sushi-svc-2", port: 3000 },
-    ],
-    plugins: [],
-    routes: [
-      {
-        name: "get-sushi",
-        path: "/v1/sushi",
-        methods: ["GET"],
-        plugins: [],
-      },
-      {
-        name: "get-sushi-restaurants",
-        path: "/v1/sushi/restaurant",
-        methods: ["GET"],
-        plugins: [],
-      },
-      {
-        name: "sushi-provision-jwt",
-        path: "/v1/token",
-        methods: ["GET"],
-        plugins: [],
-      },
-    ],
-  };
-
+function ServiceModal({ showModal, onClose, service }: ServiceModalProps) {
   return (
-    <Modal isOpen={isServiceModalOpen} onClose={closeModal} title="Service">
+    <Modal isOpen={showModal} onClose={onClose} title="Service">
       <section className="flex flex-col gap-4 font-lora tracking-wider font-light text-sm">
         {/* Service Name */}
         <div className="flex gap-2">
@@ -51,7 +20,7 @@ function ServiceModal() {
             <span>name</span>
             <IoMdInformationCircle className="text-lg" />
           </div>
-          <span>SushiService</span>
+          <span>{service && service.name}</span>
         </div>
 
         {/* Service Path */}
@@ -60,7 +29,7 @@ function ServiceModal() {
             <span>path</span>
             <IoMdInformationCircle className="text-lg" />
           </div>
-          <span>http://sushi-service.com</span>
+          <span>{service && service.base_path}</span>
         </div>
 
         {/* Service upstreams*/}
@@ -70,9 +39,18 @@ function ServiceModal() {
             <IoMdInformationCircle className="text-lg" />
           </div>
           <ul className="flex flex-col gap-3">
-            <li>http://localhost:8080</li>
-            <li>http://localhost:8081</li>
-            <li>http://localhost:8082</li>
+            {service &&
+              service.upstreams.map((upstream, i) => {
+                const protocol = service.protocol;
+                const host = upstream.host;
+                const port = upstream.port;
+
+                if (port) {
+                  return <li key={i}>{`${protocol}://${host}:${port}`}</li>;
+                } else {
+                  return <li key={i}>{`${protocol}://${host}`}</li>;
+                }
+              })}
           </ul>
         </div>
 
@@ -83,15 +61,19 @@ function ServiceModal() {
             <IoMdInformationCircle className="text-lg" />
           </div>
           <ul className="flex gap-3">
-            <li>
-              <Tag value="Basic Auth" />
-            </li>
-            <li>
-              <Tag value="JWT" />
-            </li>
-            <li>
-              <Tag value="CORS" />
-            </li>
+            {service && service.plugins.length > 0 ? (
+              service.plugins.map((plugin: any, i: number) => {
+                return (
+                  <li key={i}>
+                    <Tag value={plugin?.name} />
+                  </li>
+                );
+              })
+            ) : (
+              <li>
+                <Tag value="none" />
+              </li>
+            )}
           </ul>
         </div>
 
@@ -102,15 +84,19 @@ function ServiceModal() {
             <IoMdInformationCircle className="text-lg" />
           </div>
           <ul className="flex flex-col gap-3">
-            <li className="font-sand tracking-widest">
-              <HttpMethodTag method="GET" /> /v1/sushi
-            </li>
-            <li className="font-sand tracking-widest">
-              <HttpMethodTag method="POST" /> /v1/sushi
-            </li>
-            <li className="font-sand tracking-widest">
-              <HttpMethodTag method="GET" /> {"/v1/sushi/{id}"}
-            </li>
+            {service &&
+              service.routes.map((route: any, i: number) => {
+                return (
+                  <li className="font-sand tracking-widest" key={i}>
+                    <div className="min-w-[70px] inline-block">
+                      {route.methods.map((method: any, j: number) => (
+                        <HttpMethodTag key={j} method={method} />
+                      ))}
+                    </div>
+                    {route.path}
+                  </li>
+                );
+              })}
           </ul>
         </div>
 
@@ -119,7 +105,7 @@ function ServiceModal() {
           <div className="flex items-center gap-2">
             <span>configuration json</span>
           </div>
-          <JsonView style={{ fontSize: "11px" }} src={data} />
+          <JsonView style={{ fontSize: "11px" }} src={service} />
         </div>
       </section>
     </Modal>

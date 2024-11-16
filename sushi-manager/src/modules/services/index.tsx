@@ -2,10 +2,13 @@ import Container from "../../components/layout/Container";
 import DashboardCard from "../../components/layout/DashboardCard";
 import Header from "../../components/typography/Header";
 import Subtitle from "../../components/typography/Subtitle";
+import { useGatewayData } from "../../hooks/useGatewayState";
 import ServiceModal from "./ServiceModal";
 import ServiceTable from "./ServiceTable";
 
 function ServicesModule() {
+  const gatewayInfo = useGatewayData();
+
   return (
     <Container>
       <DashboardCard>
@@ -15,7 +18,7 @@ function ServicesModule() {
             <Header text="services" align="left" size="sm" />
             <Subtitle text="Services define the upstream APIs for the proxy to forward requests to." />
           </div>
-          <ServiceTable />
+          <ServiceTable services={gatewayInfo?.gateway?.services} />
         </div>
       </DashboardCard>
     </Container>
