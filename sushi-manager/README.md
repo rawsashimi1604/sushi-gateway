@@ -4,6 +4,22 @@
 
 Ensure that sushi gateway is running with the Admin API up.
 
+### Create env file
+
+Create `.env` file following the `.env.example` contents. Put it in the root directory
+
+### Starting the server
+
+```bash
+npm run dev
+```
+
+### building the source code
+
+```bash
+npm run build
+```
+
 ### Docker build
 
 ```bash
