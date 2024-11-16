@@ -62,7 +62,10 @@ function ServiceTableRow({ service }: ServiceTableRowProps) {
           service={service}
         />
       )}
-      <tr className="border-b" onClick={() => setShowModal(true)}>
+      <tr
+        className="border-b cursor-pointer transition-all duration-75 hover:bg-gray-100"
+        onClick={() => setShowModal(true)}
+      >
         <td
           scope="row"
           className="pl-0 px-6 py-4 font-medium  whitespace-nowrap"

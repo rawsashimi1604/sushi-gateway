@@ -1,7 +1,13 @@
 import { IoMdInformationCircle } from "react-icons/io";
 import HttpMethodTag from "./HttpMethodTag";
+import RouteModal from "./RouteModal";
+import { useState } from "react";
 
-function RouteTable() {
+interface RouteTableProps {
+  routes: any;
+}
+
+function RouteTable({ routes }: RouteTableProps) {
   return (
     <table className="w-full text-sm text-left rtl:text-right">
       <thead className="text-xs uppercase">
@@ -33,48 +39,58 @@ function RouteTable() {
         </tr>
       </thead>
       <tbody className="font-lora tracking-wider">
-        <tr className="border-b">
-          <td
-            scope="row"
-            className="pl-0 px-6 py-4 font-medium  whitespace-nowrap"
-          >
-            sushi-route
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            /sushi
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            <HttpMethodTag method="GET" />
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            SushiService
-          </td>
-        </tr>
-        <tr className="border-b">
-          <td
-            scope="row"
-            className="pl-0 px-6 py-4 font-medium  whitespace-nowrap"
-          >
-            sushi-route
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            /sushi
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            <HttpMethodTag method="POST" />
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            SushiService
-          </td>
-        </tr>
+        {routes &&
+          routes.map((route: any, i: number) => {
+            return <RouteTableRow key={i} route={route} />;
+          })}
       </tbody>
     </table>
+  );
+}
+
+interface RouteTableRowProps {
+  route: any;
+}
+
+function RouteTableRow({ route }: RouteTableRowProps) {
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  return (
+    <>
+      {showModal && (
+        <RouteModal
+          showModal={showModal}
+          onClose={() => setShowModal(false)}
+          route={route}
+        />
+      )}
+      <tr
+        onClick={() => setShowModal(true)}
+        className="border-b cursor-pointer transition-all duration-75 hover:bg-gray-100"
+      >
+        <td
+          scope="row"
+          className="pl-0 px-6 py-4 font-medium  whitespace-nowrap"
+        >
+          {!!route.name && route.name}
+        </td>
+
+        <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
+          {!!route.path && route.path}
+        </td>
+
+        <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
+          {!!route.methods &&
+            route.methods.map((method: any, i: number) => {
+              return <HttpMethodTag method={method} key={i} />;
+            })}
+        </td>
+
+        <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
+          {!!route.service && route.service}
+        </td>
+      </tr>
+    </>
   );
 }
 

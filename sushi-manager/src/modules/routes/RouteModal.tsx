@@ -1,29 +1,26 @@
-import { useState } from "react";
 import Modal from "../../components/layout/Modal";
 import { IoMdInformationCircle } from "react-icons/io";
 import JsonView from "react18-json-view";
 import HttpMethodTag from "./HttpMethodTag";
 import Tag from "../../components/typography/Tag";
 
-function RouteModal() {
-  const [isRouteModalOpen, setIsRouteModalOpen] = useState(true);
-  const openModal = () => setIsRouteModalOpen(true);
-  const closeModal = () => setIsRouteModalOpen(false);
+interface RouteModalProps {
+  showModal: boolean;
+  onClose: () => void;
+  route: any;
+}
 
-  const data = {
-    name: "get-sushi",
-    path: "/v1/sushi",
-    methods: ["GET"],
-    plugins: [],
-  };
-
+function RouteModal({ showModal, onClose, route }: RouteModalProps) {
   return (
-    <Modal isOpen={isRouteModalOpen} onClose={closeModal} title="Route">
+    <Modal isOpen={showModal} onClose={onClose} title="Route">
       <section className="flex flex-col gap-4 font-lora tracking-wider font-light text-sm">
         <div className="flex gap-2 items-center">
-          <HttpMethodTag method="GET" />
+          {route &&
+            route.methods.map((method: any, i: number) => {
+              return <HttpMethodTag method={method} key={i} />;
+            })}
           <span className="font-extralight font-sans tracking-widest text-md">
-            /v1/sushi
+            {route && route.path}
           </span>
         </div>
 
@@ -33,7 +30,7 @@ function RouteModal() {
             <span>name</span>
             <IoMdInformationCircle className="text-lg" />
           </div>
-          <span>get-sushi</span>
+          <span>{route && route.name}</span>
         </div>
 
         {/* Route Service */}
@@ -42,7 +39,7 @@ function RouteModal() {
             <span>service</span>
             <IoMdInformationCircle className="text-lg" />
           </div>
-          <span>SushiService</span>
+          <span>{route && route.service}</span>
         </div>
 
         {/* Route Plugins */}
@@ -52,15 +49,19 @@ function RouteModal() {
             <IoMdInformationCircle className="text-lg" />
           </div>
           <ul className="flex gap-3">
-            <li>
-              <Tag value="Basic Auth" />
-            </li>
-            <li>
-              <Tag value="JWT" />
-            </li>
-            <li>
-              <Tag value="CORS" />
-            </li>
+            {route && route.plugins.length > 0 ? (
+              route.plugins.map((plugin: any, i: number) => {
+                return (
+                  <li>
+                    <Tag value={plugin.name} />
+                  </li>
+                );
+              })
+            ) : (
+              <li>
+                <Tag value="None" />
+              </li>
+            )}
           </ul>
         </div>
 
@@ -69,7 +70,7 @@ function RouteModal() {
           <div className="flex items-center gap-2">
             <span>configuration json</span>
           </div>
-          <JsonView style={{ fontSize: "11px" }} src={data} />
+          <JsonView style={{ fontSize: "11px" }} src={route} />
         </div>
       </section>
     </Modal>
