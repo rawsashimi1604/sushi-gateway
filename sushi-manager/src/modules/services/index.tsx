@@ -19,6 +19,7 @@ function ServicesModule() {
           <ServiceTable services={gatewayInfo?.gateway?.services} />
         </div>
       </DashboardCard>
+      <div className="mb-24" />
     </Container>
   );
 }

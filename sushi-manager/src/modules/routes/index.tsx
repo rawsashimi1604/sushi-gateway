@@ -35,6 +35,7 @@ function RoutesModule() {
           <RouteTable routes={routes} />
         </div>
       </DashboardCard>
+      <div className="mb-24" />
     </Container>
   );
 }

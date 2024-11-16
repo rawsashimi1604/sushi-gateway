@@ -37,8 +37,6 @@ function EnvConfiguration({ config }: EnvConfigurationProps) {
         <Header text="environment configuration" align="left" size="sm" />
         <div className="mt-4 flex flex-col gap-2">
           {Object.keys(config).map((configKey, i) => {
-            console.log(configKey);
-            console.log(config[configKey]);
             return (
               <EnvConfigurationItem
                 key={i}

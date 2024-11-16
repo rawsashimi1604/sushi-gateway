@@ -27,9 +27,5 @@ export const useGatewayData = () => {
     fetchData();
   }, [setGatewayInfo, navigate]);
 
-  useEffect(() => {
-    console.log(gatewayInfo);
-  }, [gatewayInfo]);
-
   return gatewayInfo;
 };

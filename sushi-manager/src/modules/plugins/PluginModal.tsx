@@ -1,24 +1,17 @@
-import { useState } from "react";
 import Modal from "../../components/layout/Modal";
 import { IoMdInformationCircle } from "react-icons/io";
 import JsonView from "react18-json-view";
+import { getPluginAppliedToDisplayText } from ".";
 
-function PluginModal() {
-  const [isPluginModalOpen, setIsPluginModalOpen] = useState(true);
-  const openModal = () => setIsPluginModalOpen(true);
-  const closeModal = () => setIsPluginModalOpen(false);
+interface PluginModalProps {
+  showModal: boolean;
+  onClose: () => void;
+  plugin: any;
+}
 
-  const data = {
-    name: "basic_auth",
-    enabled: false,
-    data: {
-      username: "admin",
-      password: "changeme",
-    },
-  };
-
+function PluginModal({ showModal, onClose, plugin }: PluginModalProps) {
   return (
-    <Modal isOpen={isPluginModalOpen} onClose={closeModal} title="Plugin">
+    <Modal isOpen={showModal} onClose={onClose} title="Plugin">
       <section className="flex flex-col gap-4 font-lora tracking-wider font-light text-sm">
         {/* Plugin Name */}
         <div className="flex gap-2">
@@ -26,7 +19,7 @@ function PluginModal() {
             <span>name</span>
             <IoMdInformationCircle className="text-lg" />
           </div>
-          <span>Basic Authentication</span>
+          <span>{plugin && plugin.name}</span>
         </div>
 
         {/* Plugin Enabled */}
@@ -35,16 +28,16 @@ function PluginModal() {
             <span>enabled</span>
             <IoMdInformationCircle className="text-lg" />
           </div>
-          <span>true</span>
+          <span>{plugin && plugin.enabled.toString()}</span>
         </div>
 
         {/* Plugin Level */}
         <div className="flex gap-2">
           <div className="w-[110px] flex items-center gap-2">
-            <span>level</span>
+            <span>scope</span>
             <IoMdInformationCircle className="text-lg" />
           </div>
-          <span>Route</span>
+          <span>{plugin && plugin.scope}</span>
         </div>
 
         {/* Plugin Applied To */}
@@ -53,7 +46,7 @@ function PluginModal() {
             <span>applied to</span>
             <IoMdInformationCircle className="text-lg" />
           </div>
-          <span>SushiService</span>
+          <span>{plugin && getPluginAppliedToDisplayText(plugin)}</span>
         </div>
 
         {/* Plugin Configuration */}
@@ -61,7 +54,7 @@ function PluginModal() {
           <div className="flex items-center gap-2">
             <span>configuration json</span>
           </div>
-          <JsonView style={{ fontSize: "11px" }} src={data} />
+          <JsonView style={{ fontSize: "11px" }} src={plugin} />
         </div>
       </section>
     </Modal>

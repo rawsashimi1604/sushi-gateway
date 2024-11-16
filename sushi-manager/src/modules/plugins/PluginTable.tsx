@@ -1,6 +1,13 @@
 import { IoMdInformationCircle } from "react-icons/io";
+import { getPluginAppliedToDisplayText } from ".";
+import { useState } from "react";
+import PluginModal from "./PluginModal";
 
-function PluginTable() {
+interface PluginTableProps {
+  plugins: any[];
+}
+
+function PluginTable({ plugins }: PluginTableProps) {
   return (
     <table className="w-full text-sm text-left rtl:text-right">
       <thead className="text-xs uppercase">
@@ -19,7 +26,7 @@ function PluginTable() {
           </th>
           <th className="px-6 py-3">
             <div className="flex flex-row items-center gap-2">
-              <span>level</span>
+              <span>scope</span>
               <IoMdInformationCircle className="text-lg mb-0.5" />
             </div>
           </th>
@@ -32,48 +39,56 @@ function PluginTable() {
         </tr>
       </thead>
       <tbody className="font-lora tracking-wider">
-        <tr className="border-b">
-          <td
-            scope="row"
-            className="pl-0 px-6 py-4 font-medium  whitespace-nowrap"
-          >
-            http log
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            true
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            service
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            SushiService
-          </td>
-        </tr>
-        <tr className="border-b">
-          <td
-            scope="row"
-            className="pl-0 px-6 py-4 font-medium  whitespace-nowrap"
-          >
-            basic authentication
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            true
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            service
-          </td>
-
-          <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
-            SushiService
-          </td>
-        </tr>
+        {plugins &&
+          plugins.map((plugin: any, i: number) => {
+            return <PluginTableRow key={i} plugin={plugin} />;
+          })}
       </tbody>
     </table>
+  );
+}
+
+interface PluginTableRowProps {
+  plugin: any;
+}
+
+function PluginTableRow({ plugin }: PluginTableRowProps) {
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  return (
+    <>
+      {showModal && (
+        <PluginModal
+          showModal={showModal}
+          onClose={() => setShowModal(false)}
+          plugin={plugin}
+        />
+      )}
+
+      <tr
+        onClick={() => setShowModal(true)}
+        className="border-b cursor-pointer transition-all duration-75 hover:bg-gray-100"
+      >
+        <td
+          scope="row"
+          className="pl-0 px-6 py-4 font-medium  whitespace-nowrap"
+        >
+          {plugin && plugin.name}
+        </td>
+
+        <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
+          {plugin && plugin.enabled.toString()}
+        </td>
+
+        <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
+          {plugin && plugin.scope}
+        </td>
+
+        <td scope="row" className="px-6 py-4 font-medium whitespace-nowrap">
+          {plugin && getPluginAppliedToDisplayText(plugin)}
+        </td>
+      </tr>
+    </>
   );
 }
 
