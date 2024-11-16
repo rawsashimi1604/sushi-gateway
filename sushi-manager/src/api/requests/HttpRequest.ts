@@ -7,8 +7,7 @@ const instance = axios.create();
 // Add a request interceptor
 instance.interceptors.request.use(
   function (config) {
-    // TODO: externalize this??
-    config.baseURL = `http://localhost:8081`;
+    config.baseURL = import.meta.env.VITE_BACKEND_API_URL;
     return config;
   },
   function (error) {
