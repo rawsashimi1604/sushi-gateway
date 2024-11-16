@@ -301,7 +301,8 @@ Congrats!! you have created your first proxy service!
   - [ ] Weighted
 - [ ] Configure health checks for upstreams (good to have)
 - [x] UI Portal development and design
-  - [ ] Update UI Portal to show services, routes, upstreams etc...
+  - [x] Update UI Portal to show services, routes, upstreams etc...
+  - [ ] Update UI Portal to interface with Admin API
 - [x] Flatten file structure, cyclic imports
 
 ## TLS
