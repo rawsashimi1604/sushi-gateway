@@ -21,12 +21,12 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies
-        working-directory: ./sushi-amanger
+        working-directory: sushi-manager
         run: |
           npm install
 
       - name: Build Sushi Manager using Vite
-        working-directory: ./sushi-amanger
+        working-directory: sushi-manager
         run: |
           npm run build
 
@@ -44,7 +44,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        working-directory: ./sushi-manager
+        working-directory: sushi-manager
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/sushi-manager:latest .
 
