@@ -61,7 +61,7 @@ function ServiceModal({ showModal, onClose, service }: ServiceModalProps) {
             <IoMdInformationCircle className="text-lg" />
           </div>
           <ul className="flex gap-3">
-            {service && service.plugins.length > 0 ? (
+            {service.plugins && service.plugins.length > 0 ? (
               service.plugins.map((plugin: any, i: number) => {
                 return (
                   <li key={i}>

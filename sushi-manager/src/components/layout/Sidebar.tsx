@@ -17,9 +17,10 @@ function Sidebar() {
         await AdminAuth.logout();
         navigate("/login");
       } catch (err: any) {
-        if (err.response.status === 401) {
+        if (err.response && err.response.status === 401) {
           console.log("logout fail");
         }
+        navigate("/login");
       }
     };
     logout();

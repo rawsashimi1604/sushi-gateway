@@ -38,9 +38,11 @@ function PluginsModule() {
 
     // Get service scope plugins...
     gatewayInfo.gateway.services.forEach((service: any) => {
-      service.plugins.forEach((plugin: any) => {
-        parsed.push({ ...plugin, scope: "service", service: service.name });
-      });
+      if (service.plugins && service.plugins.length > 0) {
+        service.plugins.forEach((plugin: any) => {
+          parsed.push({ ...plugin, scope: "service", service: service.name });
+        });
+      }
     });
 
     // Get route scope plugins...

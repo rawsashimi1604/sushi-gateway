@@ -16,12 +16,13 @@ function IndexModule() {
   return (
     <Container>
       <div className="flex flex-col gap-6">
-        <Summary />
+        {gatewayInfo?.gateway.global && <Summary config={gatewayInfo} />}
+
         <div className="grid grid-cols-2 gap-6">
           <EnvConfiguration config={gatewayInfo?.config} />
           <GatewayConfiguration config={gatewayInfo?.gateway} />
         </div>
-        <DashboardCard className="p-6">graph to be added...</DashboardCard>
+        {/* <DashboardCard className="p-6">graph to be added...</DashboardCard> */}
       </div>
     </Container>
   );

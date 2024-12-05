@@ -205,7 +205,7 @@ docker run \
 -e ADMIN_PASSWORD=changeme \
 -e PERSISTENCE_CONFIG=dbless \
 -p 8008:8008 \
--p 8001:8001 \
+-p 8081:8081 \
 -p 8443:8443 \
 rawsashimi/sushi-proxy:latest
 ```

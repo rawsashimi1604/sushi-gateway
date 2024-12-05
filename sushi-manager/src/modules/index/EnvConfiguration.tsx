@@ -15,14 +15,19 @@ function EnvConfigurationItem({
   tooltip,
 }: EnvConfigurationItemProps) {
   return (
-    <div className="flex flex-row">
-      <div className="w-[200px] flex gap-3 items-start justify-start">
-        <h2 className="tracking-wider text-sm">{item}</h2>
-        {tooltip && <IoMdInformationCircle className="text-md mt-0.5" />}
+    <>
+      <div className="flex flex-row">
+        <div className="w-[200px] flex gap-3 items-start justify-start">
+          <h2 className="tracking-wider text-sm">{item}</h2>
+          {tooltip && <IoMdInformationCircle className="text-md mt-0.5" />}
+        </div>
+        <span className="tracking-wider text-sm font-serif pr-4">::</span>
+        <Tag
+          value={value || "Not Configured"}
+          className="tracking-wide text-sm font-mono"
+        />
       </div>
-      <span className="tracking-wider text-sm font-serif pr-4">::</span>
-      <Tag value={value || ""} className="tracking-wide text-sm font-mono" />
-    </div>
+    </>
   );
 }
 

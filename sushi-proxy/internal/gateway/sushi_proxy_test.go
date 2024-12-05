@@ -52,3 +52,5 @@ func Test_HandleServiceNotFound(t *testing.T) {
 		t.Errorf("Expected error field in response body")
 	}
 }
+
+// TODO: add test for route not found
