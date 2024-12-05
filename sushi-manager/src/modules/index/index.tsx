@@ -1,5 +1,5 @@
 import Container from "../../components/layout/Container";
-import DashboardCard from "../../components/layout/DashboardCard";
+// import DashboardCard from "../../components/layout/DashboardCard";
 import { useGatewayData } from "../../hooks/useGatewayState";
 import EnvConfiguration from "./EnvConfiguration";
 import GatewayConfiguration from "./GatewayConfiguration";

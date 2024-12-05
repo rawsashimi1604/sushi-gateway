@@ -7,8 +7,6 @@ interface SummaryProps {
 }
 
 function Summary({ config }: SummaryProps) {
-  console.log(config);
-
   function configExists() {
     return config && Object.keys(config).length > 0;
   }
