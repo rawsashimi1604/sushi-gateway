@@ -191,6 +191,7 @@ openssl verify -CAfile ca.crt server.crt
 
 ```bash
 docker run \
+--rm \
 --name example-proxy \
 --network sushi-network \
 -v $(pwd)/config.json:/app/config.json \
