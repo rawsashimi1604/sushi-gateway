@@ -242,7 +242,7 @@ You will get the response:
 ```bash
 docker run --rm -p 5173:5173 \
 -e SUSHI_MANAGER_BACKEND_API_URL=http://localhost:8081 \
-sushi-manager:latest
+rawsashimi/sushi-manager:latest
 ```
 
 Congrats!! you have created your first proxy service!

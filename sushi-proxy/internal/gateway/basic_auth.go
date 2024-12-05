@@ -42,6 +42,9 @@ func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 			return
 		}
 
+		// Strip Basic auth header
+		r.Header.Del("Authorization")
+
 		next.ServeHTTP(w, r)
 	})
 }
