@@ -272,7 +272,7 @@ Congrats!! you have created your first proxy service!
   - [x] Basic auth
   - [x] Bot protection
   - [x] Cors
-  - [ ] Jwt
+  - [x] Jwt
   - [x] Key auth
   - [ ] Mtls
   - [x] Rate limit
