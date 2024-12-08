@@ -53,6 +53,7 @@ func (plugin JwtPlugin) Execute(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+
 }
 
 func writeWWWAuthenticateHeaderJwt(w http.ResponseWriter) {
