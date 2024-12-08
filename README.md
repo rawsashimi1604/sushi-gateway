@@ -306,9 +306,6 @@ Congrats!! you have created your first proxy service!
   - [ ] Update UI Portal to interface with Admin API
 - [x] Flatten file structure, cyclic imports
 
-## TLS
-
-https/tls support has been added to the proxy, add cert and key into environment variables to use.
 
 ## Start a database
 
@@ -324,19 +321,3 @@ create a postgres database.
 - `docker exec -it postgres-db psql -U postgres -d sushi -f /mock.sql`
 - `\c`
 
-## Plugins
-
-- Auth
-  - **(DONE)** basic auth
-  - **(DONE)** jwt (only Hs256, Rs256 tbd)
-  - **(DONE)** key auth
-  - **(DONE)** mtls
-- Security
-  - **(DONE)** bot_protection
-  - **(DONE)** cors
-- Traffic Control
-  - **(DONE)** acl
-  - **(DONE)** rate limit
-  - **(DONE)** request size limit
-- Logging and metrics
-  - **(DONE)** http log
