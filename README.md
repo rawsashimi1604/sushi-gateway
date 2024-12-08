@@ -18,9 +18,8 @@ Sushi Gateway contains two components: `Sushi Proxy` and `Sushi Manager`.
 | Component     | Function                                                                                                                                              |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Sushi Proxy   | The core API Gateway functionality handling API request routing, load balancing, and the modular plugin architecture, enabling configurable policies. |
-|               |
 | Sushi Manager | Frontend interface to allow administrators to view and manage gateway configurations.                                                                 |
-|               |
+
 
 ## Architecture
 
