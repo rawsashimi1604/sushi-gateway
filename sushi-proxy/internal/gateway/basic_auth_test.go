@@ -51,6 +51,10 @@ func TestBasicAuthSuccess(t *testing.T) {
 	if rr.Header().Get("WWW-Authenticate") != "" {
 		t.Errorf("Should not get WWW-Authenticate header when basic auth is passing")
 	}
+
+	if rr.Header().Get("Authorization") != "" {
+		t.Errorf("Authorization header should be stripped when basic auth is passing")
+	}
 }
 
 func TestBasicAuthFail(t *testing.T) {
