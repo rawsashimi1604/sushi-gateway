@@ -48,6 +48,9 @@ func (plugin JwtPlugin) Execute(next http.Handler) http.Handler {
 			return
 		}
 
+		// Strip Authorization header
+		r.Header.Del("Authorization")
+
 		next.ServeHTTP(w, r)
 	})
 }
