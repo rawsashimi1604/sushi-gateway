@@ -11,7 +11,7 @@ Plugins are:
 - Applied at different scopes (global, service, route) for fine-grained control.
 
 ::: tip
-Learn about plugin fields and configurations in the **[Plugin Entity Documentation](../entities/plugin.md)**.
+Learn about plugin fields and configurations in the **[Plugin Entity Documentation](../concepts/entities/plugin.md)**.
 :::
 
 ## Plugin Middleware Chain

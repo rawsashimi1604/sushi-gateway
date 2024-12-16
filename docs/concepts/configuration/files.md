@@ -74,7 +74,7 @@ Example:
 ```
 
 ::: tip
-For a deeper dive into plugins, see the **[Plugins Overview](../plugins/overview.md)**.
+For a deeper dive into plugins, see the **[Plugins Overview](../../plugins/index.md)**.
 :::
 
 ### 2. Services

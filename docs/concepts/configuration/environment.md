@@ -62,6 +62,6 @@ Combine environment variables with declarative configurations for maximum flexib
 Validate the values of required environment variables during startup to prevent misconfiguration.
 :::
 
----
-
-For a deeper understanding of declarative configurations, visit the **[Declarative Configuration Guide](../configuration/declarative.md)**. To see examples of combining both methods, check out the **[Configuration Overview](../configuration/overview.md)**.
+::: tip
+For a deeper understanding of declarative configurations, visit the **[Declarative Configuration Guide](./files.md)**.
+:::

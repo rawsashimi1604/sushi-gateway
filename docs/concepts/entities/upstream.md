@@ -60,7 +60,7 @@ Upstreams are a critical component in load balancing strategies, such as:
 - **IP Hash** _(in progress)_: Routes traffic based on the client IP address, ensuring consistent upstream selection.
 
 ::: tip
-Learn more about load balancing strategies in the **[Load Balancing Concepts](../concepts/load-balancing.md)** page.
+Learn more about load balancing strategies in the **[Load Balancing Concepts](../load-balancing.md)** page.
 :::
 
 ---

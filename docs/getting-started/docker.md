@@ -88,7 +88,7 @@ Create a `config.json` file with the following example configuration:
 ```
 
 ::: tip Configuration Management
-Learn more about managing configurations in our [Configuration Management Guide](../concepts/configuration-management.md), including environment variables and JSON files.
+Learn more about managing configurations in our [Configuration Management Guide](../concepts/configuration/index.md), including environment variables and JSON files.
 :::
 
 ## Step 3: Create a Docker Network
@@ -236,7 +236,7 @@ Expected response:
 
 ## Step 10: Run Sushi Manager
 
-Launch the interactive UI at http://localhost:5173 via the pulled UI docker image for managing and monitoring your gateway:
+Launch the interactive UI at `http://localhost:5173` via the pulled UI docker image for managing and monitoring your gateway:
 
 ::: tip
 Sushi Manager provides a user-friendly interface for configuring and monitoring your gateway.

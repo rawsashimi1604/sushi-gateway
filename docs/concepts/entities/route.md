@@ -70,7 +70,7 @@ Here’s an example of a route definition in `config.json`:
      ```
 
    ::: tip
-   Explore all available plugins in the **[Plugins Overview](../plugins/overview.md)** page for more information.
+   Explore all available plugins in the **[Plugins Overview](../../plugins/index.md)** page for more information.
    :::
 
 ## Relationships with Other Entities

@@ -13,7 +13,7 @@ The HTTP Log plugin captures details of incoming requests and outgoing responses
 - Supports JSON payloads for structured logging.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Fields
@@ -137,4 +137,4 @@ Secure the logging endpoint using authentication and encryption to protect sensi
 Monitor and rotate logs regularly to prevent storage overflow.
 :::
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.

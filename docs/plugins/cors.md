@@ -14,7 +14,7 @@ Requests that do not meet the criteria are either denied or processed without CO
 - Helps APIs comply with modern web security standards.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Fields
@@ -112,4 +112,4 @@ Combine the CORS plugin with authentication plugins like JWT to secure cross-ori
 Regularly audit allowed origins and headers to align with your security policies.
 :::
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.

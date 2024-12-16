@@ -16,7 +16,7 @@ The API Key Authentication (`key_auth`) plugin provides a straightforward method
 - Lightweight and easy to implement for simple authentication needs.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Fields
@@ -112,4 +112,4 @@ Log unauthorized attempts to identify potential misuse or attacks.
 Relying solely on API keys is not recommended for production environments. Combine with additional security mechanisms such as IP whitelisting or authentication plugins for enhanced protection.
 :::
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.

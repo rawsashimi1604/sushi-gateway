@@ -19,7 +19,7 @@ This mechanism ensures that only authorized clients can connect to the API.
 - Uses a configurable CA certificate for validation.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Requirements
@@ -31,7 +31,7 @@ The mTLS plugin relies on the following environment variable:
 | `CA_CERT_PATH`       | Path to the Certificate Authority (CA) file for validating client certificates. | `/path/to/ca.crt` |
 
 ::: warning
-Ensure that the CA certificate file provided in `CA_CERT_PATH` is valid and accessible by Sushi Gateway. For more information, refer to the **[Environment Variables Configuration](../configuration/environment.md)**.
+Ensure that the CA certificate file provided in `CA_CERT_PATH` is valid and accessible by Sushi Gateway. For more information, refer to the **[Environment Variables Configuration](../concepts/configuration/environment.md)**.
 :::
 
 ## Example Configuration
@@ -87,4 +87,4 @@ Use strong and unique client certificates to prevent unauthorized access.
 Regularly update and rotate CA certificates to maintain a secure environment.
 :::
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.

@@ -12,7 +12,7 @@ The Rate Limiting plugin applies rules to incoming requests based on a defined c
 - Flexible configuration for global, service, or route-specific limits.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Fields
@@ -81,4 +81,4 @@ Example of applying the plugin to a specific route:
 2. **Traffic Shaping**: Ensure fair usage by distributing requests evenly across clients.
 3. **Upstream Protection**: Prevent backend services from being overwhelmed by traffic.
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.

@@ -23,7 +23,7 @@ Defining services is a critical step in Sushi Gateway, enabling the management o
 A **service** in Sushi Gateway represents a backend application or a group of upstreams. Each service includes configuration details for routing traffic, applying plugins, and balancing loads across upstream instances.
 
 ::: tip
-Learn more about the core entities in Sushi Gateway, such as **[Services](../models/service.md)**, **[Routes](../models/route.md)**, and **[Plugins](../models/plugin.md)**.
+Learn more about the core entities in Sushi Gateway, such as **[Services](../concepts/entities/service.md)**, **[Routes](../concepts/entities/route.md)**, and **[Plugins](../concepts/entities/plugin.md)**.
 :::
 
 ## Example Service Configuration
@@ -171,5 +171,5 @@ Add CORS plugins to services to manage cross-origin requests:
 Defining services and understanding routing in Sushi Gateway allows you to precisely control API traffic and backend communication, ensuring a scalable and secure architecture.
 
 ::: tip
-Routing in Sushi Gateway ensures precise control over API traffic, allowing developers to create robust and efficient microservices architectures. For more details, refer to the **[Configuration Management Guide](../concepts/configuration-management.md)**.
+Routing in Sushi Gateway ensures precise control over API traffic, allowing developers to create robust and efficient microservices architectures. For more details, refer to the **[Configuration Management Guide](../concepts/configuration/index.md)**.
 :::

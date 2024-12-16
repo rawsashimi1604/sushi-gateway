@@ -21,7 +21,7 @@ Requests that do not meet the configured criteria are rejected with a **403 Forb
 - Configurable as a blacklist or whitelist.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Fields
@@ -114,4 +114,4 @@ Monitor blocked requests using logs or analytics to fine-tune your configuration
 This plugin provides basic filtering and may not prevent sophisticated attacks. Combine it with authentication and IP-based restrictions for robust security.
 :::
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.

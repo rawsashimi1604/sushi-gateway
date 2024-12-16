@@ -258,4 +258,4 @@ Ensure the `token` cookie is securely stored and included in all requests requir
 Use tools like Postman, curl, or custom scripts to test and automate endpoint usage.
 :::
 
-For more information on the Admin API, refer to the **[Admin API Overview](../admin-api-overview.md)**.
+For more information on the Admin API, refer to the **[Admin API Overview](./index.md)**.

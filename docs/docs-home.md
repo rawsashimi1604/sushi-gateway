@@ -5,7 +5,7 @@ Welcome to the **Sushi Gateway** documentation! It is meant to serve as a refere
 ## What is Sushi Gateway?
 
 ::: info
-An API Gateway acts as a reverse proxy that sits between clients and backend services, handling tasks such as request routing, security enforcement, and load balancing. For a deeper dive into what an API Gateway is, check out our [What is an API Gateway?](../concepts/api-gateway.md) page.
+An API Gateway acts as a reverse proxy that sits between clients and backend services, handling tasks such as request routing, security enforcement, and load balancing. For a deeper dive into what an API Gateway is, check out our [What is an API Gateway?](./concepts/what-is-api-gateway.md) page.
 :::
 
 Sushi Gateway serves as a **Layer 7 API Gateway** that simplifies API traffic management by handling:
@@ -55,7 +55,7 @@ Sushi Gateway comprises two primary components:
 
 ::: tip
 Try Sushi Gateway in stateless (without a database) mode for an easy and fast setup. Stateless mode uses declarative configuration files, making it perfect for testing or quick deployment scenarios.
-[Get started with our Quick Start Guide now](../getting-started/docker.md)!
+[Get started with our Quick Start Guide now](./getting-started/docker.md)!
 :::
 
 - **Stateless Mode**: Uses declarative configuration files, ideal for GitOps workflows.
@@ -65,11 +65,3 @@ Try Sushi Gateway in stateless (without a database) mode for an easy and fast se
 
 - Docker
 - Kubernetes via Helm (Coming soon!)
-
-## Next Steps
-
-Ready to dive in? Here’s how to get started:
-
-1. [Install Sushi Gateway](../getting-started/installation.md): Learn how to set up Sushi Gateway.
-2. [Configure the Gateway](../getting-started/configuration.md): Customize routing, security, and more.
-3. [Explore Plugins](../plugins/overview.md): Extend the gateway with powerful plugins.

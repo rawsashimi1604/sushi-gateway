@@ -81,7 +81,7 @@ Here’s an example of a complete service definition in `config.json`:
    - Example: `"round_robin"`.
 
    ::: tip
-   Learn more about these strategies in the **[Load Balancing Concepts](../concepts/load-balancing.md)** page.
+   Learn more about these strategies in the **[Load Balancing Concepts](../load-balancing.md)** page.
    :::
 
 5. **`upstreams`**:
@@ -130,7 +130,7 @@ Here’s an example of a complete service definition in `config.json`:
      ```
 
    ::: tip
-   Explore all available plugins in the **[Plugins Overview](../plugins/overview.md)** page to see the full list of supported features and configurations.
+   Explore all available plugins in the **[Plugins Overview](../../plugins/index.md)** page to see the full list of supported features and configurations.
    :::
 
 ---

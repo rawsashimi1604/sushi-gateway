@@ -12,7 +12,7 @@ The Basic Authentication plugin validates incoming requests by checking the prov
 - Configurable at global, service, or route levels.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Fields
@@ -128,4 +128,4 @@ Combine Basic Authentication with plugins like Rate Limiting to prevent brute-fo
 Store and manage credentials securely using environment variables or secret management tools.
 :::
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.

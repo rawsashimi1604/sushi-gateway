@@ -22,7 +22,7 @@ Requests that do not meet the criteria are rejected with a **403 Forbidden** res
 - Configurable at global, service, or route levels.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Fields
@@ -103,4 +103,4 @@ Apply the plugin at the route level for granular control of access restrictions.
 Regularly review and update your IP lists to maintain effective access control.
 :::
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.

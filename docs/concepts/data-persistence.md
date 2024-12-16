@@ -16,7 +16,7 @@ PERSISTENCE_CONFIG=dbless
 ```
 
 ::: tip
-For step-by-step instructions on setting up Sushi Gateway in Stateless Mode, see the **[Quick Start with Docker Guide](../quick-start/docker.md)**.
+For step-by-step instructions on setting up Sushi Gateway in Stateless Mode, see the **[Quick Start with Docker Guide](../getting-started/docker.md)**.
 :::
 
 ### Key Features
@@ -52,5 +52,5 @@ DB_CONNECTION_PASS=<database_password>
 - **`PERSISTENCE_SYNC_INTERVAL`**: Specifies how often (in seconds) the database should sync with the in-memory configuration.
 
 ::: tip
-For step-by-step instructions on setting up Sushi Gateway with PostgreSQL, see the **[Installation Guide](../installation/install-with-postgres.md)**.
+For step-by-step instructions on setting up Sushi Gateway with PostgreSQL, see the **[Installation Guide](../getting-started/postgres.md)**.
 :::

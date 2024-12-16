@@ -65,7 +65,7 @@ Some of the commonly used plugins include:
 - **JWT**: Validates JSON Web Tokens for secure access control.
 
 ::: tip
-For a full list of available plugins and their configurations, refer to the **[Plugins Overview](../plugins/overview.md)** page.
+For a full list of available plugins and their configurations, refer to the **[Plugins Overview](../../plugins/index.md)** page.
 :::
 
 To explore other entities, see:

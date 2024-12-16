@@ -13,7 +13,7 @@ The plugin inspects the total request payload size in bytes and compares it agai
 - Configurable at global, service, or route levels for granular control.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Fields
@@ -80,4 +80,4 @@ Use route-level size limits for endpoints that handle large payloads, such as fi
 Combine this plugin with Rate Limiting to further secure your API against abusive traffic.
 :::
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.

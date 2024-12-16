@@ -68,7 +68,7 @@ Plugins can be applied at different scopes, allowing fine-grained customizabilit
 | **Route**   | Tailors policies for individual API routes.    |
 
 ::: info
-Read about supported plugins and their configurations in the **[Plugins Guide](../plugins/overview.md)**.
+Read about supported plugins and their configurations in the **[Plugins Guide](../plugins/index.md)**.
 :::
 
 ## Networking and Ports

@@ -15,7 +15,7 @@ When using declarative configuration:
 - Easy to replicate and manage across environments.
 
 ::: tip
-To learn more about declarative configurations, visit the **[Declarative Configuration Guide](../configuration/declarative.md)**.
+To learn more about declarative configurations, visit the **[Declarative Configuration Guide](./files.md)**.
 :::
 
 ## Environment Variable Configuration

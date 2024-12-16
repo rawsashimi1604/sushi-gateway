@@ -15,7 +15,7 @@ Currently, only **HS256** (HMAC-SHA256) is supported, with **RS256** (RSA-SHA256
 - Validates token signatures using a secret key.
 
 ::: tip
-Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/overview.md)**.
+Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
 :::
 
 ## Configuration Fields
@@ -115,4 +115,4 @@ Use HTTPS to protect the token in transit and prevent interception by attackers.
 - **[RFC 7519: JSON Web Token (JWT)](https://datatracker.ietf.org/doc/html/rfc7519)**
 - **[JWT.io](https://jwt.io/)**
 
-For more plugins, visit the **[Plugins Overview](../plugins/overview.md)**.
+For more plugins, visit the **[Plugins Overview](../plugins/index.md)**.
