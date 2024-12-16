@@ -4,6 +4,7 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "Sushi Gateway",
   description: "Lightweight Layer 7 Open Source Gateway",
+  base: "/sushi-gateway/",
   themeConfig: {
     search: {
       provider: "local",
