@@ -2,10 +2,11 @@ package gateway
 
 import (
 	"crypto/x509"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 type MtlsPlugin struct {
