@@ -3,8 +3,7 @@ layout: home
 
 hero:
   name: "Sushi Gateway"
-  text: "Test"
-  tagline: Layer 7 Lightweight Open Source API Gateway
+  tagline: Layer 7 Lightweight Modular Open Source API Gateway
 
   # TODO: add actions
   actions:
