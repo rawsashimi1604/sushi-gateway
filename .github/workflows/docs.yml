@@ -27,6 +27,9 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docs
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,15 +43,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          working-directory: ./docs
           cache: npm # or pnpm / yarn
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Install dependencies
-        working-directory: ./docs
         run: npm ci # or pnpm install / yarn install / bun install
       - name: Build with VitePress
-        working-directory: ./docs
         run: npm run docs:build # or pnpm docs:build / yarn docs:build / bun run docs:build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
