@@ -18,8 +18,8 @@
 
             <!-- CTA Buttons -->
             <div class="hero__actions">
-                <a href="/docs" class="btn btn--primary">Get started</a>
-                <a href="https://github.com/sushi-gateway/sushi" target="_blank" class="btn btn--outline">
+                <a href="/sushi-gateway/getting-started/docker" class="btn btn--primary">Get started</a>
+                <a href="https://github.com/rawsashimi1604/sushi-gateway" target="_blank" class="btn btn--outline">
                     <img src="/github.svg" alt="GitHub logo" width="24" height="24" />
                     GitHub
                 </a>

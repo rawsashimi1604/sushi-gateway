@@ -11,7 +11,7 @@
         </h3>
 
         <div class="btn-container">
-            <a href="/docs" class="btn btn--primary">Get started</a>
+            <a href="/sushi-gateway/getting-started/docker" class="btn btn--primary">Get started</a>
         </div>
 
     </div>
