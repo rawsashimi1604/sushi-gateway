@@ -115,12 +115,20 @@ export default {
 
 .hero__diagram {
   width: 100%;
-  height: 700px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  margin-top: -200px;
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: -200px;
+    height: 500px;
+  }
+
+  @media (min-width: 1280px) {
+    height: 700px;
+  }
 
 }
 
@@ -129,17 +137,41 @@ export default {
   height: 134px;
   border-radius: 10px;
   position: absolute;
-  left: 690px;
-  top: 330px;
+
   background: linear-gradient(135deg, #2a78d4, #3fd9f0);
   /* Slightly darker blueish gradient */
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 20px rgba(63, 217, 240, 0.6), 0 0 10px rgba(42, 120, 212, 0.5);
   /* Adjusted glow to match darker gradient */
   z-index: 3;
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    width: 105px;
+    height: 105px;
+    left: 460px;
+    top: 220px;
+  }
+
+  @media (min-width: 1280px) {
+    display: flex;
+    width: 120px;
+    height: 120px;
+    left: 580px;
+    top: 280px;
+  }
+
+  @media (min-width: 1536px) {
+    display: flex;
+    width: 134px;
+    height: 134px;
+    left: 690px;
+    top: 330px;
+  }
+
 }
 
 .sushi-chip:hover {
@@ -155,14 +187,12 @@ export default {
   object-fit: contain;
 }
 
-
-
 .api-processing {
+  display: none;
   position: absolute;
   top: 280px;
   left: 645px;
   /* Adjust position above the sushi-chip */
-  display: flex;
   align-items: center;
   justify-content: center;
   font-family: Arial, sans-serif;
@@ -171,6 +201,18 @@ export default {
   text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
   color: #ffffff;
   z-index: 4;
+
+  @media (min-width: 1280px) {
+    display: flex;
+    top: 230px;
+    left: 535px;
+  }
+
+  @media (min-width: 1536px) {
+    display: flex;
+    top: 280px;
+    left: 645px;
+  }
 }
 
 .spinner {

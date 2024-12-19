@@ -13,14 +13,34 @@ html:has(.landing) {
     margin-right: auto;
     padding-left: 1rem; /* Default padding */
     padding-right: 1rem;
-
     position: relative;
     overflow: visible; /* Allow child elements to overflow */
-  
-    @media (min-width: 1536px) {
-      max-width: 1536px; /* 2XL screens */
-    }
   }
+
+  @media (min-width: 768px) {
+      .container {
+          max-width: 768px; /* MD screens */
+      }
+  }
+
+  @media (min-width: 1024px) {
+      .container {
+          max-width: 1024px; /* LG screens */
+      }
+  }
+
+  @media (min-width: 1280px) {
+      .container {
+          max-width: 1280px; /* XL screens */
+      }
+  }
+
+  @media (min-width: 1536px) {
+      .container {
+          max-width: 1536px; /* 2XL screens */
+      }
+  }
+
   
   
   .landing {

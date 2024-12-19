@@ -28,11 +28,6 @@ import { onMounted } from "vue";
                 <h3 class="feature-title">Scalable API Management</h3>
                 <p class="feature-details">Handle high-traffic APIs with dynamic routing and load balancing.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚖️</div>
-                <h3 class="feature-title">Scalable API Management</h3>
-                <p class="feature-details">Handle high-traffic APIs with dynamic routing and load balancing.</p>
-            </div>
         </div>
     </div>
 </template>
