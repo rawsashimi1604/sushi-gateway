@@ -18,7 +18,10 @@ export default defineConfig({
         link: "/getting-started/docker",
       },
     ],
-
+    footer: {
+      message: `Released under the MIT License.`,
+      copyright: "Copyright © 2024-present Sushi Gateway",
+    },
     sidebar: [
       {
         text: "Getting Started",
