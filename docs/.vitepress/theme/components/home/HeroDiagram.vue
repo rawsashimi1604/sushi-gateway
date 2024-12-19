@@ -7,46 +7,46 @@ gsap.registerPlugin(MotionPathPlugin);
 </script>
 
 <template>
-  <div class="hero__diagram">
+  <div class="hero__bgwrapper">
+    <div class="hero__diagram container">
+      <!-- Animated Text with Spinner -->
+      <div class="api-processing">
+        <div class="spinner"></div>
+        <span class="processing-text">API request processing...</span>
+      </div>
+
+      <!-- SVG for curved lines -->
+      <svg class="curved-lines" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+
+        <defs>
+          <!-- Define Gradient for the Lines -->
+          <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#c6caff" stop-opacity="0.1" />
+            <stop offset="30%" stop-color="#c6caff" stop-opacity="0.5" />
+            <stop offset="50%" stop-color="#ffffff" stop-opacity="0.9" />
+            <stop offset="70%" stop-color="#c6caff" stop-opacity="0.5" />
+            <stop offset="100%" stop-color="#c6caff" stop-opacity="0.1" />
+          </linearGradient>
+        </defs>
+
+        <!-- Incoming Lines -->
+        <path d="M0,80 C200,80 300,180 370,190" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+        <path d="M0,130 C150,130 300,200 370,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+        <path d="M0,200 C150,210 300,210 370,210" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+        <path d="M0,280 C240,270 300,240 370,220" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+        <path d="M0,340 C240,310 300,260 370,230" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+
+        <!-- Outgoing Lines -->
+        <path d="M420,190 C750,150 850,10 1200,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+        <path d="M420,210 C750,200 850,200 1200,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+        <path d="M420,230 C750,250 850,360 1200,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+
+      </svg>
 
 
-    <!-- Animated Text with Spinner -->
-    <div class="api-processing">
-      <div class="spinner"></div>
-      <span class="processing-text">processing...</span>
-    </div>
-
-    <!-- SVG for curved lines -->
-    <svg class="curved-lines" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
-
-      <defs>
-        <!-- Define Gradient for the Lines -->
-        <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#c6caff" stop-opacity="0.1" />
-          <stop offset="30%" stop-color="#c6caff" stop-opacity="0.5" />
-          <stop offset="50%" stop-color="#ffffff" stop-opacity="0.9" />
-          <stop offset="70%" stop-color="#c6caff" stop-opacity="0.5" />
-          <stop offset="100%" stop-color="#c6caff" stop-opacity="0.1" />
-        </linearGradient>
-      </defs>
-
-      <!-- Incoming Lines -->
-      <path d="M0,80 C200,80 300,180 370,190" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
-      <path d="M0,130 C150,130 300,200 370,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
-      <path d="M0,200 C150,210 300,210 370,210" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
-      <path d="M0,280 C240,270 300,240 370,220" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
-      <path d="M0,340 C240,310 300,260 370,230" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
-
-      <!-- Outgoing Lines -->
-      <path d="M420,190 C750,150 850,10 1200,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
-      <path d="M420,210 C750,200 850,200 1200,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
-      <path d="M420,230 C750,250 850,360 1200,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
-
-    </svg>
-
-
-    <div class="sushi-chip">
-      <img src="/images/Logo.png" alt="Sushi Gateway Logo" class="sushi-chip__logo" />
+      <div class="sushi-chip">
+        <img src="/images/Logo.png" alt="Sushi Gateway Logo" class="sushi-chip__logo" />
+      </div>
     </div>
   </div>
 </template>
@@ -108,6 +108,10 @@ export default {
 </script>
 
 <style scoped>
+.hero__bgwrapper {
+  width: 100%;
+}
+
 .curved-lines {
   position: absolute;
   left: 0;
@@ -123,28 +127,32 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
+  margin-top: -200px;
+
 }
 
 .sushi-chip {
   width: 134px;
   height: 134px;
   border-radius: 10px;
-  margin-top: 180px;
-  background: linear-gradient(135deg, #40a4ff, #ff57d9);
-  /* Nice gradient background */
+  position: absolute;
+  left: 690px;
+  top: 330px;
+  background: linear-gradient(135deg, #2a78d4, #3fd9f0);
+  /* Slightly darker blueish gradient */
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 20px rgba(64, 115, 255, 0.6);
+  box-shadow: 0 0 20px rgba(63, 217, 240, 0.6), 0 0 10px rgba(42, 120, 212, 0.5);
+  /* Adjusted glow to match darker gradient */
   z-index: 3;
-  /* Simple glow effect */
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .sushi-chip:hover {
-  box-shadow: 0 0 30px rgba(64, 115, 255, 0.9);
-  /* More intense glow on hover */
-  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(63, 217, 240, 0.8), 0 0 15px rgba(42, 120, 212, 0.7);
+  /* Slightly darker glow on hover */
+  transform: scale(1.1);
   /* Slight zoom-in on hover */
 }
 
@@ -154,9 +162,12 @@ export default {
   object-fit: contain;
 }
 
+
+
 .api-processing {
   position: absolute;
-  top: 180px;
+  top: 280px;
+  left: 645px;
   /* Adjust position above the sushi-chip */
   display: flex;
   align-items: center;

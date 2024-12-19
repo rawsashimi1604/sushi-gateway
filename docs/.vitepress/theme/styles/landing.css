@@ -2,4 +2,52 @@
 /* Landing Page CSS Styles */
 /* /////////////////////// */
 
+html:has(.landing) {
+    --vp-c-bg: #101010;
+  
+    background-color: #101010;
+  
+    body {
+      background-color: #101010;
+    }
+  }
 
+  .container {
+    width: 100%;
+    max-width: 640px; /* Default for small screens */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem; /* Default padding */
+    padding-right: 1rem;
+
+    position: relative;
+    overflow: visible; /* Allow child elements to overflow */
+  
+    @media (min-width: 1536px) {
+      max-width: 1536px; /* 2XL screens */
+    }
+  }
+  
+  
+  .landing {
+    overflow-x: hidden;
+    background-color: #101010;
+  
+    * {
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      text-rendering: optimizeLegibility !important;
+    }
+  
+    /* /////////////////// */
+    /* VitePress Overrides */
+    /* /////////////////// */
+
+    
+  
+    /* /////// */
+    /* Buttons */
+    /* /////// */
+
+  }
+  
