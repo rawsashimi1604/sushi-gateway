@@ -33,10 +33,14 @@
 .hero {
     position: relative;
     z-index: 2;
-    margin-bottom: 0;
+    margin-bottom: 150px;
 
     @media (min-width: 768px) {
         margin-bottom: 60px;
+    }
+
+    @media(min-width: 1025px) {
+        margin-bottom: 0;
     }
 }
 
