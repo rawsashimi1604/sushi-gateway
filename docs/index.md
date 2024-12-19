@@ -15,33 +15,24 @@ markdownStyles: false
 #     - theme: alt
 #       text: View Documentation
 #       link: /docs-home
-
-# features:
-#   - icon: "🧩"
-#     title: "Modular Plugins"
-#     details: "Easily customize and extend functionality with configurable plugins."
-#   - icon: "🔒"
-#     title: "Secure & Reliable"
-#     details: "Built with modern security protocols and reliable architecture."
-#   - icon: "⚖️"
-#     title: "Scalable API Management"
-#     details: "Handle high-traffic APIs with dynamic routing and load balancing."
 ---
 
 <script setup>
-  import HeroSection from ".vitepress/theme/components/home/HeroSection.vue"
-  import HeroDiagram from ".vitepress/theme/components/home/HeroDiagram.vue"
+  import HeroSection from ".vitepress/theme/components/landing/HeroSection.vue"
+  import HeroDiagram from ".vitepress/theme/components/landing/HeroDiagram.vue"
+
+  import Features from ".vitepress/theme/components/landing/Features.vue"
+  import OpenSource from ".vitepress/theme/components/landing/OpenSource.vue"
+
+  import StartBuilding from ".vitepress/theme/components/landing/StartBuilding.vue"
 </script>
 
-<div class="landing__wrapper">
+<div>
   <HeroSection/>
   <HeroDiagram/>
+
+  <Features/>
+  <OpenSource />
+
+  <StartBuilding />
 </div>
-
-<style scoped>
-
-.landing__wrapper {
-  position: relative;
-  overflow: visible; 
-}
-</style>

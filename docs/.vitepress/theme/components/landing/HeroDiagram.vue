@@ -1,7 +1,7 @@
 <script setup>
 import gsap from "gsap";
 import { MotionPathPlugin } from "gsap/all";
-import { TimelineMax } from "gsap/gsap-core";
+
 
 gsap.registerPlugin(MotionPathPlugin);
 </script>
@@ -97,13 +97,6 @@ export default {
       ease: "power2.out",
     });
   },
-  props: {
-    text: {
-      type: String,
-      required: true,
-      default: "Default text",
-    },
-  },
 };
 </script>
 
@@ -122,7 +115,7 @@ export default {
 
 .hero__diagram {
   width: 100%;
-  height: 400px;
+  height: 700px;
   display: flex;
   justify-content: center;
   align-items: center;
