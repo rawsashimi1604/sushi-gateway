@@ -1,8 +1,3 @@
-<script setup>
-import gsap from "gsap";
-import { onMounted } from "vue";
-</script>
-
 <template>
     <div class="hero__bgwrapper container">
 

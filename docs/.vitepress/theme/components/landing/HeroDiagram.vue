@@ -1,8 +1,6 @@
-<script setup>
-const gsap = require("gsap")
-const gsapPlugin = require("gsap/all")
-const { MotionPathPlugin } = gsapPlugin
-
+<script setup type="module">
+import { gsap } from "gsap/dist/gsap";
+import MotionPathPlugin from "gsap/dist/MotionPathPlugin";
 gsap.registerPlugin(MotionPathPlugin);
 </script>
 

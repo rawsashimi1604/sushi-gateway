@@ -1,4 +1,7 @@
 {
+  "name": "sushi-gateway-docs",
+  "version": "1.0.0",
+  "description": "Sushi Gateway Documentation",
   "type": "module",
   "devDependencies": {
     "vitepress": "^1.5.0"

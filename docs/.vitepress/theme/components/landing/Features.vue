@@ -1,6 +1,4 @@
 <script setup>
-import gsap from "gsap";
-import { onMounted } from "vue";
 </script>
 
 <template>
@@ -22,6 +20,11 @@ import { onMounted } from "vue";
                 <div class="feature-icon">🔒</div>
                 <h3 class="feature-title">Secure & Reliable</h3>
                 <p class="feature-details">Built with modern security protocols and reliable architecture.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚖️</div>
+                <h3 class="feature-title">Scalable API Management</h3>
+                <p class="feature-details">Handle high-traffic APIs with dynamic routing and load balancing.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">⚖️</div>
@@ -59,7 +62,7 @@ import { onMounted } from "vue";
 .hero__bgwrapper {
     width: 100%;
     position: relative;
-    padding-top: 100px;
+    padding-top: px;
     text-align: center;
 }
 
