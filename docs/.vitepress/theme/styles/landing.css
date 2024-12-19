@@ -1,15 +1,9 @@
 /* /////////////////////// */
 /* Landing Page CSS Styles */
 /* /////////////////////// */
-
 html:has(.landing) {
     --vp-c-bg: #101010;
-  
     background-color: #101010;
-  
-    body {
-      background-color: #101010;
-    }
   }
 
   .container {
