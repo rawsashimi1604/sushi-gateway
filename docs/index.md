@@ -4,8 +4,6 @@ layout: home
 hero:
   name: "Sushi Gateway"
   tagline: Layer 7 Lightweight Modular Open Source API Gateway
-
-  # TODO: add actions
   actions:
     - theme: brand
       text: Quick Start
@@ -25,3 +23,11 @@ features:
     title: "Scalable API Management"
     details: "Handle high-traffic APIs with dynamic routing and load balancing."
 ---
+
+<script setup>
+  import HeroDiagram from ".vitepress/theme/components/home/HeroDiagram.vue"
+</script>
+
+<div>
+  <HeroDiagram/>
+</div>
