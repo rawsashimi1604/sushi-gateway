@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../../../../node_modules/gsap/index.js"],
   "sourcesContent": ["import { gsap, Power0, Power1, Power2, Power3, Power4, Linear, Quad, Cubic, Quart, Quint, Strong, Elastic, Back, SteppedEase, Bounce, Sine, Expo, Circ, TweenLite, TimelineLite, TimelineMax } from \"./gsap-core.js\";\nimport { CSSPlugin } from \"./CSSPlugin.js\";\nvar gsapWithCSS = gsap.registerPlugin(CSSPlugin) || gsap,\n    // to protect from tree shaking\nTweenMaxWithCSS = gsapWithCSS.core.Tween;\nexport { gsapWithCSS as gsap, gsapWithCSS as default, CSSPlugin, TweenMaxWithCSS as TweenMax, TweenLite, TimelineMax, TimelineLite, Power0, Power1, Power2, Power3, Power4, Linear, Quad, Cubic, Quart, Quint, Strong, Elastic, Back, SteppedEase, Bounce, Sine, Expo, Circ };"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;AAEA,IAAI,cAAc,KAAK,eAAe,SAAS,KAAK;AAApD,IAEA,kBAAkB,YAAY,KAAK;",
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAEA,IAAI,cAAc,KAAK,eAAe,SAAS,KAAK;AAApD,IAEA,kBAAkB,YAAY,KAAK;",
   "names": []
 }

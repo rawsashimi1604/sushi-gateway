@@ -11,9 +11,11 @@ import {
   transformRawPath
 } from "./chunk-HVPYMRLX.js";
 import {
+  CSSPlugin
+} from "./chunk-2YXPF3EA.js";
+import {
   Back,
   Bounce,
-  CSSPlugin,
   Circ,
   Cubic,
   Elastic,
@@ -49,7 +51,7 @@ import {
   unitize,
   wrap,
   wrapYoyo
-} from "./chunk-PQD4HY7D.js";
+} from "./chunk-I4LCZ4BW.js";
 import "./chunk-BUSYA2B4.js";
 
 // node_modules/gsap/CustomEase.js

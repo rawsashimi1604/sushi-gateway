@@ -1,12 +1,21 @@
 <script setup>
 import gsap from "gsap";
 import { MotionPathPlugin } from "gsap/all";
+import { TimelineMax } from "gsap/gsap-core";
 
 gsap.registerPlugin(MotionPathPlugin);
 </script>
 
 <template>
   <div class="hero__diagram">
+
+
+    <!-- Animated Text with Spinner -->
+    <div class="api-processing">
+      <div class="spinner"></div>
+      <span class="processing-text">processing...</span>
+    </div>
+
     <!-- SVG for curved lines -->
     <svg class="curved-lines" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
 
@@ -46,6 +55,18 @@ gsap.registerPlugin(MotionPathPlugin);
 export default {
   name: "HeroDiagram",
   mounted() {
+    // Animate fade in and out for the API processing text
+    gsap.fromTo(".processing-text", {
+      opacity: 1,
+      duration: 2,
+      repeat: -1,
+      ease: "linear",
+    }, {
+      opacity: 0.25,
+      duration: 2,
+      repeat: -1,
+      ease: "linear",
+    });
 
     // Animate the dots along the paths
     const paths = document.querySelectorAll(".curved-lines path");
@@ -128,8 +149,44 @@ export default {
 }
 
 .sushi-chip__logo {
-  width: 100px;
-  height: 100px;
+  width: 110px;
+  height: 110px;
   object-fit: contain;
+}
+
+.api-processing {
+  position: absolute;
+  top: 180px;
+  /* Adjust position above the sushi-chip */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+  color: #ffffff;
+  z-index: 4;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  /* Space between spinner and text */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
