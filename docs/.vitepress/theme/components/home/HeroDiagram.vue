@@ -1,5 +1,8 @@
 <script setup>
 import gsap from "gsap";
+import { MotionPathPlugin } from "gsap/all";
+
+gsap.registerPlugin(MotionPathPlugin);
 </script>
 
 <template>
@@ -32,9 +35,9 @@ import gsap from "gsap";
 
     </svg>
 
-    <!-- Sushi Chip -->
+
     <div class="sushi-chip">
-      <img src="/images/Logo.png" alt="Sushi Gateway Logo" />
+      <img src="/images/Logo.png" alt="Sushi Gateway Logo" class="sushi-chip__logo" />
     </div>
   </div>
 </template>
@@ -43,6 +46,30 @@ import gsap from "gsap";
 export default {
   name: "HeroDiagram",
   mounted() {
+
+    // Animate the dots along the paths
+    const paths = document.querySelectorAll(".curved-lines path");
+    paths.forEach((path, index) => {
+      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      dot.setAttribute("r", "3");
+      dot.setAttribute("fill", "#c6caff");
+      dot.setAttribute("cx", "0");
+      dot.setAttribute("cy", "0");
+      dot.classList.add("animated-dot");
+      path.parentNode.appendChild(dot);
+
+      gsap.to(dot, {
+        motionPath: {
+          path: path,
+          align: path,
+          alignOrigin: [0.5, 0.5],
+        },
+        duration: 3 + index * 0.5, // Vary the speed slightly
+        repeat: -1, // Infinite repeat
+        ease: "power2.inOut",
+      });
+    });
+
     // Animate the paths using GSAP
     gsap.from(".curved-lines path", {
       duration: 1.5,
@@ -60,6 +87,14 @@ export default {
 </script>
 
 <style scoped>
+.curved-lines {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
 .hero__diagram {
   width: 100%;
   height: 400px;
@@ -69,27 +104,32 @@ export default {
   position: relative;
 }
 
-.curved-lines {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-}
-
 .sushi-chip {
   width: 134px;
   height: 134px;
   border-radius: 10px;
-  margin-top: 200px;
-  overflow: hidden;
-  transition: all 0.6s ease-out;
-  transform: translate3d(0, 0, 0) scale(0.85);
-  background: white;
+  margin-top: 180px;
+  background: linear-gradient(135deg, #40a4ff, #ff57d9);
+  /* Nice gradient background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 20px rgba(64, 115, 255, 0.6);
+  z-index: 3;
+  /* Simple glow effect */
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.sushi-chip img {
-  width: 100%;
-  height: 100%;
+.sushi-chip:hover {
+  box-shadow: 0 0 30px rgba(64, 115, 255, 0.9);
+  /* More intense glow on hover */
+  transform: scale(1.05);
+  /* Slight zoom-in on hover */
+}
+
+.sushi-chip__logo {
+  width: 100px;
+  height: 100px;
   object-fit: contain;
 }
 </style>

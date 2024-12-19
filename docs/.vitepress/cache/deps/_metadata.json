@@ -2,64 +2,82 @@
   "hash": "6c543ad8",
   "configHash": "670ad7d7",
   "lockfileHash": "611d2f69",
-  "browserHash": "a4d7134d",
+  "browserHash": "d7c26f39",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "1a3f8f70",
+      "fileHash": "39156306",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "0ef8521b",
+      "fileHash": "47c0dbf7",
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
-      "fileHash": "e48da385",
+      "fileHash": "ee4fe5af",
       "needsInterop": false
     },
     "vitepress > @vueuse/integrations/useFocusTrap": {
       "src": "../../../../node_modules/@vueuse/integrations/useFocusTrap.mjs",
       "file": "vitepress___@vueuse_integrations_useFocusTrap.js",
-      "fileHash": "f622b9df",
+      "fileHash": "1838fa81",
       "needsInterop": false
     },
     "vitepress > mark.js/src/vanilla.js": {
       "src": "../../../../node_modules/mark.js/src/vanilla.js",
       "file": "vitepress___mark__js_src_vanilla__js.js",
-      "fileHash": "197756f2",
+      "fileHash": "503acd67",
       "needsInterop": false
     },
     "vitepress > minisearch": {
       "src": "../../../../node_modules/minisearch/dist/es/index.js",
       "file": "vitepress___minisearch.js",
-      "fileHash": "ba5b6066",
+      "fileHash": "921c9db5",
       "needsInterop": false
     },
     "gsap": {
       "src": "../../../../node_modules/gsap/index.js",
       "file": "gsap.js",
-      "fileHash": "a61e7eb3",
+      "fileHash": "ced4f746",
       "needsInterop": false
     },
     "gsap/dist/MotionPathPlugin": {
       "src": "../../../../node_modules/gsap/dist/MotionPathPlugin.js",
       "file": "gsap_dist_MotionPathPlugin.js",
-      "fileHash": "1b0117c4",
+      "fileHash": "54b3a14f",
       "needsInterop": true
     },
     "gsap/dist/ScrollTrigger": {
       "src": "../../../../node_modules/gsap/dist/ScrollTrigger.js",
       "file": "gsap_dist_ScrollTrigger.js",
-      "fileHash": "90f86a46",
+      "fileHash": "ce7ec6fa",
       "needsInterop": true
+    },
+    "gsap/MotionPathPlugin": {
+      "src": "../../../../node_modules/gsap/MotionPathPlugin.js",
+      "file": "gsap_MotionPathPlugin.js",
+      "fileHash": "531820a0",
+      "needsInterop": false
+    },
+    "gsap/all": {
+      "src": "../../../../node_modules/gsap/all.js",
+      "file": "gsap_all.js",
+      "fileHash": "4001dd4b",
+      "needsInterop": false
     }
   },
   "chunks": {
+    "chunk-HVPYMRLX": {
+      "file": "chunk-HVPYMRLX.js"
+    },
+    "chunk-PQD4HY7D": {
+      "file": "chunk-PQD4HY7D.js"
+    },
     "chunk-YJ6QP2VR": {
       "file": "chunk-YJ6QP2VR.js"
     },
