@@ -6,17 +6,29 @@ import gsap from "gsap";
   <div class="hero__diagram">
     <!-- SVG for curved lines -->
     <svg class="curved-lines" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+
+      <defs>
+        <!-- Define Gradient for the Lines -->
+        <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#c6caff" stop-opacity="0.1" />
+          <stop offset="30%" stop-color="#c6caff" stop-opacity="0.5" />
+          <stop offset="50%" stop-color="#ffffff" stop-opacity="0.9" />
+          <stop offset="70%" stop-color="#c6caff" stop-opacity="0.5" />
+          <stop offset="100%" stop-color="#c6caff" stop-opacity="0.1" />
+        </linearGradient>
+      </defs>
+
       <!-- Incoming Lines -->
-      <path d="M0,80 C200,80 300,180 370,190" stroke="#ffffff" fill="transparent" stroke-width="1" />
-      <path d="M0,130 C150,130 300,200 370,200" stroke="#ffffff" fill="transparent" stroke-width="1" />
-      <path d="M0,210 C250,210 300,210 370,210" stroke="#ffffff" fill="transparent" stroke-width="1" />
-      <path d="M0,280 C240,270 300,240 370,220" stroke="#ffffff" fill="transparent" stroke-width="1" />
-      <path d="M0,340 C240,310 300,260 370,230" stroke="#ffffff" fill="transparent" stroke-width="1" />
+      <path d="M0,80 C200,80 300,180 370,190" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+      <path d="M0,130 C150,130 300,200 370,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+      <path d="M0,200 C150,210 300,210 370,210" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+      <path d="M0,280 C240,270 300,240 370,220" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+      <path d="M0,340 C240,310 300,260 370,230" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
 
       <!-- Outgoing Lines -->
-      <path d="M420,190 C750,150 850,10 1200,200" stroke="#ffffff" fill="transparent" stroke-width="1" />
-      <path d="M420,210 C750,200 850,200 1200,200" stroke="#ffffff" fill="transparent" stroke-width="1" />
-      <path d="M420,230 C750,250 850,360 1200,200" stroke="#ffffff" fill="transparent" stroke-width="1" />
+      <path d="M420,190 C750,150 850,10 1200,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+      <path d="M420,210 C750,200 850,200 1200,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
+      <path d="M420,230 C750,250 850,360 1200,200" stroke="url(#line-gradient)" fill="transparent" stroke-width="1" />
 
     </svg>
 
@@ -33,11 +45,8 @@ export default {
   mounted() {
     // Animate the paths using GSAP
     gsap.from(".curved-lines path", {
-      strokeDasharray: 50,
-      strokeDashoffset: 50,
       duration: 1.5,
       ease: "power2.out",
-      stagger: 0.1, // Stagger animation for paths
     });
   },
   props: {
