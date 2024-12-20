@@ -12,8 +12,8 @@
 
             <!-- Tagline -->
             <h3>
-                Sushi Gateway is a high-performance API management solution, built to empower developers with seamless
-                control and scalability.
+                Sushi Gateway delivers high-performance API management, empowering developers with effortless control,
+                robust security, and dynamic adaptability.
             </h3>
 
             <!-- CTA Buttons -->

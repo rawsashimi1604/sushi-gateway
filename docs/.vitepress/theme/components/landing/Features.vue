@@ -13,18 +13,21 @@
         <div class="feature-grid">
             <div class="feature-card">
                 <div class="feature-icon">🧩</div>
-                <h3 class="feature-title">Modular Plugins</h3>
-                <p class="feature-details">Easily customize and extend functionality with configurable plugins.</p>
+                <h3 class="feature-title">Modular Plugin Architecture</h3>
+                <p class="feature-details">Easily configure and extend API capabilities with plugins like rate limiting,
+                    authentication, and request transformations.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🔒</div>
-                <h3 class="feature-title">Secure & Reliable</h3>
-                <p class="feature-details">Built with modern security protocols and reliable architecture.</p>
+                <h3 class="feature-title">Integrate API Security</h3>
+                <p class="feature-details">Integrate security protocols like Mutual TLS, API key validation,
+                    and JWT authentication into your request chain to safeguard your APIs.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">⚖️</div>
-                <h3 class="feature-title">Scalable API Management</h3>
-                <p class="feature-details">Handle high-traffic APIs with dynamic routing and load balancing.</p>
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Efficient Performance</h3>
+                <p class="feature-details">Optimized to handle large-scale API traffic seamlessly with low latency and
+                    high throughput.</p>
             </div>
         </div>
     </div>

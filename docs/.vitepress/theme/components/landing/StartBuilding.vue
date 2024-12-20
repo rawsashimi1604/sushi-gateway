@@ -7,7 +7,7 @@
 
         <h2>Try out Sushi Gateway</h2>
         <h3>
-            Try it out now using our quick start guide.
+            Start building with Sushi Gateway today by following our Quick Start Guide for a seamless setup.
         </h3>
 
         <div class="btn-container">
