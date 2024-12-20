@@ -57,7 +57,11 @@ html:has(.landing) {
     /* VitePress Overrides */
     /* /////////////////// */
 
-    
+    .VPNavBarAppearance,
+    .VPNavScreenAppearance,
+    .VPMenu > .group:first-child {
+      display: none !important;
+    }
   
     /* /////// */
     /* Buttons */
