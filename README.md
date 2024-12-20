@@ -1,4 +1,4 @@
-[![][sushi-logo]][sushi-url]
+![Sushi Gateway](./docs/public/images/LogoWithText2RemoveBg.png)
 
 ![Stars](https://img.shields.io/github/stars/rawsashimi1604/sushi-gateway?style=flat-square) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rawsashimi1604/sushi-gateway?style=flat-square) ![Docker Pulls](https://img.shields.io/docker/pulls/rawsashimi/sushi-proxy?style=flat-square) ![Version](https://img.shields.io/github/v/release/rawsashimi1604/sushi-gateway?color=green&label=Version&style=flat-square) ![License](https://img.shields.io/badge/License-Apache%202.0-blue?style=flat-square)
 
@@ -64,7 +64,6 @@ You may obtain a copy of the License at
    https://www.apache.org/licenses/LICENSE-2.0
 ```
 
-[sushi-logo]: https://raw.githubusercontent.com/rawsashimi1604/sushi-gateway/main/assets/logo.png
 [sushi-url]: https://rawsashimi1604.github.io/sushi-gateway/
 
 ## TODO LIST
