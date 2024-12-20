@@ -18,6 +18,22 @@ export default defineConfig({
         text: "Get Started",
         link: "/getting-started/docker",
       },
+      {
+        text: "Plugins",
+        items: [
+          { text: "Overview", link: "/plugins/" },
+          { text: "Basic Auth", link: "/plugins/basic-auth" },
+          { text: "JWT", link: "/plugins/jwt" },
+          { text: "Key Auth", link: "/plugins/key-auth" },
+          { text: "MTLS", link: "/plugins/mtls" },
+          { text: "Bot Protection", link: "/plugins/bot-protection" },
+          { text: "CORS", link: "/plugins/cors" },
+          { text: "ACL", link: "/plugins/acl" },
+          { text: "Rate Limit", link: "/plugins/rate-limit" },
+          { text: "Request Size Limit", link: "/plugins/request-size-limit" },
+          { text: "HTTP Log", link: "/plugins/http-log" },
+        ],
+      },
     ],
     footer: {
       message: `Released under the MIT License.`,
