@@ -1,6 +1,6 @@
-# Plugins Overview in Sushi Gateway
+# Plugins in Sushi Gateway
 
-Plugins in Sushi Gateway are modular extensions that enhance the gateway's functionality. They can be used for tasks such as authentication, rate limiting, transformations, and more. Each plugin operates within a middleware chain, allowing precise control over how requests and responses are processed.
+Plugins are modular extensions that enhance the gateway's functionality. They can be used for tasks such as authentication, rate limiting, transformations, and more. Each plugin operates within a middleware chain, allowing precise control over how requests and responses are processed.
 
 ## What are Plugins?
 
