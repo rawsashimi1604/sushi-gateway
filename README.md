@@ -48,65 +48,6 @@ We ❤️ contributions! Check out the [Contributing Guide](CONTRIBUTING.md) to 
 
 [sushi-url]: https://rawsashimi1604.github.io/sushi-gateway/
 
-## TODO LIST
-
-- [x] design database schema
-- [x] provide database configuration options ( env variables to inject database env in )
-- [x] sushi manager update logo
-- [x] Logout endpoint to delete httponly cookie
-- [x] sushi manager update gateway state to get types and also domain object to retrieve from gateway state.
-- [x] sushi manager create screens
-- [ ] Add gateway metadata (last configuration update, total requests)
-  - [ ] gateway logs middleware
-- [ ] Add stateful gateway configurations (good to have)
-  - [x] Postgres DB (Externalise option)
-  - [x] Postgres DB docker
-  - [x] Admin API for CRUD operations
-  - [x] global domain object config state retrieval from db.
-  - [ ] add time created and time updated to schema.
-  - [x] add simple gateway table to store gateway configurations.
-- [x] Update readme with latest architecture diagrams and logos
-- [x] Add CI github actions
-- [x] Add CD for each release to push to dockerhub
-- [ ] Add more tests for each plugin
-  - [x] Acl
-  - [x] Basic auth
-  - [x] Bot protection
-  - [x] Cors
-  - [x] Jwt
-  - [x] Key auth
-  - [ ] Mtls
-  - [x] Rate limit
-  - [x] Request size limit
-  - [ ] Http log
-- [x] Finish up plugins
-- [x] Add "enabled" field to plugins (common middleware for all plugins)
-- [ ] Add validation schema for each plugin, that is validated at config file load time (good to have)
-  - [ ] General architecture
-  - [ ] Acl
-  - [ ] Basic auth
-  - [ ] Bot protection
-  - [ ] Cors
-  - [ ] Jwt
-  - [ ] Key auth
-  - [ ] Mtls
-  - [ ] Rate limit
-  - [ ] Request size limit
-  - [ ] Http log
-- [x] Add dynamic routing (route parameters like {id}, {anything})
-- [ ] Add more tests for the proxy
-- [x] Dockerizing proxy
-- [ ] Create kube deployment (helm)
-- [ ] Load balancing to upstreams
-  - [x] Round robin
-  - [ ] IP hash
-  - [ ] Weighted
-- [ ] Configure health checks for upstreams (good to have)
-- [x] UI Portal development and design
-  - [x] Update UI Portal to show services, routes, upstreams etc...
-  - [ ] Update UI Portal to interface with Admin API
-- [x] Flatten file structure, cyclic imports
-
 ## Start a database
 
 create a postgres database.
