@@ -101,27 +101,40 @@ export default {
 <style scoped>
 .hero__bgwrapper {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  min-width: 768px;
+  margin: 0 auto;
 }
 
 .curved-lines {
   position: absolute;
   left: 0;
   top: 0;
-  width: 100%;
   z-index: 1;
+  overflow: hidden;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    height: 400px;
+  }
 }
 
 .hero__diagram {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: -100px;
+  height: 500px;
   display: none;
 
-  @media (min-width: 1024px) {
+
+  @media (min-width: 768px) {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    margin-top: -200px;
-    height: 500px;
   }
 
   @media (min-width: 1280px) {
@@ -131,20 +144,30 @@ export default {
 }
 
 .sushi-chip {
-  width: 134px;
-  height: 134px;
+  width: 80px;
+  height: 80px;
   border-radius: 10px;
   position: absolute;
-
   background: linear-gradient(135deg, #2a78d4, #3fd9f0);
-  /* Slightly darker blueish gradient */
-  display: none;
-  justify-content: center;
-  align-items: center;
+
+
   box-shadow: 0 0 20px rgba(63, 217, 240, 0.6), 0 0 10px rgba(42, 120, 212, 0.5);
-  /* Adjusted glow to match darker gradient */
   z-index: 3;
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 270px;
+  top: 120px;
+
+  @media (min-width: 768px) {
+    display: flex;
+    width: 100px;
+    height: 100px;
+    left: 335px;
+    top: 150px;
+  }
 
   @media (min-width: 1024px) {
     display: flex;
