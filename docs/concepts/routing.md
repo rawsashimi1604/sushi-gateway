@@ -1,67 +1,78 @@
-# Routing
+# Routing Overview
 
-Routing is a core feature of Sushi Gateway, enabling the efficient handling of incoming requests by directing them to the appropriate backend services. This mechanism provides flexibility, scalability, and precision in API traffic management.
+Routing is a core feature of Sushi Gateway, enabling efficient handling of API requests by directing them to the appropriate backend services. This mechanism leverages a structured system of Services, Routes, and Upstreams to ensure precision, scalability, and reliability in API traffic management.
 
 ## How Routing Works
 
-Routing in Sushi Gateway ensures that requests are directed to the appropriate backend services based on predefined rules.
+### Request Structure
 
-### Route Matching
+Sushi Gateway employs a **path-based routing mechanism**, using the protocol, HTTP method, and path to direct traffic to the appropriate backend services (Upstreams). Here’s how it works with an example request:
 
-Routes are matched using the following criteria:
+```http
+https://api.gateway.com:8443/sushi/restaurant
+```
 
-- **Path**: The URL path specified in the route.
-- **HTTP Methods**: Supported methods such as GET, POST, etc.
-- **Headers**: Optional headers for advanced matching.
+### Components of the Request
 
-## Defining Services
+1. **Scheme**: `https`
+   - Specifies the communication protocol. Since we are using https, we are hitting the HTTPS endpoint of the gateway.
+2. **Domain**: `api.gateway.com`
+   - Identifies the API Gateway host.
+3. **Port**: `8443`
+   - Secure HTTPS port where gateway is hosted.
+4. **Service Path**: `/sushi`
+   - Matches the `base_path` of a Service entity.
+5. **Route Path**: `/restaurant`
+   - Matches the `path` of a Route within the Service.
 
-Defining services is a critical step in Sushi Gateway, enabling the management of APIs and their associated upstreams and routes. This mechanism allows you to organize, secure, and control traffic flow effectively.
+### Routing Workflow
 
-## What is a Service?
+1. **Receive Request**:
 
-A **service** in Sushi Gateway represents a backend application or a group of upstreams. Each service includes configuration details for routing traffic, applying plugins, and balancing loads across upstream instances.
+   - The gateway receives the incoming request at `https://api.gateway.com:8443/sushi/restaurant`.
 
-::: tip
-Learn more about the core entities in Sushi Gateway, such as **[Services](../concepts/entities/service.md)**, **[Routes](../concepts/entities/route.md)**, and **[Plugins](../concepts/entities/plugin.md)**.
-:::
+2. **Match Service**:
 
-## Example Service Configuration
+   - The gateway matches `/sushi` to the `base_path` of a configured Service entity in memory.
 
-Here’s an example of a complete service definition in `config.json`:
+3. **Match Route**:
+
+   - Within the matched Service, the gateway identifies `/restaurant` as the `path` of a Route.
+
+4. **Load Balancer**:
+
+   - Based on the Service’s load balancing strategy, the gateway selects an appropriate upstream (e.g., `sushi.jp`).
+
+5. **Forward Request**:
+
+   - Constructs the upstream path: `https://sushi.jp/restaurant`.
+   - Applies middleware plugins before forwarding the request.
+
+6. **Process Response**:
+   - Receives the response from the upstream, processes it through middleware plugins, and sends it back to the client.
+
+## Example Configuration
+
+### Service Definition
 
 ```json
 {
-  "global": {
-    "name": "example-gateway",
-    "plugins": []
-  },
   "services": [
     {
-      "name": "example-service",
-      "base_path": "/example",
+      "name": "sushi-service",
+      "base_path": "/sushi",
       "protocol": "http",
       "load_balancing_strategy": "round_robin",
       "upstreams": [
-        { "id": "upstream_1", "host": "example-app", "port": 3000 }
+        { "id": "upstream_1", "host": "localhost", "port": 8001 },
+        { "id": "upstream_2", "host": "localhost", "port": 8002 }
       ],
       "routes": [
         {
-          "name": "example-route",
-          "path": "/v1/sushi",
+          "name": "get-sushi",
+          "path": "/restaurant",
           "methods": ["GET"],
-          "plugins": [
-            {
-              "id": "example-plugin",
-              "name": "rate_limit",
-              "enabled": true,
-              "config": {
-                "limit_second": 10,
-                "limit_min": 10,
-                "limit_hour": 100
-              }
-            }
-          ]
+          "plugins": []
         }
       ]
     }
@@ -69,107 +80,45 @@ Here’s an example of a complete service definition in `config.json`:
 }
 ```
 
-### Key Components of the Configuration
+### Request Flow
 
-1. **Service-Level Configuration**:
+1. **Request**: `https://api.gateway.com:8443/sushi/restaurant`
+2. **Service Match**:
+   - `base_path`: `/sushi` → `sushi-service`
+3. **Route Match**:
+   - `path`: `/restaurant` → `get-sushi`
+4. **Upstream Selection**:
+   - Load balancing strategy: `round_robin`
+   - Selected upstream: `localhost:8001`
+5. **Final Upstream Path**:
+   - `https://localhost:8001/restaurant`
 
-   - **`name`**: A unique identifier for the service.
-   - **`base_path`**: The base path for routing requests to the service.
-   - **`protocol`**: The protocol (`http` or `https`) used to communicate with upstreams.
-   - **`load_balancing_strategy`**: Determines how traffic is distributed across upstreams.
+## Middleware Chain
 
-2. **Upstreams**:
+### Plugins Applied
 
-   - Define the backend instances associated with the service.
-   - Include properties like `id`, `host`, and `port` for each upstream.
+1. **Global Plugins**: Configured at the gateway level.
+2. **Service Plugins**: Configured for the matched Service entity.
+3. **Route Plugins**: Configured for the matched Route entity.
 
-3. **Routes**:
-   - Define specific API paths and methods handled by the service.
-   - Include optional plugins for additional processing.
+The gateway executes plugins in the following order:
 
-### Load Balancing
-
-Once a route is matched, Sushi Gateway uses the defined load-balancing strategy to distribute traffic to the upstreams.
-
-| Strategy        | Description                                                                |
-| --------------- | -------------------------------------------------------------------------- |
-| **Round Robin** | Distributes requests sequentially among upstreams.                         |
-| **IP Hash**     | (WIP) Directs requests to the upstream based on IP Hash (sticky session).  |
-| **Weighted**    | (WIP) Assigns weights to upstreams for proportionate traffic distribution. |
-
-Set the strategy in the service configuration:
-
-```json
-"load_balancing_strategy": "round_robin"
+```bash
+plugins = global_plugins + service_plugins + route_plugins
 ```
 
-### Route-Specific Plugins
+### Example Plugins
 
-You can configure plugins at the route level to handle:
+- **Rate Limiting**: Controls request limits per time window.
+- **Authentication**: Enforces API key or JWT validation.
 
-- **Authentication**: Enforce JWT or API key validation.
-- **Rate Limiting**: Control the number of requests allowed within a time window.
+## Key Features of Routing
 
-Example:
-
-```json
-{
-  "routes": [
-    {
-      "name": "example-route",
-      "path": "/v1/sushi",
-      "methods": ["GET"],
-      "plugins": [
-        {
-          "id": "example-plugin",
-          "name": "rate_limit",
-          "enabled": true,
-          "config": {
-            "limit_second": 10
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-## Advanced Features
-
-### Dynamic Parameters
-
-Routes can include dynamic parameters for greater flexibility:
-
-```json
-{
-  "path": "/v1/sushi/:id"
-}
-```
-
-This matches paths like `/v1/sushi/123` and `/v1/sushi/456`.
-
-### CORS Handling
-
-Add CORS plugins to services to manage cross-origin requests:
-
-```json
-{
-  "plugins": [
-    {
-      "name": "cors",
-      "config": {
-        "allow_origins": "*",
-        "allow_methods": ["GET", "POST"]
-      }
-    }
-  ]
-}
-```
+- **Dynamic Path Matching**: Supports dynamic parameters (e.g., `/sushi/{id}`).
+- **Load Balancing**: Distributes traffic across multiple upstreams.
+- **Middleware Integration**: Enables plugin execution for advanced request/response handling.
+- **Advanced Match Criteria**: Supports path, HTTP methods, and header matching.
 
 ---
 
-Defining services and understanding routing in Sushi Gateway allows you to precisely control API traffic and backend communication, ensuring a scalable and secure architecture.
-
-::: tip
 Routing in Sushi Gateway ensures precise control over API traffic, allowing developers to create robust and efficient microservices architectures. For more details, refer to the **[Configuration Management Guide](../concepts/configuration/index.md)**.
-:::

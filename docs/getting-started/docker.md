@@ -256,6 +256,11 @@ docker run --rm -p 5173:5173 \
 rawsashimi/sushi-manager:latest
 ```
 
----
+## Next Steps
 
-Congratulations! You’ve successfully set up Sushi Gateway and created your first proxy service!
+Congratulations on setting up Sushi Gateway! Now that you have your gateway running, explore these additional features:
+
+- **[Explore More Plugins](../plugins/index.md)**: Enhance your API management with powerful plugins for rate limiting, authentication, and more.
+- **[Admin REST API](../api/index.md)**: Learn how to query your gateway state using the Admin REST API.
+
+Dive deeper into Sushi Gateway’s capabilities and take full control of your API ecosystem!
