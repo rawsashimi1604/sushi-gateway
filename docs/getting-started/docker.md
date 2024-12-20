@@ -160,6 +160,10 @@ Expected response:
 To secure communications, generate certificates for TLS and MTLS. These certificates are used to validate client and server communications.
 :::
 
+::: tip
+The CA certificate can be used to generate any child certs that can be used for MTLS authentication by your client.
+:::
+
 ```bash
 # Generate CA private key
 openssl genrsa -out ca.key 4096
@@ -238,8 +242,12 @@ Expected response:
 
 Launch the interactive UI at `http://localhost:5173` via the pulled UI docker image for managing and monitoring your gateway:
 
-::: tip
+::: info
 Sushi Manager provides a user-friendly interface for configuring and monitoring your gateway.
+:::
+
+::: tip
+Use the credentials specified above - `ADMIN_USER` and `ADMIN_PASSWORD` to login! If you have followed the guide, the credentials will be `admin` and `changeme` respectively.
 :::
 
 ```bash
