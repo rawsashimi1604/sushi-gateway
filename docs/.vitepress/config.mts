@@ -5,6 +5,7 @@ export default defineConfig({
   title: "Sushi Gateway",
   description: "Lightweight Layer 7 Open Source Gateway",
   base: "/sushi-gateway/",
+  head: [["link", { rel: "icon", href: "/sushi-gateway/favicon.ico" }]],
   themeConfig: {
     search: {
       provider: "local",
