@@ -4,12 +4,6 @@ The Sushi Gateway Admin REST API provides an internal interface for managing and
 
 The Admin REST API is designed to automate gateway management tasks, making it easier to integrate with CI/CD pipelines or other external systems.
 
-## Key Features
-
-- **Comprehensive Management**: Manage all entities such as services, routes, plugins, and upstreams through a RESTful interface.
-- **Automation-Ready**: Integrate with automation tools for seamless configuration updates.
-- **Real-Time Changes**: Apply configuration changes instantly without needing to restart the gateway.
-
 ## Accessing the Admin API
 
 The Admin REST API is hosted on **port 8081** and communicates over HTTP. Ensure that the API is accessible only from trusted networks or through secure tunnels (e.g., VPN or SSH).
@@ -30,6 +24,19 @@ The Admin REST API is secured through **Basic Authentication (RFC 7617)** and **
 2. **JWT Provision**: Upon successful authentication, the API issues a JWT stored as an HttpOnly cookie.
 3. **Subsequent Requests**: The JWT cookie is included in requests to authenticate against the Admin API.
 
+## CRUD Operations and Configuration Modes
+
+CRUD operations (create, read, update, delete) for the Admin API are only available when Sushi Gateway is running in **stateful (DB)** configuration mode. This design choice ensures that:
+
+- **Stateful Mode**: The database serves as the source of truth, enabling dynamic updates and real-time changes through the Admin API.
+- **Stateless Mode**: The configuration is maintained via a declarative configuration file (`config.json`), which acts as the source of truth. In this mode, changes must be made directly to the configuration file and cannot be managed via the Admin API.
+
+This separation ensures consistency and prevents conflicting sources of truth across configuration modes.
+
+::: info
+For more information regarding data persistence modes, please refer to the **[Data Persistence](../concepts/data-persistence.md)** section.
+:::
+
 ## Endpoints
 
 Here are the endpoints available in the Admin REST API:
@@ -48,12 +55,6 @@ Here are the endpoints available in the Admin REST API:
 | `POST`   | `/plugin`         | Add a plugin at a global, service, or route level.       |
 | `DELETE` | `/plugin`         | Remove a plugin at a global, service, or route level.    |
 | `PUT`    | `/plugin`         | Update a plugin at a global, service, or route level.    |
-
-## Use Cases
-
-1. **Automated Deployments**: Manage services, routes, and plugins programmatically during deployment pipelines.
-2. **Dynamic Configuration**: Update configurations in real-time without downtime.
-3. **Monitoring and Auditing**: Retrieve details of the gateway configuration for reporting or troubleshooting.
 
 ::: tip
 For more detailed information on available endpoints, refer to the **[Admin API Reference](../api/endpoints.md)**.
