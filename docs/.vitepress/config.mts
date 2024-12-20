@@ -16,7 +16,10 @@ export default defineConfig({
       { text: "Docs", link: "/docs-home" },
       {
         text: "Get Started",
-        link: "/getting-started/docker",
+        items: [
+          { text: "Docker", link: "/getting-started/docker" },
+          { text: "Postgres", link: "/getting-started/postgres" },
+        ],
       },
       {
         text: "Plugins",

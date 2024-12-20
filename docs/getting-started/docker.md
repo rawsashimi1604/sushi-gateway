@@ -1,4 +1,4 @@
-# Quick Start Using Docker
+# Quick Start with Docker
 
 Welcome to the **Getting Started** guide for Sushi Gateway! This guide will help you set up Sushi Gateway quickly using Docker. In just a few steps, you'll have a working API Gateway to manage and secure your APIs.
 
