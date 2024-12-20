@@ -112,13 +112,48 @@ plugins = global_plugins + service_plugins + route_plugins
 - **Rate Limiting**: Controls request limits per time window.
 - **Authentication**: Enforces API key or JWT validation.
 
-## Key Features of Routing
+## Dynamic API Path Routing Matching
 
-- **Dynamic Path Matching**: Supports dynamic parameters (e.g., `/sushi/{id}`).
-- **Load Balancing**: Distributes traffic across multiple upstreams.
-- **Middleware Integration**: Enables plugin execution for advanced request/response handling.
-- **Advanced Match Criteria**: Supports path, HTTP methods, and header matching.
+Sushi Gateway also comes with Dynamic API path routing matchin support, allowing for flexible and reusable routes by using parameterized paths.
 
----
+### How It Works
+
+In a route configuration, dynamic segments are defined using curly braces (`{}`) to represent placeholders for values. When an incoming request matches the dynamic segment, Sushi Gateway extracts the value and passes it to the upstream service or processes it as needed.
+
+### Example Configuration
+
+```json
+{
+  "routes": [
+    {
+      "name": "get-sushi-by-id",
+      "path": "/sushi/{id}",
+      "methods": ["GET"],
+      "plugins": []
+    }
+  ]
+}
+```
+
+### Example Request and Routing
+
+#### Request:
+
+```http
+GET https://api.gateway.com:8443/sushi/123
+```
+
+#### Route Match:
+
+- **Base Path**: `/sushi`
+- **Dynamic Segment**: `{id}` → `123`
+
+#### Upstream Request:
+
+The dynamic value is included in the forwarded request to the upstream:
+
+```http
+GET https://upstream-service/sushi/123
+```
 
 Routing in Sushi Gateway ensures precise control over API traffic, allowing developers to create robust and efficient microservices architectures. For more details, refer to the **[Configuration Management Guide](../concepts/configuration/index.md)**.
