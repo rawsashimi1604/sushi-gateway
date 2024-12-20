@@ -21,13 +21,9 @@ By providing functionality such as routing, load balancing, authentication, and 
 - **Secure API Management**: Features such as Mutual TLS, API key authentication, and JWT support.
 - **Lightweight & Efficient**: Optimized for speed and scalability with a minimal footprint.
 
----
-
 ## Quick Start
 
 View our quick start guide using Docker [here](https://rawsashimi1604.github.io/sushi-gateway/getting-started/docker.html).
-
----
 
 ## Plugins
 
@@ -43,26 +39,12 @@ Sushi Gateway offers a wide range of plugins to enhance functionality, including
 
 Explore all available plugins in the **[Plugins Documentation](https://rawsashimi1604.github.io/sushi-gateway/plugins)**.
 
----
-
 ## Contributing
 
 We ❤️ contributions! Check out the [Contributing Guide](CONTRIBUTING.md) to get started.
 
 - **Join the Community**: Share feedback and ask questions in our [Discussions](https://github.com/rawsashimi1604/sushi-gateway/discussions).
 - **Report Issues**: Open issues directly in the [GitHub repository](https://github.com/rawsashimi1604/sushi-gateway/issues).
-
----
-
-## License
-
-```
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   https://www.apache.org/licenses/LICENSE-2.0
-```
 
 [sushi-url]: https://rawsashimi1604.github.io/sushi-gateway/
 
