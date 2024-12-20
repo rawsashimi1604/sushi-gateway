@@ -8,7 +8,7 @@ By providing functionality such as routing, load balancing, authentication, and 
 
 ---
 
-[Installation Guide](https://rawsashimi1604.github.io/sushi-gateway/quick-start) | [Documentation](https://rawsashimi1604.github.io/sushi-gateway/) | [Releases](https://github.com/rawsashimi1604/sushi-gateway/releases)
+[Installation Guide](https://rawsashimi1604.github.io/sushi-gateway/getting-started/docker.html) | [Documentation](https://rawsashimi1604.github.io/sushi-gateway/docs-home.html) | [Releases](https://github.com/rawsashimi1604/sushi-gateway/releases)
 
 ---
 
