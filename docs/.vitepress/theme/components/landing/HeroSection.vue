@@ -2,7 +2,7 @@
     <div class="hero">
         <div class="container">
             <!-- Promo Pill -->
-            <a href="https://sushigateway.io" class="hero__pill" target="_blank">
+            <a href="https://github.com/rawsashimi1604/sushi-gateway" class="hero__pill" target="_blank">
                 <img src="/images/Logo.png" alt="Sushi Gateway logo" width="20" height="20" />
                 <span>Sushi Gateway v0.1 Released</span>
             </a>
