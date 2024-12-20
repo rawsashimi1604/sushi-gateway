@@ -44,6 +44,7 @@ Explore all available plugins in the **[Plugins Documentation](https://rawsashim
 We ❤️ contributions! Check out the [Contributing Guide](CONTRIBUTING.md) to get started.
 
 - **Join the Community**: Share feedback and ask questions in our [Discussions](https://github.com/rawsashimi1604/sushi-gateway/discussions).
+- **Chat on Discord**: Collaborate and discuss on our [Discord Channel](https://discord.gg/aPv4QhQ6).
 - **Report Issues**: Open issues directly in the [GitHub repository](https://github.com/rawsashimi1604/sushi-gateway/issues).
 
 [sushi-url]: https://rawsashimi1604.github.io/sushi-gateway/
