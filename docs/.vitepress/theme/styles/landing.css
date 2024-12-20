@@ -2,70 +2,128 @@
 /* Landing Page CSS Styles */
 /* /////////////////////// */
 html:has(.landing) {
-    --vp-c-bg: #101010;
-    background-color: #101010;
-  }
+  --vp-c-bg: #101010;
+  background-color: #101010;
+}
 
+.container {
+  width: 100%;
+  max-width: 640px; /* Default for small screens */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem; /* Default padding */
+  padding-right: 1rem;
+  position: relative;
+  overflow: visible; /* Allow child elements to overflow */
+}
+
+@media (min-width: 768px) {
   .container {
-    width: 100%;
-    max-width: 640px; /* Default for small screens */
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem; /* Default padding */
-    padding-right: 1rem;
-    position: relative;
-    overflow: visible; /* Allow child elements to overflow */
+    max-width: 768px; /* MD screens */
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px; /* LG screens */
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px; /* XL screens */
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px; /* 2XL screens */
+  }
+}
+
+.landing {
+  overflow-x: hidden;
+  background-color: #101010;
+
+  * {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    text-rendering: optimizeLegibility !important;
   }
 
-  @media (min-width: 768px) {
-      .container {
-          max-width: 768px; /* MD screens */
-      }
+  /* /////////////////// */
+  /* VitePress Overrides */
+  /* /////////////////// */
+
+  .VPNavBarAppearance,
+  .VPNavScreenAppearance,
+  .VPMenu > .group:first-child {
+    display: none !important;
   }
 
-  @media (min-width: 1024px) {
-      .container {
-          max-width: 1024px; /* LG screens */
-      }
+  /* /////// */
+  /* Buttons */
+  /* /////// */
+
+  .btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-secondary);
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
-  @media (min-width: 1280px) {
-      .container {
-          max-width: 1280px; /* XL screens */
-      }
-  }
+  .btn--primary {
+    color: #fff;
+    background: linear-gradient(135deg, #2e88ee, #39c7dd);
+    box-shadow: 0 4px 8px rgba(50, 194, 255, 0.3);
+    border: none;
 
-  @media (min-width: 1536px) {
-      .container {
-          max-width: 1536px; /* 2XL screens */
-      }
-  }
-
-  
-  
-  .landing {
-    overflow-x: hidden;
-    background-color: #101010;
-  
-    * {
-      -webkit-font-smoothing: antialiased !important;
-      -moz-osx-font-smoothing: grayscale !important;
-      text-rendering: optimizeLegibility !important;
+    &:hover {
+      background: linear-gradient(90deg, #1a93cc, #32c2ff);
+      box-shadow: 0 6px 12px rgba(50, 194, 255, 0.5);
+      transform: translateY(-2px);
     }
-  
-    /* /////////////////// */
-    /* VitePress Overrides */
-    /* /////////////////// */
 
-    .VPNavBarAppearance,
-    .VPNavScreenAppearance,
-    .VPMenu > .group:first-child {
-      display: none !important;
+    &:active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 6px rgba(50, 194, 255, 0.2);
     }
-  
-    /* /////// */
-    /* Buttons */
-    /* /////// */
-
   }
-  
+
+  .btn--outline {
+    color: #32c2ff;
+    border: 2px solid #32c2ff;
+    background: transparent;
+    transition: color 0.3s ease, border-color 0.3s ease,
+      background-color 0.3s ease;
+
+    &:hover {
+      color: #fff;
+      border-color: #1a93cc;
+      box-shadow: 0 4px 8px rgba(50, 194, 255, 0.3);
+    }
+
+    &:active {
+      color: #fff;
+      border-color: #1a93cc;
+      box-shadow: 0 3px 6px rgba(50, 194, 255, 0.2);
+    }
+  }
+
+  .btn img {
+    margin-right: 4px;
+  }
+
+  .btn--primary img {
+    filter: brightness(0) invert(1);
+  }
+}

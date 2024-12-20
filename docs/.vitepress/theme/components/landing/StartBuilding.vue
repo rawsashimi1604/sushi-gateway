@@ -94,38 +94,4 @@ h3 {
 .btn-container {
     margin-top: 40px;
 }
-
-.btn {
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: 600;
-    font-family: var(--font-secondary);
-    border-radius: 8px;
-    text-decoration: none;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btn--primary {
-    color: #fff;
-    background: linear-gradient(135deg, #2e88ee, #39c7dd);
-    box-shadow: 0 4px 8px rgba(50, 194, 255, 0.3);
-    border: none;
-
-    &:hover {
-        background: linear-gradient(90deg, #1a93cc, #32c2ff);
-        box-shadow: 0 6px 12px rgba(50, 194, 255, 0.5);
-        transform: translateY(-2px);
-    }
-
-    &:active {
-        transform: translateY(1px);
-        box-shadow: 0 3px 6px rgba(50, 194, 255, 0.2);
-    }
-}
 </style>
