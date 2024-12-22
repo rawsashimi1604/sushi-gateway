@@ -15,8 +15,8 @@ jobs:
   ci:
     uses: ./.github/workflows/ci.yml
 
-  cd:
-    uses: ./.github/workflows/cd.yml
-    needs: [determine-version, ci]
-    with:
-      docker_tag: ${{ needs.determine-version.outputs.docker_tag }}
+  # cd:
+  #   uses: ./.github/workflows/cd.yml
+  #   needs: [determine-version, ci]
+  #   with:
+  #     docker_tag: ${{ needs.determine-version.outputs.docker_tag }}
