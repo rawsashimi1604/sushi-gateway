@@ -1,15 +1,8 @@
-on:
-  pull_request:
-    branches:
-      - release/*
-  push:
-    branches:
-      - release/*
-
 name: Create Release
+on: [workflow_call]
 
 jobs:
-  build:
+  release:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
