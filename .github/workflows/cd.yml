@@ -23,4 +23,6 @@ jobs:
 
   deploy-docs:
     secrets: inherit
+    # We only want to deploy the docs when we push to main
+    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/deploy-docs.yml
