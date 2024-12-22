@@ -1,8 +1,28 @@
 name: CD
-on: [workflow_call] # allow this workflow to be called from other workflows
+
+on:
+  workflow_call:
+    inputs:
+      docker_tag:
+        description: "Docker tag for the image"
+        required: true
+        type: string
+
 jobs:
   deploy-manager-docker:
-    uses: ./.github/workflows/deploy-amanger.yml
+    uses: ./.github/workflows/deploy-manager.yml
+    secrets: inherit
+    with:
+      docker_tag: ${{ inputs.docker_tag }}
 
   deploy-proxy-docker:
     uses: ./.github/workflows/deploy-proxy.yml
+    secrets: inherit
+    with:
+      docker_tag: ${{ inputs.docker_tag }}
+
+  deploy-docs:
+    secrets: inherit
+    # We only want to deploy the docs when we push to main
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/deploy-docs.yml

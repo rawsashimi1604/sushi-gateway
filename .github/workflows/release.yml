@@ -1,0 +1,28 @@
+name: Create Release
+on:
+  workflow_call: # allow this workflow to be called from other workflows
+    inputs:
+      release_tag:
+        description: "Release tag for the release version and tag."
+        required: true
+        type: string
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Create Release
+        id: create_release
+        uses: comnoco/create-release-action@v2.0.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ inputs.release_tag }}
+          release_name: ${{ inputs.release_tag }}
+          body: |
+            <<Please insert some release notes here. Please set it as a prerelease if it is not ready for production.>>
+          draft: true
+          prerelease: false

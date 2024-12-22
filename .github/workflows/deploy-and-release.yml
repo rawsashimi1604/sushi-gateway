@@ -1,0 +1,36 @@
+name: Deploy and Release new version
+
+on:
+  pull_request:
+    branches:
+      - main
+      - release/*
+  push:
+    branches:
+      - main
+      - release/*
+
+jobs:
+  determine-version:
+    uses: ./.github/workflows/determine-version.yml
+    with:
+      # Get the target branch name, we will use the target branch to determine the docker tag version.
+      branch_name: ${{ github.base_ref }}
+
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  cd:
+    uses: ./.github/workflows/cd.yml
+    secrets: inherit
+    needs: [determine-version, ci]
+    with:
+      docker_tag: ${{ needs.determine-version.outputs.docker_tag }}
+
+  release:
+    uses: ./.github/workflows/release.yml
+    # Only run this job when we push/PR to a release branch
+    if: startsWith(github.ref, 'refs/heads/release/')
+    needs: [determine-version, cd]
+    with:
+      release_tag: v${{ needs.determine-version.outputs.docker_tag }}

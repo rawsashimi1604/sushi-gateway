@@ -1,5 +1,4 @@
 # Sample workflow for building and deploying a VitePress site to GitHub Pages
-#
 name: Deploy VitePress Docs site to Pages
 
 on: [workflow_call]

@@ -1,7 +1,12 @@
 name: Proxy Deploy
 
-on: [workflow_call] # allow this workflow to be called from other workflows
-
+on:
+  workflow_call: # allow this workflow to be called from other workflows
+    inputs:
+      docker_tag:
+        description: "Docker tag for the image"
+        required: true
+        type: string
 jobs:
   deploy-docker:
     runs-on: ubuntu-latest
@@ -19,8 +24,8 @@ jobs:
       - name: Build Docker image
         working-directory: ./sushi-proxy
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/sushi-proxy:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/sushi-proxy:${{ inputs.docker_tag }} .
 
       - name: Push Docker image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/sushi-proxy:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/sushi-proxy:${{ inputs.docker_tag }}

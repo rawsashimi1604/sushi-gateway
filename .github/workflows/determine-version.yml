@@ -1,0 +1,38 @@
+name: Determine Version
+
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        description: "Branch name to determine the version"
+        required: true
+        type: string
+    outputs:
+      docker_tag:
+        description: "The determined Docker image tag"
+        value: ${{ jobs.determine-version.outputs.docker_tag }}
+
+jobs:
+  determine-version:
+    runs-on: ubuntu-latest
+    outputs:
+      docker_tag: ${{ steps.get-version.outputs.DOCKER_TAG }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Run Python Script to Determine Docker Tag
+        id: get-version
+        run: |
+          python .github/scripts/get_version.py
+        env:
+          BRANCH_NAME: ${{ inputs.branch_name }}
+
+      - name: Log out Docker Tag
+        run: |
+          echo "The docker tag we got from the script is: $DOCKER_TAG"
