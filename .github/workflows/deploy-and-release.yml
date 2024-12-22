@@ -19,5 +19,4 @@ jobs:
     uses: ./.github/workflows/cd.yml
     needs: [determine-version, ci]
     with:
-      # docker_tag: ${{ needs.determine-version.outputs.docker_tag }}
-      docker_tag: 0.1
+      docker_tag: ${{ needs.determine-version.outputs.docker_tag }}

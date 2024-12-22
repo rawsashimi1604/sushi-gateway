@@ -21,5 +21,3 @@ jobs:
 
   deploy-docs:
     uses: ./.github/workflows/deploy-docs.yml
-    with:
-      docker_tag: ${{ inputs.docker_tag }}
