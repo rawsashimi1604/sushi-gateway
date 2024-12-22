@@ -1,8 +1,25 @@
 name: CD
-on: [workflow_call] # allow this workflow to be called from other workflows
+
+on:
+  workflow_call:
+    inputs:
+      docker_tag:
+        description: "Docker tag for the image"
+        required: true
+        type: string
+
 jobs:
   deploy-manager-docker:
-    uses: ./.github/workflows/deploy-amanger.yml
+    uses: ./.github/workflows/deploy-manager.yml
+    with:
+      docker_tag: ${{ inputs.docker_tag }}
 
   deploy-proxy-docker:
     uses: ./.github/workflows/deploy-proxy.yml
+    with:
+      docker_tag: ${{ inputs.docker_tag }}
+
+  deploy-docs:
+    uses: ./.github/workflows/deploy-docs.yml
+    with:
+      docker_tag: ${{ inputs.docker_tag }}

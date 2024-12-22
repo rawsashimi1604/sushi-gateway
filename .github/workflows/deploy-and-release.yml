@@ -1,0 +1,22 @@
+name: Deploy and Release new version
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+
+jobs:
+  determine-version:
+    uses: ./.github/workflows/determine-version.yml
+    with:
+      branch_name: ${{ github.ref_name }}
+
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  cd:
+    uses: ./.github/workflows/cd.yml
+    needs: [determine-version, ci]
+    with:
+      docker_tag: ${{ needs.determine-version.outputs.docker_tag }}

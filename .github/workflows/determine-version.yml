@@ -1,0 +1,33 @@
+# File: .github/workflows/determine-version.yml
+name: Determine Version
+
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        description: "Branch name to determine the version"
+        required: true
+        type: string
+    outputs:
+      docker_tag:
+        description: "The determined Docker image tag"
+        value: ${{ steps.determine.outputs.docker_tag }}
+
+jobs:
+  determine-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Run Python Script
+        id: determine
+        run: |
+          python .github/scripts/get_version.py
+        env:
+          BRANCH_NAME: ${{ inputs.branch_name }}
