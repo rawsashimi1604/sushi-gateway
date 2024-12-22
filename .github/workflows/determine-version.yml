@@ -29,8 +29,9 @@ jobs:
       - name: Run Python Script to Determine Docker Tag
         id: get-version
         run: |
-          docker_tag=$(python .github/scripts/get_version.py)
-          echo "DOCKER_TAG=$docker_tag" >> $GITHUB_ENV
+          python .github/scripts/get_version.py
+          echo "$DOCKER_TAG" >> $GITHUB_ENV
+          echo "$DOCKER_TAG" >> $GITHUB_OUTPUT
         env:
           BRANCH_NAME: ${{ inputs.branch_name }}
 
