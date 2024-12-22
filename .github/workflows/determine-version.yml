@@ -16,7 +16,7 @@ jobs:
   determine-version:
     runs-on: ubuntu-latest
     outputs:
-      docker_tag: ${{ steps.get-version.outputs.docker_tag }}
+      docker_tag: ${{ steps.get-version.outputs.DOCKER_TAG }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
