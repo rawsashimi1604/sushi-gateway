@@ -1,6 +1,10 @@
 name: Deploy and Release new version
 
 on:
+  pull_request:
+    branches:
+      - main
+      - release/*
   push:
     branches:
       - main
