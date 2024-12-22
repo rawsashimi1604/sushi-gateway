@@ -17,6 +17,7 @@ jobs:
 
   cd:
     uses: ./.github/workflows/cd.yml
+    secrets: inherit
     needs: [determine-version, ci]
     with:
       docker_tag: ${{ needs.determine-version.outputs.docker_tag }}

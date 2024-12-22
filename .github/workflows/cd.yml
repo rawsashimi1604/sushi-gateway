@@ -11,13 +11,16 @@ on:
 jobs:
   deploy-manager-docker:
     uses: ./.github/workflows/deploy-manager.yml
+    secrets: inherit
     with:
       docker_tag: ${{ inputs.docker_tag }}
 
   deploy-proxy-docker:
     uses: ./.github/workflows/deploy-proxy.yml
+    secrets: inherit
     with:
       docker_tag: ${{ inputs.docker_tag }}
 
   deploy-docs:
+    secrets: inherit
     uses: ./.github/workflows/deploy-docs.yml
