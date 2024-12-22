@@ -20,13 +20,15 @@ if __name__ == "__main__":
             raise EnvironmentError(
                 "BRANCH_NAME environment variable is not set.")
 
-        # Write the env variables to the file
+        # Write the docker tag to github environment and github outputs
         env_file = os.getenv('GITHUB_ENV')
         with open(env_file, "a") as file:
-            file.write(f"DOCKER_TAG={branch_name}")
+            file.write(f"DOCKER_TAG={get_docker_tag(branch_name)}")
 
-        docker_tag = get_docker_tag(branch_name)
-        os.environ["DOCKER_TAG"] = docker_tag
+        github_output_file = os.getenv('GITHUB_OUTPUT')
+        with open(github_output_file, "a") as file:
+            file.write(f"DOCKER_TAG={get_docker_tag(branch_name)}")
+
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
