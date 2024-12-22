@@ -35,4 +35,5 @@ jobs:
           BRANCH_NAME: ${{ inputs.branch_name }}
 
       - name: Log out Docker Tag
-        run: echo $DOCKER_TAG
+        run: |
+          echo "The docker tag we got from the script is: $DOCKER_TAG"
