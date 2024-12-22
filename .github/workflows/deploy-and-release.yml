@@ -14,6 +14,7 @@ jobs:
   determine-version:
     uses: ./.github/workflows/determine-version.yml
     with:
+      # Get the target branch name, we will use the target branch to determine the docker tag version.
       branch_name: ${{ github.base_ref }}
 
   ci:
