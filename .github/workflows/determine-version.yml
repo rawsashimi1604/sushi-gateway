@@ -30,8 +30,6 @@ jobs:
         id: get-version
         run: |
           python .github/scripts/get_version.py
-          echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
-          echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_OUTPUT
         env:
           BRANCH_NAME: ${{ inputs.branch_name }}
 
