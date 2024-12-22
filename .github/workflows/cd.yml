@@ -1,0 +1,8 @@
+name: CD
+on: [workflow_call] # allow this workflow to be called from other workflows
+jobs:
+  deploy-manager-docker:
+    uses: ./.github/workflows/deploy-amanger.yml
+
+  deploy-proxy-docker:
+    uses: ./.github/workflows/deploy-proxy.yml

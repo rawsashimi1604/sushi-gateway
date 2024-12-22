@@ -1,0 +1,11 @@
+name: CI
+on: [workflow_call] # allow this workflow to be called from other workflows
+jobs:
+  build-manager:
+    uses: ./.github/workflows/build-manager.yml
+
+  build-proxy:
+    uses: ./.github/workflows/build-proxy.yml
+
+  build-docs:
+    uses: ./.github/workflows/build-docs.yml

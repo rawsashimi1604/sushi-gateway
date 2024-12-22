@@ -1,0 +1,13 @@
+name: Staging Branch CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    branches:
+      - staging
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml

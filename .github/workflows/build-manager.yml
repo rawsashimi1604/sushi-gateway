@@ -1,0 +1,25 @@
+name: Manager Build
+
+on: [workflow_call] # allow this workflow to be called from other workflows
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: sushi-manager
+        run: |
+          npm install
+
+      - name: Build Sushi Manager using Vite
+        working-directory: sushi-manager
+        run: |
+          npm run build
