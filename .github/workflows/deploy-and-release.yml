@@ -27,3 +27,5 @@ jobs:
     # Only run this job when we push/PR to a release branch
     if: startsWith(github.ref, 'refs/heads/release/')
     needs: [cd]
+    with:
+      release_tag: v${{ needs.determine-version.outputs.docker_tag }}
