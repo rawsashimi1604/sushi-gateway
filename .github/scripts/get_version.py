@@ -19,6 +19,12 @@ if __name__ == "__main__":
         if not branch_name:
             raise EnvironmentError(
                 "BRANCH_NAME environment variable is not set.")
+
+        # Write the env variables to the file
+        env_file = os.getenv('GITHUB_ENV')
+        with open(env_file, "a") as file:
+            file.write(f"DOCKER_TAG={branch_name}")
+
         docker_tag = get_docker_tag(branch_name)
         os.environ["DOCKER_TAG"] = docker_tag
     except Exception as e:
