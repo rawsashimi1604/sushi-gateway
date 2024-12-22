@@ -6,7 +6,7 @@ on: [workflow_call]
 
 jobs:
   # Build job
-  build:
+  build-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

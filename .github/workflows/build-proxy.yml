@@ -2,7 +2,7 @@ name: Proxy Build
 on: [workflow_call] # allow this workflow to be called from other workflows
 
 jobs:
-  build:
+  build-proxy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
