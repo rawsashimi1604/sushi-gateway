@@ -26,6 +26,6 @@ jobs:
     uses: ./.github/workflows/release.yml
     # Only run this job when we push/PR to a release branch
     if: startsWith(github.ref, 'refs/heads/release/')
-    needs: [cd]
+    needs: [determine-version, cd]
     with:
       release_tag: v${{ needs.determine-version.outputs.docker_tag }}
