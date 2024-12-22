@@ -14,7 +14,7 @@ jobs:
   determine-version:
     uses: ./.github/workflows/determine-version.yml
     with:
-      branch_name: ${{ github.ref_name }}
+      branch_name: ${{ github.head_ref }}
 
   ci:
     uses: ./.github/workflows/ci.yml
