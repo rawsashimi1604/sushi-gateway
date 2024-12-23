@@ -1,6 +1,10 @@
 # Routing Overview
 
-Routing is a core feature of Sushi Gateway, enabling efficient handling of API requests by directing them to the appropriate backend services. This mechanism leverages a structured system of Services, Routes, and Upstreams to ensure precision, scalability, and reliability in API traffic management.
+Routing is a core feature of Sushi Gateway, directing API requests to the appropriate backend services. This mechanism leverages a structured system of Services, Routes, and Upstreams to ensure precision, scalability, and reliability in API traffic management.
+
+::: tip
+Click [here](./entities/index.md) to understand more about the different entities in Sushi Gateway.
+:::
 
 ## How Routing Works
 
@@ -156,4 +160,4 @@ The dynamic value is included in the forwarded request to the upstream:
 GET https://upstream-service/sushi/123
 ```
 
-Routing in Sushi Gateway ensures precise control over API traffic, allowing developers to create robust and efficient microservices architectures. For more details, refer to the **[Configuration Management Guide](../concepts/configuration/index.md)**.
+For more details, refer to the **[Configuration Management Guide](../concepts/configuration/index.md)**.
