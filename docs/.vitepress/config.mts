@@ -145,6 +145,10 @@ export default defineConfig({
         icon: "discord",
         link: "https://discord.gg/aPv4QhQ6",
       },
+      {
+        icon: "docker",
+        link: "https://hub.docker.com/repository/docker/rawsashimi/sushi-proxy",
+      },
     ],
   },
 });
