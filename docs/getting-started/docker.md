@@ -36,8 +36,8 @@ By using the `latest` tag, you can ensure you are using the latest release of Su
 :::
 
 ```bash
-docker pull rawsashimi/sushi-proxy:latest
-docker pull rawsashimi/sushi-manager:latest
+docker pull rawsashimi/sushi-proxy:0.1
+docker pull rawsashimi/sushi-manager:0.1
 ```
 
 ## Step 2: Create a Configuration File
@@ -207,7 +207,7 @@ docker run \
 -p 8008:8008 \
 -p 8081:8081 \
 -p 8443:8443 \
-rawsashimi/sushi-proxy:latest
+rawsashimi/sushi-proxy:0.1
 ```
 
 ## Step 9: Test the Proxy
@@ -253,7 +253,7 @@ Use the credentials specified above - `ADMIN_USER` and `ADMIN_PASSWORD` to login
 ```bash
 docker run --rm -p 5173:5173 \
 -e SUSHI_MANAGER_BACKEND_API_URL=http://localhost:8081 \
-rawsashimi/sushi-manager:latest
+rawsashimi/sushi-manager:0.1
 ```
 
 ## Next Steps
