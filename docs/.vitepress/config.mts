@@ -10,7 +10,7 @@ export default defineConfig({
     search: {
       provider: "local",
     },
-    logo: "/images/Logo.png",
+    logo: "/images/Logo_gradient.png",
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Home", link: "/" },
