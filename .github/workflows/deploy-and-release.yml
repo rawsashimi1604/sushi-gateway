@@ -1,7 +1,7 @@
 name: Deploy and Release new version
 
 on:
-  push:
+  pull_request:
     branches:
       - main
       - release/*
@@ -10,7 +10,8 @@ jobs:
   determine-version:
     uses: ./.github/workflows/determine-version.yml
     with:
-      branch_name: ${{ github.ref_name }}
+      # Get the target branch name, we will use the target branch to determine the docker tag version.
+      branch_name: ${{ github.base_ref }}
 
   ci:
     uses: ./.github/workflows/ci.yml

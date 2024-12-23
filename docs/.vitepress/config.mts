@@ -10,7 +10,7 @@ export default defineConfig({
     search: {
       provider: "local",
     },
-    logo: "/images/Logo.png",
+    logo: "/images/Logo_gradient.png",
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Home", link: "/" },
@@ -140,6 +140,14 @@ export default defineConfig({
       {
         icon: "github",
         link: "https://github.com/rawsashimi1604/sushi-gateway",
+      },
+      {
+        icon: "discord",
+        link: "https://discord.gg/aPv4QhQ6",
+      },
+      {
+        icon: "docker",
+        link: "https://hub.docker.com/repository/docker/rawsashimi/sushi-proxy",
       },
     ],
   },

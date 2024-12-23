@@ -22,7 +22,7 @@ jobs:
       docker_tag: ${{ inputs.docker_tag }}
 
   deploy-docs:
+    # We only want to deploy the docs when we PR to main
     secrets: inherit
-    # We only want to deploy the docs when we push to main
-    if: github.ref == 'refs/heads/main'
+    if: github.base_ref == 'main'
     uses: ./.github/workflows/deploy-docs.yml
