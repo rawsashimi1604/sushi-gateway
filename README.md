@@ -5,7 +5,7 @@
     <img 
       alt="Sushi Gateway Logo"
       src="./docs/public/images/LogoWithText_Light.png"
-      style="width: 320px;">
+      width="320">
   </picture>
 </a>
 
