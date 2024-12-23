@@ -23,3 +23,8 @@ jobs:
         working-directory: sushi-manager
         run: |
           npm run build
+
+      - name: Build Docker image
+        working-directory: sushi-manager
+        run: |
+          docker build -t sushi-manager:ci-pipeline .

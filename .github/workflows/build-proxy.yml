@@ -25,3 +25,8 @@ jobs:
         working-directory: ./sushi-proxy
         run: |
           go test -v ./...
+
+      - name: Build Docker image
+        working-directory: ./sushi-proxy
+        run: |
+          docker build -t sushi-proxy:ci-pipeline .
