@@ -1,10 +1,17 @@
 <a href="https://rawsashimi1604.github.io/sushi-gateway">
-  <img src="./docs/public/images/LogoWithText_Dark.png" alt="Sushi Gateway" style="width: 320px;" #gh-dark-mode-only>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/public/images/LogoWithText_Dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="./docs/public/images/LogoWithText_Light.png">
+    <img 
+      alt="Sushi Gateway Logo"
+      src="./docs/public/images/LogoWithText_Light.png"
+      style="width: 320px;">
+  </picture>
 </a>
 
-<a href="https://rawsashimi1604.github.io/sushi-gateway">
-  <img src="./docs/public/images/LogoWithText_Light.png" alt="Sushi Gateway" style="width: 320px;" #gh-light-mode-only>
-</a>
+<br/>
+<br/>
+<br/>
 
 ![Stars](https://img.shields.io/github/stars/rawsashimi1604/sushi-gateway?style=flat-square) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rawsashimi1604/sushi-gateway?style=flat-square) ![Docker Pulls](https://img.shields.io/docker/pulls/rawsashimi/sushi-proxy?style=flat-square) ![Version](https://img.shields.io/github/v/release/rawsashimi1604/sushi-gateway?color=green&label=Version&style=flat-square) ![License](https://img.shields.io/badge/License-Apache%202.0-blue?style=flat-square)
 
