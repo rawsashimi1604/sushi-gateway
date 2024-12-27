@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log"
@@ -25,7 +26,7 @@ func (serviceRepo *ServiceRepository) GetServiceByName(serviceName string) (*mod
 	var service model.Service
 	err := row.Scan(&service.Name, &service.BasePath, &service.Protocol, &service.LoadBalancingStrategy)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, fmt.Errorf("service %s not found", serviceName)
 		}
 		return nil, fmt.Errorf("failed to fetch service %s: %w", serviceName, err)
