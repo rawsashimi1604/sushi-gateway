@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
@@ -23,7 +24,7 @@ func (gatewayRepo *GatewayRepository) GetGatewayInfo() (model.Global, error) {
 	query := `SELECT name FROM gateway LIMIT 1`
 	err := gatewayRepo.db.QueryRow(query).Scan(&gatewayInfo.Name)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return model.Global{}, fmt.Errorf("no gateway information found")
 		}
 		return model.Global{}, fmt.Errorf("failed to fetch gateway information: %w", err)
