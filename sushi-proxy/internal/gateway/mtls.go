@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"crypto/x509"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -27,6 +28,9 @@ func NewMtlsPlugin(config map[string]interface{}) *Plugin {
 }
 
 func (plugin MtlsPlugin) Validate() error {
+	if GlobalAppConfig.CACertPath == "" {
+		return fmt.Errorf("CA_CERT_PATH not set, no certificates found for mtls verification")
+	}
 	return nil
 }
 
