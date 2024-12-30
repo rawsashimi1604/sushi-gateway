@@ -1,12 +1,14 @@
 package gateway
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strings"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 )
 
 type BotProtectionPlugin struct {
@@ -20,7 +22,37 @@ func NewBotProtectionPlugin(config map[string]interface{}) *Plugin {
 		Handler: BotProtectionPlugin{
 			config: config,
 		},
+		Validator: BotProtectionPlugin{
+			config: config,
+		},
 	}
+}
+
+func (plugin BotProtectionPlugin) Validate() error {
+	blacklist, exists := plugin.config["blacklist"]
+	if !exists {
+		return fmt.Errorf("blacklist configuration is required")
+	}
+
+	blacklistArr, ok := blacklist.([]interface{})
+	if !ok {
+		return fmt.Errorf("blacklist must be an array of strings")
+	}
+
+	if len(blacklistArr) == 0 {
+		return fmt.Errorf("blacklist cannot be empty")
+	}
+
+	for _, bot := range blacklistArr {
+		if _, ok := bot.(string); !ok {
+			return fmt.Errorf("blacklist entries must be strings")
+		}
+		if bot.(string) == "" {
+			return fmt.Errorf("blacklist entries cannot be empty strings")
+		}
+	}
+
+	return nil
 }
 
 func (plugin BotProtectionPlugin) Execute(next http.Handler) http.Handler {

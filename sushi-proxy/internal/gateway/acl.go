@@ -106,27 +106,14 @@ func (plugin AclPlugin) Execute(next http.Handler) http.Handler {
 	})
 }
 
-func ValidateACLPlugin(config map[string]interface{}) {
-	// TODO: complete
-}
-
 func (plugin AclPlugin) isWhitelisted(ip string) bool {
-	if ip == "" {
-		return false
-	}
-
 	config := plugin.config
 	whitelist, exists := config["whitelist"]
 	if !exists {
 		return false
 	}
 
-	whitelistArr, ok := whitelist.([]interface{})
-	if !ok {
-		return false
-	}
-
-	for _, whitelistedIP := range util.ToStringSlice(whitelistArr) {
+	for _, whitelistedIP := range util.ToStringSlice(whitelist.([]interface{})) {
 		if ip == whitelistedIP {
 			return true
 		}
@@ -135,9 +122,6 @@ func (plugin AclPlugin) isWhitelisted(ip string) bool {
 }
 
 func (plugin AclPlugin) isBlacklisted(ip string) bool {
-	if ip == "" {
-		return false
-	}
 
 	config := plugin.config
 	blacklist, exists := config["blacklist"]
@@ -145,12 +129,7 @@ func (plugin AclPlugin) isBlacklisted(ip string) bool {
 		return false
 	}
 
-	blacklistArr, ok := blacklist.([]interface{})
-	if !ok {
-		return false
-	}
-
-	for _, blacklistedIP := range util.ToStringSlice(blacklistArr) {
+	for _, blacklistedIP := range util.ToStringSlice(blacklist.([]interface{})) {
 		if ip == blacklistedIP {
 			return true
 		}
