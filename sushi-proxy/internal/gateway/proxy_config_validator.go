@@ -13,7 +13,7 @@ func ValidateAndParseSchema(raw []byte) (*model.ProxyConfig, error) {
 	var config model.ProxyConfig
 	err := json.Unmarshal(raw, &config)
 	if err != nil {
-		slog.Info("Error parsing gateway file", err)
+		slog.Info("Error parsing gateway file", "error", err)
 		return nil, err
 	}
 

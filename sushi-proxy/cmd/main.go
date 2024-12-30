@@ -50,7 +50,7 @@ func main() {
 	go func() {
 		slog.Info("Started sushi-proxy_pass http server on port: " + constant.PORT_HTTP)
 		if err := http.ListenAndServe(":"+constant.PORT_HTTP, appRouter); err != nil {
-			slog.Info("Failed to start HTTP server: %v", err)
+			slog.Info("Failed to start HTTP server", "error", err)
 			panic(err)
 		}
 	}()
@@ -98,7 +98,7 @@ func main() {
 
 		slog.Info("Started another API server on port: " + constant.PORT_ADMIN_API)
 		if err := http.ListenAndServe(":"+constant.PORT_ADMIN_API, adminApiRouter); err != nil {
-			slog.Info("Failed to start new API server: %v", err)
+			slog.Info("Failed to start new API server", "error", err)
 			log.Fatal(err)
 		}
 	}()
