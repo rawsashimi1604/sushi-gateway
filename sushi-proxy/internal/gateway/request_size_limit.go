@@ -54,13 +54,13 @@ func (plugin RequestSizeLimitPlugin) checkRequestLength(r *http.Request) *model.
 }
 
 func (plugin RequestSizeLimitPlugin) Validate() error {
-	maxSize, ok := plugin.config["max_size"].(float64)
+	maxSize, ok := plugin.config["max_payload_size"].(float64)
 	if !ok {
-		return fmt.Errorf("max_size must be a number")
+		return fmt.Errorf("max_payload_size must be a number")
 	}
 
 	if maxSize <= 0 {
-		return fmt.Errorf("max_size must be greater than 0")
+		return fmt.Errorf("max_payload_size must be greater than 0")
 	}
 
 	return nil

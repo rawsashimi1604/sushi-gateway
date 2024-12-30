@@ -56,7 +56,7 @@ func TestRequestSizeLimitValidation(t *testing.T) {
 		{
 			name: "valid config",
 			config: map[string]interface{}{
-				"max_size": float64(1024 * 1024), // 1MB
+				"max_payload_size": float64(1024 * 1024), // 1MB
 			},
 			expectError: false,
 		},
@@ -68,21 +68,21 @@ func TestRequestSizeLimitValidation(t *testing.T) {
 		{
 			name: "invalid max_size type",
 			config: map[string]interface{}{
-				"max_size": "1024",
+				"max_payload_size": "1024",
 			},
 			expectError: true,
 		},
 		{
 			name: "zero max_size",
 			config: map[string]interface{}{
-				"max_size": float64(0),
+				"max_payload_size": float64(0),
 			},
 			expectError: true,
 		},
 		{
 			name: "negative max_size",
 			config: map[string]interface{}{
-				"max_size": float64(-1024),
+				"max_payload_size": float64(-1024),
 			},
 			expectError: true,
 		},
