@@ -1,11 +1,13 @@
 package gateway
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 
 	"github.com/joho/godotenv"
 )
@@ -30,27 +32,45 @@ var GlobalAppConfig *AppConfig
 
 func LoadGlobalConfig() *AppConfig {
 	slog.Info("Loading global app gateway")
-	// TODO: should be able to load from system environment vars too.
-	// check if it works if use dockerfile to set env
 	godotenv.Load()
 
 	errors := make([]string, 0)
 
+	// Get certificate paths from environment
 	serverCertPath := os.Getenv("SERVER_CERT_PATH")
-	if serverCertPath == "" {
-		errors = append(errors, "SERVER_CERT_PATH is required.")
-	}
-
 	serverKeyPath := os.Getenv("SERVER_KEY_PATH")
-	if serverKeyPath == "" {
-		errors = append(errors, "SERVER_KEY_PATH is required.")
+
+	// Check if server cert paths are provided
+	hasServerCert := serverCertPath != ""
+	hasServerKey := serverKeyPath != ""
+
+	// If any server cert path is provided, both must be provided
+	if hasServerCert || hasServerKey {
+		// When both server cert and key is provided, it is loaded into our configuration,
+		// else it is an user configuration error as they did not pass either cert or key
+		if !hasServerCert {
+			errors = append(errors, "if you want to use your own certificates, SERVER_CERT_PATH is required when SERVER_KEY_PATH is provided. for auto generating the certificates, leave both SERVER_CERT_PATH and SERVER_KEY_PATH empty")
+		}
+		if !hasServerKey {
+			errors = append(errors, "if you want to use your own certificates, SERVER_KEY_PATH is required when SERVER_CERT_PATH is provided. for auto generating the certificates, leave both SERVER_CERT_PATH and SERVER_KEY_PATH empty")
+		}
+	} else {
+		// If user did not spsecify both the server cert or key, we generate the self signed cert in the gateway on load.
+		slog.Info("Since no certs were found, auto generating self signed certs for the TLS server...")
+		if err := GenerateSelfSignedCerts("."); err != nil {
+			slog.Error("Failed to generate self-signed certificates", "error", err)
+			panic("Failed to generate self-signed certificates")
+		}
+
+		// Set certificate paths
+		serverCertPath = filepath.Join(".", "server.crt")
+		serverKeyPath = filepath.Join(".", "server.key")
 	}
 
+	// Optional, we only need CA Certs for MTLS communications
 	caCertPath := os.Getenv("CA_CERT_PATH")
-	if caCertPath == "" {
-		errors = append(errors, "CA_CERT_PATH is required.")
-	}
 
+	// Admin User and Password is used for ADMIN API credentials
 	adminUser := os.Getenv("ADMIN_USER")
 	if adminUser == "" {
 		errors = append(errors, "ADMIN_USER is required.")
@@ -61,6 +81,7 @@ func LoadGlobalConfig() *AppConfig {
 		errors = append(errors, "ADMIN_PASSWORD is required.")
 	}
 
+	// Persistence Config must be "db" or "dbless", it specifies the persistence mode for the gateway.
 	persistenceConfig := os.Getenv("PERSISTENCE_CONFIG")
 	if persistenceConfig == "" {
 		errors = append(errors, "PERSISTENCE_CONFIG is required.")
@@ -71,6 +92,7 @@ func LoadGlobalConfig() *AppConfig {
 			"PERSISTENCE_CONFIG must be \"db\" or \"dbless\".")
 	}
 
+	// Sync Interval defines how often we sync with the database in seconds. Only required for db mode
 	var syncIntervalInteger int
 	persistenceSyncInterval := os.Getenv("PERSISTENCE_SYNC_INTERVAL")
 	if persistenceConfig == constant.DB_MODE {
@@ -85,11 +107,7 @@ func LoadGlobalConfig() *AppConfig {
 		}
 	}
 
-	configFilePath := os.Getenv("CONFIG_FILE_PATH")
-	if persistenceConfig == constant.DBLESS_MODE && configFilePath == "" {
-		errors = append(errors, "CONFIG_FILE_PATH is required.")
-	}
-
+	// Defines database connection variables, only needed in db mode.
 	dbConnectionHost := os.Getenv("DB_CONNECTION_HOST")
 	dbConnectionName := os.Getenv("DB_CONNECTION_NAME")
 	dbConnectionUser := os.Getenv("DB_CONNECTION_USER")
@@ -114,6 +132,19 @@ func LoadGlobalConfig() *AppConfig {
 		}
 	}
 
+	// Defines the path to our declarative configuration file, only required in dbless mode.
+	configFilePath := os.Getenv("CONFIG_FILE_PATH")
+	if persistenceConfig == constant.DBLESS_MODE && configFilePath == "" {
+		errors = append(errors, "CONFIG_FILE_PATH is required.")
+	}
+
+	if len(errors) > 0 {
+		for _, err := range errors {
+			slog.Error(err)
+		}
+		panic("Errors detected when loading environment configuration...")
+	}
+
 	config := &AppConfig{
 		ServerCertPath:          serverCertPath,
 		ServerKeyPath:           serverKeyPath,
@@ -128,13 +159,6 @@ func LoadGlobalConfig() *AppConfig {
 		DbConnectionUser:        dbConnectionUser,
 		DbConnectionPass:        dbConnectionPass,
 		DbConnectionPort:        dbConnectionPort,
-	}
-
-	if len(errors) > 0 {
-		for _, err := range errors {
-			slog.Error(err)
-		}
-		panic("Errors detected when loading environment configuration...")
 	}
 
 	return config
