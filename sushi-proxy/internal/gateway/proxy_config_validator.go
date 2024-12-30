@@ -3,17 +3,17 @@ package gateway
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
+
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/validator"
-	"log/slog"
 )
 
 func ValidateAndParseSchema(raw []byte) (*model.ProxyConfig, error) {
 	var config model.ProxyConfig
 	err := json.Unmarshal(raw, &config)
 	if err != nil {
-		slog.Info("Error parsing gateway file", err)
+		slog.Info("Error parsing gateway file", "error", err)
 		return nil, err
 	}
 
@@ -50,7 +50,7 @@ func validateGeneralConfigs(config *model.ProxyConfig) error {
 func validatePlugins(config *model.ProxyConfig) error {
 	// Aggregate plugins in the gateway
 	var plugins []model.PluginConfig
-	pluginValidator := validator.NewPluginValidator()
+	pluginValidator := NewPluginValidator()
 
 	for _, globalPlugin := range config.Global.Plugins {
 		plugins = append(plugins, globalPlugin)
@@ -82,7 +82,7 @@ func validatePlugins(config *model.ProxyConfig) error {
 func validateServices(config *model.ProxyConfig) error {
 	var serviceNames []string
 	var servicePaths []string
-	serviceValidator := validator.NewServiceValidator()
+	serviceValidator := NewServiceValidator()
 
 	for _, service := range config.Services {
 		// Name
@@ -111,7 +111,7 @@ func validateRoutes(config *model.ProxyConfig) error {
 	for _, service := range config.Services {
 		var routePaths []string
 		var routeNames []string
-		routeValidator := validator.NewRouteValidator()
+		routeValidator := NewRouteValidator()
 
 		for _, route := range service.Routes {
 			// Name

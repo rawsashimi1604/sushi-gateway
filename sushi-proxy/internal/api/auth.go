@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/base64"
+	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
@@ -153,7 +154,7 @@ func ProtectRouteUsingJWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		cookie, err := req.Cookie("token")
 		if err != nil {
-			if err == http.ErrNoCookie {
+			if errors.Is(err, http.ErrNoCookie) {
 				model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH", "Invalid token").WriteJSONResponse(w)
 				return
 			}

@@ -2,13 +2,13 @@ package api
 
 import (
 	"encoding/json"
+	"log/slog"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/validator"
-	"log/slog"
-	"net/http"
 )
 
 type RouteController struct {
@@ -110,7 +110,7 @@ func (r *RouteController) AddRoute() http.HandlerFunc {
 		uuidGenerator.GenerateUUIDForRoute(&routeDTO.Route)
 
 		// Generic route validations
-		routeValidator := validator.NewRouteValidator()
+		routeValidator := gateway.NewRouteValidator()
 		if err := routeValidator.ValidateRoute(routeDTO.Route); err != nil {
 			slog.Info("service validation failed")
 			httperr := &model.HttpError{

@@ -48,7 +48,7 @@
       {
         "id": "plugin_6",
         "name": "jwt",
-        "enabled": true,
+        "enabled": false,
         "config": {
           "alg": "HS256",
           "iss": "someIssuerKey",
@@ -58,16 +58,15 @@
       {
         "id": "plugin_7",
         "name": "acl",
-        "enabled": true,
+        "enabled": false,
         "config": {
-          "whitelist": ["127.0.0.1", "127.0.0.2"],
-          "blacklist": ["192.168.0.1"]
+          "whitelist": ["127.0.0.1", "127.0.0.2"]
         }
       },
       {
         "id": "plugin_8",
         "name": "bot_protection",
-        "enabled": true,
+        "enabled": false,
         "config": {
           "blacklist": ["googlebot", "bingbot", "yahoobot"]
         }
@@ -75,7 +74,7 @@
       {
         "id": "plugin_9",
         "name": "request_size_limit",
-        "enabled": true,
+        "enabled": false,
         "config": {
           "max_payload_size": 10
         }
@@ -83,7 +82,7 @@
       {
         "id": "plugin_10",
         "name": "cors",
-        "enabled": true,
+        "enabled": false,
         "config": {
           "allow_origins": ["*"],
           "allow_methods": ["GET", "POST"],
@@ -103,9 +102,7 @@
       "base_path": "/swapi",
       "protocol": "https",
       "load_balancing_strategy": "round_robin",
-      "upstreams": [
-            { "id": "upstream_1", "host": "swapi.dev", "port": 443 }
-      ],
+      "upstreams": [{ "id": "upstream_1", "host": "swapi.dev", "port": 443 }],
       "plugins": [],
       "routes": [
         {

@@ -1,10 +1,11 @@
 package gateway
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 func handleRateLimitRequest(t *testing.T, ip string) *httptest.ResponseRecorder {
@@ -64,18 +65,151 @@ func TestRateLimitPluginBypass(t *testing.T) {
 	}
 }
 
+func TestRateLimitValidation(t *testing.T) {
+	mockProxyConfig := createMockProxyConfig(t)
+
+	tests := []struct {
+		name        string
+		config      map[string]interface{}
+		expectError bool
+	}{
+		{
+			name: "valid config",
+			config: map[string]interface{}{
+				"limit_second": float64(10),
+				"limit_min":    float64(10),
+				"limit_hour":   float64(10),
+			},
+			expectError: false,
+		},
+		{
+			name: "missing limit_second",
+			config: map[string]interface{}{
+				"limit_min":  float64(10),
+				"limit_hour": float64(10),
+			},
+			expectError: true,
+		},
+		{
+			name: "missing limit_min",
+			config: map[string]interface{}{
+				"limit_second": float64(10),
+				"limit_hour":   float64(10),
+			},
+			expectError: true,
+		},
+		{
+			name: "missing limit_hour",
+			config: map[string]interface{}{
+				"limit_second": float64(10),
+				"limit_min":    float64(10),
+			},
+			expectError: true,
+		},
+		{
+			name: "invalid limit_second type",
+			config: map[string]interface{}{
+				"limit_second": "10",
+				"limit_min":    float64(10),
+				"limit_hour":   float64(10),
+			},
+			expectError: true,
+		},
+		{
+			name: "invalid limit_min type",
+			config: map[string]interface{}{
+				"limit_second": float64(10),
+				"limit_min":    "10",
+				"limit_hour":   float64(10),
+			},
+			expectError: true,
+		},
+		{
+			name: "invalid limit_hour type",
+			config: map[string]interface{}{
+				"limit_second": float64(10),
+				"limit_min":    float64(10),
+				"limit_hour":   "10",
+			},
+			expectError: true,
+		},
+		{
+			name: "zero limit_second",
+			config: map[string]interface{}{
+				"limit_second": float64(0),
+				"limit_min":    float64(10),
+				"limit_hour":   float64(10),
+			},
+			expectError: true,
+		},
+		{
+			name: "zero limit_min",
+			config: map[string]interface{}{
+				"limit_second": float64(10),
+				"limit_min":    float64(0),
+				"limit_hour":   float64(10),
+			},
+			expectError: true,
+		},
+		{
+			name: "zero limit_hour",
+			config: map[string]interface{}{
+				"limit_second": float64(10),
+				"limit_min":    float64(10),
+				"limit_hour":   float64(0),
+			},
+			expectError: true,
+		},
+		{
+			name: "negative limit_second",
+			config: map[string]interface{}{
+				"limit_second": float64(-10),
+				"limit_min":    float64(10),
+				"limit_hour":   float64(10),
+			},
+			expectError: true,
+		},
+		{
+			name: "negative limit_min",
+			config: map[string]interface{}{
+				"limit_second": float64(10),
+				"limit_min":    float64(-10),
+				"limit_hour":   float64(10),
+			},
+			expectError: true,
+		},
+		{
+			name: "negative limit_hour",
+			config: map[string]interface{}{
+				"limit_second": float64(10),
+				"limit_min":    float64(10),
+				"limit_hour":   float64(-10),
+			},
+			expectError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			pluginConfig, err := CreatePluginConfigInput(tt.config)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			plugin := NewRateLimitPlugin(pluginConfig, mockProxyConfig)
+			err = plugin.Validator.Validate()
+
+			if tt.expectError && err == nil {
+				t.Error("expected error but got none")
+			}
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+		})
+	}
+}
+
 func createMockProxyConfig(t *testing.T) *model.ProxyConfig {
-
-	//rateLimitPlugin, err := CreatePluginConfigInput(map[string]interface{}{
-	//	"name":    "rate_limit",
-	//	"enabled": true,
-	//	"data": map[string]interface{}{
-	//		"limit_second": 10,
-	//		"limit_min":    10,
-	//		"limit_hour":   10,
-	//	},
-	//})
-
 	rateLimitPlugin := model.PluginConfig{
 		Id:      "someId",
 		Name:    "rate_limit",
@@ -86,9 +220,6 @@ func createMockProxyConfig(t *testing.T) *model.ProxyConfig {
 			"limit_hour":   10,
 		},
 	}
-	//if err != nil {
-	//	t.Fatal(err)
-	//}
 
 	service := model.Service{
 		Name:                  "mockService",

@@ -2,13 +2,14 @@ package gateway
 
 import (
 	"database/sql"
-	"github.com/fsnotify/fsnotify"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"os"
 	"sync"
 	"time"
+
+	"github.com/fsnotify/fsnotify"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 // TODO: cron job to sync config in the case of db configuration.
@@ -24,14 +25,14 @@ func LoadProxyConfigFromDb(database *sql.DB) {
 	serviceRepo := db.NewServiceRepository(database)
 	services, err := serviceRepo.GetAllServices()
 	if err != nil {
-		slog.Info("Error reading services from database during proxy config sync", err)
+		slog.Info("Error reading services from database during proxy config sync", "error", err)
 		// We don't terminate here as we can still run with the existing cached config.
 	}
 
 	gatewayRepo := db.NewGatewayRepository(database)
 	gatewayGlobalConfig, err := gatewayRepo.GetGatewayInfo()
 	if err != nil {
-		slog.Info("Error reading gateway global config from database during proxy config sync", err)
+		slog.Info("Error reading gateway global config from database during proxy config sync", "error", err)
 		// We don't terminate here as we can still run with the existing cached config.
 	}
 
@@ -47,7 +48,7 @@ func LoadProxyConfigFromConfigFile(filePath string) {
 	slog.Info("Loading proxy_pass gateway from config file.")
 	configFile, err := os.ReadFile(filePath)
 	if err != nil {
-		slog.Info("Error reading gateway file", err)
+		slog.Info("Error reading gateway file", "error", err)
 		panic("Error reading gateway file")
 	}
 
@@ -60,7 +61,7 @@ func LoadProxyConfigFromConfigFile(filePath string) {
 
 	err = ValidateConfig(config)
 	if err != nil {
-		slog.Info(err.Error())
+		slog.Info(err.Error(), "error", err)
 		panic("Error validating gateway file")
 	}
 
@@ -94,7 +95,7 @@ func StartProxyConfigCronJob(database *sql.DB, interval int) {
 func WatchConfigFile(filePath string) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		slog.Info("Error creating watcher: %v", err)
+		slog.Info("Error creating watcher", "error", err)
 		panic("Error creating watcher")
 	}
 	defer watcher.Close()
@@ -115,7 +116,7 @@ func WatchConfigFile(filePath string) {
 				if !ok {
 					return
 				}
-				slog.Info("Filesystem watcher error: " + err.Error())
+				slog.Info("Filesystem watcher error", "error", err.Error())
 				panic("Filesystem watcher error")
 			}
 		}
@@ -123,7 +124,7 @@ func WatchConfigFile(filePath string) {
 
 	err = watcher.Add(filePath)
 	if err != nil {
-		slog.Info("Error adding watcher to file: %v", err)
+		slog.Info("Error adding watcher to file", "error", err)
 		panic("Error adding watcher to file")
 	}
 	slog.Info("Started watching gateway file: " + filePath)

@@ -61,6 +61,21 @@ We ❤️ contributions! Check out the [Contributing Guide](CONTRIBUTING.md) to 
 
 [sushi-url]: https://rawsashimi1604.github.io/sushi-gateway/
 
+## Building Sushi Gateway
+
+- Ensure you have Go installed with at least version 1.22.
+- Look up the [Quick Start](https://rawsashimi1604.github.io/sushi-gateway/getting-started/docker.html) guide to get the config file, certs and keys required for the gateway to run.
+- Create the certs and keys required for the gateway to run.
+- Create the config file for the gateway to run.
+- Build and run the gateway using the following commands:
+  - `go run cmd/main.go`
+- To run tests use the following command:
+  - `go test ./...`
+  - Some tests require a database to be running, if you wish to skip the tests that require a database to be running, use the following command:
+    - `SKIP_INTEGRATION_TESTS=true go test ./...`
+- Use the `docker-compose.yml` file to quickly start up dev servers to test proxy
+  - `docker compose up -d`
+
 ## Start a database
 
 create a postgres database.

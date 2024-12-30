@@ -67,3 +67,49 @@ func TestBasicAuthFail(t *testing.T) {
 		t.Errorf("Should get WWW-Authenticate header when basic auth is failing")
 	}
 }
+
+func TestBasicAuthPluginValidation(t *testing.T) {
+	tests := []struct {
+		name      string
+		config    map[string]interface{}
+		expectErr bool
+	}{
+		{
+			name: "Valid configuration",
+			config: map[string]interface{}{
+				"username": "validUser",
+				"password": "validPass",
+			},
+			expectErr: false,
+		},
+		{
+			name: "Missing username",
+			config: map[string]interface{}{
+				"password": "validPass",
+			},
+			expectErr: true,
+		},
+		{
+			name: "Missing password",
+			config: map[string]interface{}{
+				"username": "validUser",
+			},
+			expectErr: true,
+		},
+		{
+			name:      "Missing both username and password",
+			config:    map[string]interface{}{},
+			expectErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			plugin := BasicAuthPlugin{config: tt.config}
+			err := plugin.Validate()
+			if (err != nil) != tt.expectErr {
+				t.Errorf("expected error: %v, got: %v", tt.expectErr, err)
+			}
+		})
+	}
+}
