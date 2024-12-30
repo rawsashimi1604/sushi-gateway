@@ -13,7 +13,7 @@
 *.dylib
 
 # Vitepress docs
-docs/.vitepress/cache
+docs/.vitepress/cache/
 
 # VS_STORE
 .VS_Store/
