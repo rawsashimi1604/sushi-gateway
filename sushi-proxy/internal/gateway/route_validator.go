@@ -1,11 +1,12 @@
-package validator
+package gateway
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
-	"strings"
 )
 
 type RouteValidator struct {

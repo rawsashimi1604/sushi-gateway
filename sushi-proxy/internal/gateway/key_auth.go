@@ -1,10 +1,12 @@
 package gateway
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"fmt"
 	"log/slog"
 	"net/http"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 type KeyAuthPlugin struct {
@@ -18,7 +20,18 @@ func NewKeyAuthPlugin(config map[string]interface{}) *Plugin {
 		Handler: KeyAuthPlugin{
 			config: config,
 		},
+		Validator: KeyAuthPlugin{
+			config: config,
+		},
 	}
+}
+
+func (plugin KeyAuthPlugin) Validate() error {
+	key, ok := plugin.config["key"].(string)
+	if !ok || key == "" {
+		return fmt.Errorf("key must be a non-empty string")
+	}
+	return nil
 }
 
 func (plugin KeyAuthPlugin) Execute(next http.Handler) http.Handler {

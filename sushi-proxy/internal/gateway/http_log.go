@@ -3,19 +3,21 @@ package gateway
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"log/slog"
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
-	"log/slog"
-	"net/http"
-	"time"
 )
 
 type HttpLogPlugin struct {
 	config map[string]interface{}
 }
 
-// TODO: parse log gateway
 // TODO: send logs in batches (batch processing).
 // TODO: log the response as well.
 type HttpLogConfig struct {
@@ -31,7 +33,36 @@ func NewHttpLogPlugin(config map[string]interface{}) *Plugin {
 		Handler: HttpLogPlugin{
 			config: config,
 		},
+		Validator: HttpLogPlugin{
+			config: config,
+		},
 	}
+}
+
+func (plugin HttpLogPlugin) Validate() error {
+	httpEndpoint, ok := plugin.config["http_endpoint"].(string)
+	if !ok || httpEndpoint == "" {
+		return fmt.Errorf("http_endpoint must be a non-empty string")
+	}
+
+	method, ok := plugin.config["method"].(string)
+	if !ok || method == "" {
+		return fmt.Errorf("method must be a non-empty string")
+	}
+	method = strings.ToUpper(method)
+	if !util.SliceContainsString([]string{"GET", "POST", "PUT", "PATCH"}, method) {
+		return fmt.Errorf("method must be one of: GET, POST, PUT, PATCH")
+	}
+
+	contentType, ok := plugin.config["content_type"].(string)
+	if !ok || contentType == "" {
+		return fmt.Errorf("content_type must be a non-empty string")
+	}
+	if !strings.HasPrefix(strings.ToLower(contentType), "application/") {
+		return fmt.Errorf("content_type must be an application type (e.g., application/json)")
+	}
+
+	return nil
 }
 
 func (plugin HttpLogPlugin) Execute(next http.Handler) http.Handler {

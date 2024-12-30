@@ -2,12 +2,14 @@ package gateway
 
 import (
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 	"strings"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 )
 
 type JwtPlugin struct {
@@ -27,7 +29,34 @@ func NewJwtPlugin(config map[string]interface{}) *Plugin {
 		Handler: JwtPlugin{
 			config: config,
 		},
+		Validator: JwtPlugin{
+			config: config,
+		},
 	}
+}
+
+func (plugin JwtPlugin) Validate() error {
+	alg, ok := plugin.config["alg"].(string)
+	if !ok || alg == "" {
+		return fmt.Errorf("alg must be a non-empty string")
+	}
+
+	// Only HS_256 is supported for now
+	if !util.SliceContainsString([]string{constant.HS_256}, alg) {
+		return fmt.Errorf("alg must be one of: HS256")
+	}
+
+	iss, ok := plugin.config["iss"].(string)
+	if !ok || iss == "" {
+		return fmt.Errorf("iss (issuer) must be a non-empty string")
+	}
+
+	secret, ok := plugin.config["secret"].(string)
+	if !ok || secret == "" {
+		return fmt.Errorf("secret must be a non-empty string")
+	}
+
+	return nil
 }
 
 func (plugin JwtPlugin) Execute(next http.Handler) http.Handler {
