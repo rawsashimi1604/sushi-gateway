@@ -2,13 +2,14 @@ package main
 
 import (
 	"crypto/tls"
+	"log"
+	"log/slog"
+	"net/http"
+
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/api"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
-	"log"
-	"log/slog"
-	"net/http"
 )
 
 func main() {
