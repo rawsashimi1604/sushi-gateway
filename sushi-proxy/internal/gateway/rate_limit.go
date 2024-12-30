@@ -196,6 +196,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 			err := model.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_SECOND_EXCEEDED",
 				"Rate limit exceeded for "+mapEntry)
+			err.WriteLogMessage()
 			err.WriteJSONResponse(w)
 			return
 		}
@@ -204,6 +205,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 			err := model.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_MINUTE_EXCEEDED",
 				"Rate limit exceeded for "+mapEntry)
+			err.WriteLogMessage()
 			err.WriteJSONResponse(w)
 			return
 		}
@@ -212,6 +214,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 			err := model.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_HOUR_EXCEEDED",
 				"Rate limit exceeded for "+mapEntry)
+			err.WriteLogMessage()
 			err.WriteJSONResponse(w)
 			return
 		}
