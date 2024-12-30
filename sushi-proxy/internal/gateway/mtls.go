@@ -17,8 +17,17 @@ func NewMtlsPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_MTLS,
 		Priority: 1600,
-		Handler:  MtlsPlugin{config: config},
+		Handler: MtlsPlugin{
+			config: config,
+		},
+		Validator: MtlsPlugin{
+			config: config,
+		},
 	}
+}
+
+func (plugin MtlsPlugin) Validate() error {
+	return nil
 }
 
 func (plugin MtlsPlugin) Execute(next http.Handler) http.Handler {
@@ -48,3 +57,5 @@ func (plugin MtlsPlugin) Execute(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+func (plugin MtlsPlugin) Validate() error {
