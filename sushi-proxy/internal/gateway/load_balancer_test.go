@@ -1,50 +1,62 @@
 package gateway
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"testing"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
-// Write test to test load balancer given a service with multiple upstreams
-
 func TestRoundRobin(t *testing.T) {
+	// Reset the load balancer state
 	Reset()
 	lb := NewLoadBalancer()
+
+	// Create a test service with round robin strategy
 	service := model.Service{
-		Name: "test",
+		Name:                  "test-service",
+		Protocol:              "http",
+		BasePath:              "/test",
+		LoadBalancingStrategy: model.RoundRobin,
 		Upstreams: []model.Upstream{
 			{
+				Id:   "upstream1",
 				Host: "localhost",
 				Port: 8080,
 			},
 			{
+				Id:   "upstream2",
 				Host: "localhost",
 				Port: 8081,
 			},
 			{
+				Id:   "upstream3",
 				Host: "localhost",
 				Port: 8082,
 			},
 		},
 	}
-	firstReq := lb.handleRoundRobin(service)
-	secondReq := lb.handleRoundRobin(service)
-	thirdReq := lb.handleRoundRobin(service)
 
-	if firstReq != 0 {
-		t.Errorf("Expected 0, got %d", firstReq)
-	}
-	if secondReq != 1 {
-		t.Errorf("Expected 1, got %d", secondReq)
-	}
-	if thirdReq != 2 {
-		t.Errorf("Expected 2, got %d", thirdReq)
+	// First round of requests should cycle through all upstreams
+	firstIndex := lb.GetNextUpstream(service)
+	if firstIndex != 0 {
+		t.Errorf("First request: expected upstream index 0, got %d", firstIndex)
 	}
 
-	// Try the load balancer again it should round robin to first
-	fourthReq := lb.handleRoundRobin(service)
-	if fourthReq != 0 {
-		t.Errorf("Expected 0, got %d", fourthReq)
+	secondIndex := lb.GetNextUpstream(service)
+	if secondIndex != 1 {
+		t.Errorf("Second request: expected upstream index 1, got %d", secondIndex)
 	}
+
+	thirdIndex := lb.GetNextUpstream(service)
+	if thirdIndex != 2 {
+		t.Errorf("Third request: expected upstream index 2, got %d", thirdIndex)
+	}
+
+	// Fourth request should cycle back to the first upstream
+	fourthIndex := lb.GetNextUpstream(service)
+	if fourthIndex != 0 {
+		t.Errorf("Fourth request: expected upstream index 0, got %d", fourthIndex)
+	}
+
 	Reset()
 }

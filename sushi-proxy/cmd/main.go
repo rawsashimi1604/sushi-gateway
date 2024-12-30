@@ -2,13 +2,14 @@ package main
 
 import (
 	"crypto/tls"
+	"log"
+	"log/slog"
+	"net/http"
+
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/api"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
-	"log"
-	"log/slog"
-	"net/http"
 )
 
 func main() {
@@ -49,7 +50,7 @@ func main() {
 	go func() {
 		slog.Info("Started sushi-proxy_pass http server on port: " + constant.PORT_HTTP)
 		if err := http.ListenAndServe(":"+constant.PORT_HTTP, appRouter); err != nil {
-			slog.Info("Failed to start HTTP server: %v", err)
+			slog.Info("Failed to start HTTP server", "error", err)
 			panic(err)
 		}
 	}()
@@ -97,7 +98,7 @@ func main() {
 
 		slog.Info("Started another API server on port: " + constant.PORT_ADMIN_API)
 		if err := http.ListenAndServe(":"+constant.PORT_ADMIN_API, adminApiRouter); err != nil {
-			slog.Info("Failed to start new API server: %v", err)
+			slog.Info("Failed to start new API server", "error", err)
 			log.Fatal(err)
 		}
 	}()

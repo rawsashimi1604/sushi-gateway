@@ -2,11 +2,12 @@ package api
 
 import (
 	"encoding/json"
+
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/validator"
+
 	"log/slog"
 	"net/http"
 )
@@ -108,7 +109,7 @@ func (s *ServiceController) AddService() http.HandlerFunc {
 		}
 
 		// Validate the service
-		serviceValidator := validator.NewServiceValidator()
+		serviceValidator := gateway.NewServiceValidator()
 		if err := serviceValidator.ValidateService(newService); err != nil {
 			slog.Info("service validation failed")
 			httperr := &model.HttpError{

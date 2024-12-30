@@ -2,10 +2,11 @@ package gateway
 
 import (
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 type RequestSizeLimitPlugin struct {
@@ -17,6 +18,9 @@ func NewRequestSizeLimitPlugin(config map[string]interface{}) *Plugin {
 		Name:     constant.PLUGIN_REQUEST_SIZE_LIMIT,
 		Priority: 951,
 		Handler: RequestSizeLimitPlugin{
+			config: config,
+		},
+		Validator: RequestSizeLimitPlugin{
 			config: config,
 		},
 	}
@@ -44,6 +48,19 @@ func (plugin RequestSizeLimitPlugin) checkRequestLength(r *http.Request) *model.
 		slog.Info(fmt.Sprintf("Request size too large: %vB", r.ContentLength))
 		return model.NewHttpError(http.StatusRequestEntityTooLarge,
 			"REQUEST_TOO_LARGE", "Request size too large.")
+	}
+
+	return nil
+}
+
+func (plugin RequestSizeLimitPlugin) Validate() error {
+	maxSize, ok := plugin.config["max_payload_size"].(float64)
+	if !ok {
+		return fmt.Errorf("max_payload_size must be a number")
+	}
+
+	if maxSize <= 0 {
+		return fmt.Errorf("max_payload_size must be greater than 0")
 	}
 
 	return nil

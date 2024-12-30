@@ -6,45 +6,98 @@ import (
 	"testing"
 )
 
-func handleKeyAuthRequest(t *testing.T, key string) *httptest.ResponseRecorder {
+const mockValidKey = "test-api-key-123"
+
+func TestKeyAuthValidation(t *testing.T) {
+	tests := []struct {
+		name        string
+		config      map[string]interface{}
+		expectError bool
+	}{
+		{
+			name: "valid config",
+			config: map[string]interface{}{
+				"key": mockValidKey,
+			},
+			expectError: false,
+		},
+		{
+			name:        "missing key",
+			config:      map[string]interface{}{},
+			expectError: true,
+		},
+		{
+			name: "empty key",
+			config: map[string]interface{}{
+				"key": "",
+			},
+			expectError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			pluginConfig, err := CreatePluginConfigInput(tt.config)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			plugin := NewKeyAuthPlugin(pluginConfig)
+			err = plugin.Validator.Validate()
+
+			if tt.expectError && err == nil {
+				t.Error("expected error but got none")
+			}
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+		})
+	}
+}
+
+func handleKeyAuthRequest(t *testing.T, withValidKey bool) *httptest.ResponseRecorder {
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// Set the apiKey Header
-	req.Header.Set("apiKey", key)
-
-	// Set the cors plugin data.
+	// Setup the key auth plugin
 	config, err := CreatePluginConfigInput(map[string]interface{}{
-		"key": "validApiKey",
+		"key": mockValidKey,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// Create a new instance of the basic auth plugin
 	plugin := NewKeyAuthPlugin(config)
+
+	// Set the API key if testing valid key case
+	if withValidKey {
+		req.Header.Set("apiKey", mockValidKey)
+	}
 
 	rr := httptest.NewRecorder()
 	handler := plugin.Handler.Execute(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 	handler.ServeHTTP(rr, req)
-
 	return rr
 }
 
-func TestKeyAuthPlugin(t *testing.T) {
-	rr := handleKeyAuthRequest(t, "validApiKey")
-	if rr.Code != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v", rr.Code, http.StatusOK)
+func TestKeyAuthSuccess(t *testing.T) {
+	rr := handleKeyAuthRequest(t, true)
+
+	// Check the status code is what we expect.
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 }
 
-func TestKeyAuthWrongKey(t *testing.T) {
-	rr := handleKeyAuthRequest(t, "invalidKey")
-	if rr.Code != http.StatusUnauthorized {
-		t.Errorf("handler returned wrong status code: got %v want %v", rr.Code, http.StatusUnauthorized)
+func TestKeyAuthFailure(t *testing.T) {
+	rr := handleKeyAuthRequest(t, false)
+
+	// Check the status code is what we expect.
+	if status := rr.Code; status != http.StatusUnauthorized {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusUnauthorized)
 	}
 }

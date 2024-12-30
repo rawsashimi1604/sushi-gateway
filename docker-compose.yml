@@ -1,0 +1,49 @@
+version: "3.8"
+
+networks:
+  sushi-net:
+
+services:
+  sushi-svc-1:
+    networks:
+      - sushi-net
+    container_name: sushi-svc-1
+    image: rawsashimi/express-sushi-app
+    ports:
+      - "8001:3000"
+    environment:
+      - APP_ID=8001
+      - JWT_ISSUER=someIssuerKey
+      - JWT_SECRET=123secret456
+
+  sushi-svc-2:
+    networks:
+      - sushi-net
+    container_name: sushi-svc-2
+    image: rawsashimi/express-sushi-app
+    ports:
+      - "8002:3000"
+    environment:
+      - APP_ID=8002
+      - JWT_ISSUER=someIssuerKey
+      - JWT_SECRET=123secret456
+
+  sushi-svc-3:
+    networks:
+      - sushi-net
+    container_name: sushi-svc-3
+    image: rawsashimi/express-sushi-app
+    ports:
+      - "8003:3000"
+    environment:
+      - APP_ID=8003
+      - JWT_ISSUER=someIssuerKey
+      - JWT_SECRET=123secret456
+
+  sushi-http-log-consumer:
+    networks:
+      - sushi-net
+    container_name: sushi-http-log-consumer
+    image: rawsashimi/express-sushi-http-consumer
+    ports:
+      - "3000:3000"

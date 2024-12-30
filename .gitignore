@@ -12,6 +12,9 @@
 *.so
 *.dylib
 
+# Vitepress docs
+docs/.vitepress/cache/
+
 # VS_STORE
 .VS_Store/
 

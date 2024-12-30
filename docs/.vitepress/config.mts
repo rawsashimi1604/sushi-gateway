@@ -84,6 +84,10 @@ export default defineConfig({
             link: "/concepts/data-persistence",
           },
           {
+            text: "TLS",
+            link: "/concepts/tls",
+          },
+          {
             text: "Configuration",
             link: "/concepts/configuration/",
             items: [

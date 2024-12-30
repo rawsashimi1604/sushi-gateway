@@ -1,12 +1,14 @@
 package gateway
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 )
 
 type CORSConfig struct {
@@ -28,8 +30,96 @@ func NewCorsPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_CORS,
 		Priority: 2000,
-		Handler:  CorsPlugin{config: config},
+		Handler: CorsPlugin{
+			config: config,
+		},
+		Validator: CorsPlugin{
+			config: config,
+		},
 	}
+}
+
+func (plugin CorsPlugin) Validate() error {
+	// Validate allow_origins
+	origins, ok := plugin.config["allow_origins"].([]interface{})
+	if !ok {
+		return fmt.Errorf("allow_origins must be an array of strings")
+	}
+	if len(origins) == 0 {
+		return fmt.Errorf("allow_origins cannot be empty")
+	}
+	for _, origin := range origins {
+		if _, ok := origin.(string); !ok {
+			return fmt.Errorf("allow_origins must contain only strings")
+		}
+	}
+
+	// Validate allow_methods if present
+	if methods, exists := plugin.config["allow_methods"].([]interface{}); exists {
+		if len(methods) == 0 {
+			return fmt.Errorf("allow_methods cannot be empty if specified")
+		}
+		validMethods := []string{"GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"}
+		for _, method := range methods {
+			methodStr, ok := method.(string)
+			if !ok {
+				return fmt.Errorf("allow_methods must contain only strings")
+			}
+			if !util.SliceContainsString(validMethods, strings.ToUpper(methodStr)) {
+				return fmt.Errorf("invalid HTTP method: %s", methodStr)
+			}
+		}
+	}
+
+	// Validate allow_headers if present
+	if headers, exists := plugin.config["allow_headers"].([]interface{}); exists {
+		if len(headers) == 0 {
+			return fmt.Errorf("allow_headers cannot be empty if specified")
+		}
+		for _, header := range headers {
+			if _, ok := header.(string); !ok {
+				return fmt.Errorf("allow_headers must contain only strings")
+			}
+		}
+	}
+
+	// Validate expose_headers if present
+	if exposeHeaders, exists := plugin.config["expose_headers"].([]interface{}); exists {
+		if len(exposeHeaders) == 0 {
+			return fmt.Errorf("expose_headers cannot be empty if specified")
+		}
+		for _, header := range exposeHeaders {
+			if _, ok := header.(string); !ok {
+				return fmt.Errorf("expose_headers must contain only strings")
+			}
+		}
+	}
+
+	// Validate allow_credentials if present
+	if _, exists := plugin.config["allow_credentials"].(bool); !exists && plugin.config["allow_credentials"] != nil {
+		return fmt.Errorf("allow_credentials must be a boolean")
+	}
+
+	// Validate allow_private_network if present
+	if _, exists := plugin.config["allow_private_network"].(bool); !exists && plugin.config["allow_private_network"] != nil {
+		return fmt.Errorf("allow_private_network must be a boolean")
+	}
+
+	// Validate preflight_continue if present
+	if _, exists := plugin.config["preflight_continue"].(bool); !exists && plugin.config["preflight_continue"] != nil {
+		return fmt.Errorf("preflight_continue must be a boolean")
+	}
+
+	// Validate max_age if present
+	if maxAge, exists := plugin.config["max_age"].(float64); exists {
+		if maxAge < 0 {
+			return fmt.Errorf("max_age cannot be negative")
+		}
+	} else if plugin.config["max_age"] != nil {
+		return fmt.Errorf("max_age must be a number")
+	}
+
+	return nil
 }
 
 func (plugin CorsPlugin) Execute(next http.Handler) http.Handler {
