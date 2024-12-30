@@ -2,12 +2,14 @@ package gateway
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 	"strings"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 type BasicAuthPlugin struct {
@@ -21,7 +23,23 @@ func NewBasicAuthPlugin(config map[string]interface{}) *Plugin {
 		Handler: BasicAuthPlugin{
 			config: config,
 		},
+		Validator: BasicAuthPlugin{
+			config: config,
+		},
 	}
+}
+
+func (plugin BasicAuthPlugin) Validate() error {
+	username, okUser := plugin.config["username"].(string)
+	password, okPass := plugin.config["password"].(string)
+
+	if !okUser || username == "" {
+		return errors.New("username cannot be empty or missing")
+	}
+	if !okPass || password == "" {
+		return errors.New("password cannot be empty or missing")
+	}
+	return nil
 }
 
 func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {

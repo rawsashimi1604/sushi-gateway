@@ -9,10 +9,15 @@ type PluginExecutor interface {
 	Execute(next http.Handler) http.Handler
 }
 
+type PluginValidation interface {
+	Validate() error
+}
+
 type Plugin struct {
-	Name     string
-	Priority uint
-	Handler  PluginExecutor
+	Name      string
+	Priority  uint
+	Handler   PluginExecutor
+	Validator PluginValidation
 }
 
 // CreatePluginConfigInput Convert the plugin input to how we would expect it to be in the gateway file

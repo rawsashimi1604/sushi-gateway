@@ -2,11 +2,12 @@ package gateway
 
 import (
 	"fmt"
+	"log/slog"
+	"net/http"
+
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
-	"log/slog"
-	"net/http"
 )
 
 type AclPlugin struct {
