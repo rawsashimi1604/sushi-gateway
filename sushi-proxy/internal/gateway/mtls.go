@@ -57,5 +57,3 @@ func (plugin MtlsPlugin) Execute(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-
-func (plugin MtlsPlugin) Validate() error {
