@@ -31,10 +31,6 @@ Now you're ready to proceed!
 Pull the latest Docker images for Sushi Proxy and Sushi Manager from Docker Hub to get started.
 :::
 
-::: tip Using the `latest` tag
-By using the `latest` tag, you can ensure you are using the latest release of Sushi Gateway!
-:::
-
 ```bash
 docker pull rawsashimi/sushi-proxy:0.2.0
 docker pull rawsashimi/sushi-manager:0.2.0
