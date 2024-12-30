@@ -2,66 +2,54 @@
   "hash": "6c543ad8",
   "configHash": "670ad7d7",
   "lockfileHash": "611d2f69",
-  "browserHash": "bcb47631",
+  "browserHash": "9623e20c",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "ee63ba18",
+      "fileHash": "59f3d1c2",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "31920121",
+      "fileHash": "59f13d5b",
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
-      "fileHash": "fc52bf23",
+      "fileHash": "57144bad",
       "needsInterop": false
     },
     "vitepress > @vueuse/integrations/useFocusTrap": {
       "src": "../../../../node_modules/@vueuse/integrations/useFocusTrap.mjs",
       "file": "vitepress___@vueuse_integrations_useFocusTrap.js",
-      "fileHash": "008142a5",
+      "fileHash": "16572fc2",
       "needsInterop": false
     },
     "vitepress > mark.js/src/vanilla.js": {
       "src": "../../../../node_modules/mark.js/src/vanilla.js",
       "file": "vitepress___mark__js_src_vanilla__js.js",
-      "fileHash": "c2a39bc1",
+      "fileHash": "25b74abb",
       "needsInterop": false
     },
     "vitepress > minisearch": {
       "src": "../../../../node_modules/minisearch/dist/es/index.js",
       "file": "vitepress___minisearch.js",
-      "fileHash": "1ca2dbde",
+      "fileHash": "77f2a410",
       "needsInterop": false
     },
     "gsap/dist/gsap": {
       "src": "../../../../node_modules/gsap/dist/gsap.js",
       "file": "gsap_dist_gsap.js",
-      "fileHash": "5b33b73b",
+      "fileHash": "eace6ef4",
       "needsInterop": true
-    },
-    "gsap/MotionPathPlugin": {
-      "src": "../../../../node_modules/gsap/MotionPathPlugin.js",
-      "file": "gsap_MotionPathPlugin.js",
-      "fileHash": "e7ff5e23",
-      "needsInterop": false
-    },
-    "gsap": {
-      "src": "../../../../node_modules/gsap/index.js",
-      "file": "gsap.js",
-      "fileHash": "f2c924e7",
-      "needsInterop": false
     },
     "gsap/dist/MotionPathPlugin": {
       "src": "../../../../node_modules/gsap/dist/MotionPathPlugin.js",
       "file": "gsap_dist_MotionPathPlugin.js",
-      "fileHash": "92bb2731",
+      "fileHash": "8dc71591",
       "needsInterop": true
     }
   },

@@ -36,8 +36,8 @@ By using the `latest` tag, you can ensure you are using the latest release of Su
 :::
 
 ```bash
-docker pull rawsashimi/sushi-proxy:0.1
-docker pull rawsashimi/sushi-manager:0.1
+docker pull rawsashimi/sushi-proxy:0.2.0
+docker pull rawsashimi/sushi-manager:0.2.0
 ```
 
 ## Step 2: Create a Configuration File
@@ -154,37 +154,7 @@ Expected response:
 }
 ```
 
-## Step 7: Generate Certificates for the Proxy
-
-::: info
-To secure communications, generate certificates for TLS and MTLS. These certificates are used to validate client and server communications.
-:::
-
-::: tip
-The CA certificate can be used to generate any child certs that can be used for MTLS authentication by your client.
-:::
-
-```bash
-# Generate CA private key
-openssl genrsa -out ca.key 4096
-# Generate self-signed CA cert
-openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
-
-# Generate server private key
-openssl genrsa -out server.key 2048
-# Generate server CSR
-openssl req -new -key server.key -out server.csr
-
-# Create server certificate signed by your CA
-printf "[req_ext]\nsubjectAltName=DNS:localhost" > extfile.cnf
-openssl x509 -req -days 365 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt \
--extensions req_ext -extfile extfile.cnf
-
-# Verify certificates
-openssl verify -CAfile ca.crt server.crt
-```
-
-## Step 8: Run the Sushi Proxy
+## Step 7: Run the Sushi Proxy
 
 Launch the Sushi Proxy container with the configuration and certificates:
 
@@ -194,23 +164,17 @@ docker run \
 --name example-proxy \
 --network sushi-network \
 -v $(pwd)/config.json:/app/config.json \
--v $(pwd)/server.crt:/app/server.crt \
--v $(pwd)/server.key:/app/server.key \
--v $(pwd)/ca.crt:/app/ca.crt \
 -e CONFIG_FILE_PATH="/app/config.json" \
--e SERVER_CERT_PATH="/app/server.crt" \
--e SERVER_KEY_PATH="/app/server.key" \
--e CA_CERT_PATH="/app/ca.crt" \
 -e ADMIN_USER=admin \
 -e ADMIN_PASSWORD=changeme \
 -e PERSISTENCE_CONFIG=dbless \
 -p 8008:8008 \
 -p 8081:8081 \
 -p 8443:8443 \
-rawsashimi/sushi-proxy:0.1
+rawsashimi/sushi-proxy:0.2.0
 ```
 
-## Step 9: Test the Proxy
+## Step 8: Test the Proxy
 
 Verify that the proxy works:
 
@@ -238,7 +202,7 @@ Expected response:
 }
 ```
 
-## Step 10: Run Sushi Manager
+## Step 9: Run Sushi Manager
 
 Launch the interactive UI at `http://localhost:5173` via the pulled UI docker image for managing and monitoring your gateway:
 
@@ -253,7 +217,7 @@ Use the credentials specified above - `ADMIN_USER` and `ADMIN_PASSWORD` to login
 ```bash
 docker run --rm -p 5173:5173 \
 -e SUSHI_MANAGER_BACKEND_API_URL=http://localhost:8081 \
-rawsashimi/sushi-manager:0.1
+rawsashimi/sushi-manager:0.2.0
 ```
 
 ## Next Steps
