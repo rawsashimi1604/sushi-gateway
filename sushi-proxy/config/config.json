@@ -60,8 +60,7 @@
         "name": "acl",
         "enabled": true,
         "config": {
-          "whitelist": ["127.0.0.1", "127.0.0.2"],
-          "blacklist": ["192.168.0.1"]
+          "whitelist": ["127.0.0.1", "127.0.0.2"]
         }
       },
       {
@@ -103,9 +102,7 @@
       "base_path": "/swapi",
       "protocol": "https",
       "load_balancing_strategy": "round_robin",
-      "upstreams": [
-            { "id": "upstream_1", "host": "swapi.dev", "port": 443 }
-      ],
+      "upstreams": [{ "id": "upstream_1", "host": "swapi.dev", "port": 443 }],
       "plugins": [],
       "routes": [
         {
