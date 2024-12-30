@@ -2,13 +2,14 @@ package gateway
 
 import (
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 )
 
 // Global rate limit stores
@@ -45,7 +46,38 @@ func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *model.ProxyC
 			config:      config,
 			proxyConfig: proxyConfig,
 		},
+		Validator: RateLimitPlugin{
+			config: config,
+		},
 	}
+}
+
+func (plugin RateLimitPlugin) Validate() error {
+	limitSec, ok := plugin.config["limit_second"].(float64)
+	if !ok {
+		return fmt.Errorf("limit_second must be a number")
+	}
+	if limitSec <= 0 {
+		return fmt.Errorf("limit_second must be greater than 0")
+	}
+
+	limitMin, ok := plugin.config["limit_min"].(float64)
+	if !ok {
+		return fmt.Errorf("limit_min must be a number")
+	}
+	if limitMin <= 0 {
+		return fmt.Errorf("limit_min must be greater than 0")
+	}
+
+	limitHour, ok := plugin.config["limit_hour"].(float64)
+	if !ok {
+		return fmt.Errorf("limit_hour must be a number")
+	}
+	if limitHour <= 0 {
+		return fmt.Errorf("limit_hour must be greater than 0")
+	}
+
+	return nil
 }
 
 func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *model.Service, route *model.Route, r *http.Request) (string, *model.HttpError) {
