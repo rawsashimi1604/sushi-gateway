@@ -55,7 +55,10 @@ func main() {
 
 	// Initialize Admin API server
 	var adminApiRouter http.Handler
-	if gateway.GlobalAppConfig.PersistenceConfig == constant.DB_MODE {
+	if gateway.GlobalAppConfig.PersistenceConfig == constant.DBLESS_MODE {
+		slog.Info("PersistenceConfig:: Starting gateway in DB-less mode.")
+		adminApiRouter = api.NewAdminApiRouter(nil)
+	} else if gateway.GlobalAppConfig.PersistenceConfig == constant.DB_MODE {
 		database, err := db.ConnectDb()
 		if err != nil {
 			slog.Error("Failed to connect to database", "error", err)
@@ -77,9 +80,6 @@ func main() {
 		// We don't add the goroutine to the error group, as db fail syncs should not stop the gateway
 		gateway.StartProxyConfigCronJob(database,
 			gateway.GlobalAppConfig.PersistenceSyncInterval)
-	} else {
-		slog.Info("PersistenceConfig:: Starting gateway in DB-less mode.")
-		adminApiRouter = api.NewAdminApiRouter(nil)
 	}
 
 	adminServer := &http.Server{
