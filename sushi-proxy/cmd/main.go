@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"log"
 	"log/slog"
@@ -10,12 +11,20 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
+	"golang.org/x/sync/errgroup"
 )
 
 func main() {
 	gateway.GlobalAppConfig = gateway.LoadGlobalConfig()
 
-	// DB MODE run a thread to sync the config file from db.
+	// Setup error group with cancellation context
+	errGrpCtx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	errGroup, errGrpCtx := errgroup.WithContext(errGrpCtx)
+
+	appRouter := gateway.NewRouter()
+
+	// In DB MODE, we run a thread to sync the config file from db.
 	if gateway.GlobalAppConfig.PersistenceConfig == constant.DB_MODE {
 		database, err := db.ConnectDb()
 		if err != nil {
@@ -33,7 +42,9 @@ func main() {
 			panic("unable to sync config from database.")
 		}
 
-		// Thereafter we should run a cron job to sync the config from the db.
+		// We run the cron job to sync the config from the configured db here.
+		// We don't add the goroutine to the error group, as db fail syncs should not stop the gateway,
+		// the gateway can still function with the data loaded in it's cache, just that it's not up to date.
 		gateway.StartProxyConfigCronJob(database,
 			gateway.GlobalAppConfig.PersistenceSyncInterval)
 	}
@@ -41,31 +52,45 @@ func main() {
 	// DB LESS MODE run a thread to monitor the config file for changes and do an initial boot up...
 	if gateway.GlobalAppConfig.PersistenceConfig == constant.DBLESS_MODE {
 		gateway.LoadProxyConfigFromConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
-		go gateway.WatchConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
+
+		errGroup.Go(func() error {
+			return gateway.WatchConfigFile(gateway.GlobalAppConfig.ConfigFilePath)
+		})
 	}
 
-	appRouter := gateway.NewRouter()
-
 	// Setup http server
-	go func() {
-		slog.Info("Started sushi-proxy_pass http server on port: " + constant.PORT_HTTP)
-		if err := http.ListenAndServe(":"+constant.PORT_HTTP, appRouter); err != nil {
-			slog.Info("Failed to start HTTP server", "error", err)
-			panic(err)
+	errGroup.Go(func() error {
+		server := &http.Server{
+			Addr:    ":" + constant.PORT_HTTP,
+			Handler: appRouter,
 		}
-	}()
+
+		slog.Info("Started sushi-proxy_pass http server on port: " + constant.PORT_HTTP)
+
+		// Graceful shutdown on context cancellation
+		go func() {
+			<-errGrpCtx.Done()
+			server.Shutdown(context.Background())
+		}()
+
+		if err := server.ListenAndServe(); err != http.ErrServerClosed {
+			slog.Error("HTTP server failed", "error", err)
+			return err
+		}
+		return nil
+	})
 
 	// Setup https server
-	go func() {
-		// Load global CA Cert Pool
-		gateway.GlobalCaCertPool = gateway.LoadCertPool()
-
+	errGroup.Go(func() error {
 		cert, err := tls.LoadX509KeyPair(gateway.GlobalAppConfig.ServerCertPath, gateway.GlobalAppConfig.ServerKeyPath)
 		if err != nil {
-			log.Fatalf("server: loadkeys: %s", err)
+			slog.Error("Failed to load TLS keys", "error", err)
+			return err
 		}
 
-		// allow clients to send cert for mtls validation
+		// Load global CA Cert Pool, allowing clients to send CA certificate for authentication via MTLS
+		gateway.GlobalCaCertPool = gateway.LoadCertPool()
+
 		tlsConfig := &tls.Config{
 			Certificates: []tls.Certificate{cert},
 			ClientCAs:    gateway.GlobalCaCertPool.Pool,
@@ -77,17 +102,30 @@ func main() {
 			Handler:   appRouter,
 			TLSConfig: tlsConfig,
 		}
+
 		slog.Info("Started sushi-proxy_pass https server on port: " + constant.PORT_HTTPS)
-		log.Fatal(server.ListenAndServeTLS("", "")) // Certs loaded from tls gateway.
-	}()
+
+		// Graceful shutdown on context cancellation
+		go func() {
+			<-errGrpCtx.Done()
+			server.Shutdown(context.Background())
+		}()
+
+		if err := server.ListenAndServeTLS("", ""); err != http.ErrServerClosed {
+			slog.Error("HTTPS server failed", "error", err)
+			return err
+		}
+		return nil
+	})
 
 	// Setup admin api
-	go func() {
+	errGroup.Go(func() error {
 		var adminApiRouter http.Handler
 		if gateway.GlobalAppConfig.PersistenceConfig == constant.DB_MODE {
 			database, err := db.ConnectDb()
 			if err != nil {
-				panic("unable to connect to database.")
+				slog.Error("Failed to connect to database", "error", err)
+				return err
 			}
 			slog.Info("PersistenceConfig:: Starting gateway in DB mode.")
 			adminApiRouter = api.NewAdminApiRouter(database)
@@ -96,13 +134,29 @@ func main() {
 			adminApiRouter = api.NewAdminApiRouter(nil)
 		}
 
-		slog.Info("Started another API server on port: " + constant.PORT_ADMIN_API)
-		if err := http.ListenAndServe(":"+constant.PORT_ADMIN_API, adminApiRouter); err != nil {
-			slog.Info("Failed to start new API server", "error", err)
-			log.Fatal(err)
+		server := &http.Server{
+			Addr:    ":" + constant.PORT_ADMIN_API,
+			Handler: adminApiRouter,
 		}
-	}()
 
-	// Block forever
-	select {}
+		slog.Info("Started admin API server on port: " + constant.PORT_ADMIN_API)
+
+		// Graceful shutdown on context cancellation
+		go func() {
+			<-errGrpCtx.Done()
+			server.Shutdown(context.Background())
+		}()
+
+		if err := server.ListenAndServe(); err != http.ErrServerClosed {
+			slog.Error("Admin API server failed", "error", err)
+			return err
+		}
+		return nil
+	})
+
+	// Wait for all servers and handle errors, if any goroutines in the error group encounters an error, we shutdown all other go routines.
+	if err := errGroup.Wait(); err != nil {
+		slog.Error("Server error detected, shutting down...", "error", err)
+		log.Fatal(err)
+	}
 }

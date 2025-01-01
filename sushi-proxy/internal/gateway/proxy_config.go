@@ -92,42 +92,34 @@ func StartProxyConfigCronJob(database *sql.DB, interval int) {
 	}()
 }
 
-func WatchConfigFile(filePath string) {
+func WatchConfigFile(filePath string) error {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		slog.Info("Error creating watcher", "error", err)
-		panic("Error creating watcher")
+		slog.Error("Error creating watcher", "error", err)
+		return err
 	}
 	defer watcher.Close()
 
-	done := make(chan bool)
-
-	go func() {
-		for {
-			select {
-			case event, ok := <-watcher.Events:
-				if !ok {
-					return
-				}
-				if event.Op&fsnotify.Write != 0 {
-					LoadProxyConfigFromConfigFile(filePath)
-				}
-			case err, ok := <-watcher.Errors:
-				if !ok {
-					return
-				}
-				slog.Info("Filesystem watcher error", "error", err.Error())
-				panic("Filesystem watcher error")
-			}
-		}
-	}()
-
-	err = watcher.Add(filePath)
-	if err != nil {
-		slog.Info("Error adding watcher to file", "error", err)
-		panic("Error adding watcher to file")
+	if err := watcher.Add(filePath); err != nil {
+		slog.Error("Error adding file to watcher", "error", err)
+		return err
 	}
-	slog.Info("Started watching gateway file: " + filePath)
 
-	<-done
+	for {
+		select {
+		case event, ok := <-watcher.Events:
+			if !ok {
+				return nil
+			}
+			if event.Op&fsnotify.Write != 0 {
+				LoadProxyConfigFromConfigFile(filePath)
+			}
+		case err, ok := <-watcher.Errors:
+			if !ok {
+				return nil
+			}
+			slog.Error("Filesystem watcher error", "error", err)
+			return err
+		}
+	}
 }
