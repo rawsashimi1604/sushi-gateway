@@ -59,12 +59,12 @@ func LoadGlobalConfig() *AppConfig {
 		slog.Info("Since no certs were found, auto generating self signed certs for the TLS server...")
 		if err := GenerateSelfSignedCerts("."); err != nil {
 			slog.Error("Failed to generate self-signed certificates", "error", err)
-			panic("Failed to generate self-signed certificates")
+			errors = append(errors, "Failed to generate self-signed certificates")
+		} else {
+			// Set certificate paths
+			serverCertPath = filepath.Join(".", "server.crt")
+			serverKeyPath = filepath.Join(".", "server.key")
 		}
-
-		// Set certificate paths
-		serverCertPath = filepath.Join(".", "server.crt")
-		serverKeyPath = filepath.Join(".", "server.key")
 	}
 
 	// Optional, we only need CA Certs for MTLS communications
