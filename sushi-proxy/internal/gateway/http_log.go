@@ -145,7 +145,7 @@ func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogC
 	// Create a new request with POST method, URL, and payload
 	req, err := http.NewRequest(config.method, config.httpEndpoint, bytes.NewBuffer(body))
 	if err != nil {
-		return model.NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log when creating http request")
+		return model.NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log when creating http request to "+config.method+" "+config.httpEndpoint)
 	}
 
 	// Set request headers (optional)
@@ -155,7 +155,7 @@ func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogC
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return model.NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log")
+		return model.NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log to "+config.method+" "+config.httpEndpoint)
 	}
 	defer resp.Body.Close()
 	return nil
