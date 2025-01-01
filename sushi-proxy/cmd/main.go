@@ -55,10 +55,13 @@ func main() {
 
 	// Initialize Admin API server
 	var adminApiRouter http.Handler
+
 	if gateway.GlobalAppConfig.PersistenceConfig == constant.DBLESS_MODE {
+		// Init Dbless mode gateway
 		slog.Info("PersistenceConfig:: Starting gateway in DB-less mode.")
 		adminApiRouter = api.NewAdminApiRouter(nil)
 	} else if gateway.GlobalAppConfig.PersistenceConfig == constant.DB_MODE {
+		// Init Db mode gateway
 		database, err := db.ConnectDb()
 		if err != nil {
 			slog.Error("Failed to connect to database", "error", err)
