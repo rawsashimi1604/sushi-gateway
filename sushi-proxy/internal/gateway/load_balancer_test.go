@@ -8,7 +8,7 @@ import (
 
 func TestRoundRobin(t *testing.T) {
 	// Reset the load balancer state
-	Reset()
+	ResetLoadBalancers()
 	lb := NewLoadBalancer()
 
 	// Create a test service with round robin strategy
@@ -58,5 +58,5 @@ func TestRoundRobin(t *testing.T) {
 		t.Errorf("Fourth request: expected upstream index 0, got %d", fourthIndex)
 	}
 
-	Reset()
+	ResetLoadBalancers()
 }

@@ -31,7 +31,7 @@ type AppConfig struct {
 var GlobalAppConfig *AppConfig
 
 func LoadGlobalConfig() *AppConfig {
-	slog.Info("Loading global app gateway")
+	slog.Info("Loading Global application config for sushi gateway from environment variables...")
 	godotenv.Load()
 
 	errors := make([]string, 0)

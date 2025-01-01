@@ -1,8 +1,9 @@
 package gateway
 
 import (
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"sync"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 // Contains all logic related to getting the upstream for load balancing based on the load balancing strategy.
@@ -38,8 +39,8 @@ func (lb *LoadBalancer) GetCurrentUpstream(service model.Service) int {
 	}
 }
 
-// Reset the load balancer caches
-func Reset() {
+// ResetLoadBalancers the load balancer caches
+func ResetLoadBalancers() {
 	roundRobinCache = make(map[string]int)
 }
 

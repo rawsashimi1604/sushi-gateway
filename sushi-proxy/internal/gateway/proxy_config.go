@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"context"
 	"database/sql"
 	"log/slog"
 	"os"
@@ -43,26 +44,28 @@ func LoadProxyConfigFromDb(database *sql.DB) {
 	}
 }
 
-func LoadProxyConfigFromConfigFile(filePath string) {
-
+func LoadProxyConfigFromConfigFile(filePath string) error {
 	slog.Info("Loading proxy_pass gateway from config file.")
 	configFile, err := os.ReadFile(filePath)
 	if err != nil {
-		slog.Info("Error reading gateway file", "error", err)
-		panic("Error reading gateway file")
+		slog.Error("Error reading gateway file", "error", err)
+		return err
 	}
 
 	// Validate the gateway file, if valid -> assign to GlobalProxyConfig
 	configLock.Lock()
+	defer configLock.Unlock()
+
 	config, err := ValidateAndParseSchema(configFile)
 	if err != nil {
-		panic("Error parsing gateway file")
+		slog.Error("Error parsing gateway file", "error", err)
+		return err
 	}
 
 	err = ValidateConfig(config)
 	if err != nil {
-		slog.Info(err.Error(), "error", err)
-		panic("Error validating gateway file")
+		slog.Error("Error validating gateway file", "error", err)
+		return err
 	}
 
 	slog.Info("Config file loaded successfully")
@@ -70,10 +73,9 @@ func LoadProxyConfigFromConfigFile(filePath string) {
 	GlobalProxyConfig = *config
 
 	// Reset load balancer caches
-	Reset()
+	ResetLoadBalancers()
 
-	configLock.Unlock()
-
+	return nil
 }
 
 func StartProxyConfigCronJob(database *sql.DB, interval int) {
@@ -92,42 +94,40 @@ func StartProxyConfigCronJob(database *sql.DB, interval int) {
 	}()
 }
 
-func WatchConfigFile(filePath string) {
+func WatchConfigFile(ctx context.Context, filePath string) error {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		slog.Info("Error creating watcher", "error", err)
-		panic("Error creating watcher")
+		slog.Error("Error creating watcher for config file", "error", err)
+		return err
 	}
 	defer watcher.Close()
 
-	done := make(chan bool)
-
-	go func() {
-		for {
-			select {
-			case event, ok := <-watcher.Events:
-				if !ok {
-					return
-				}
-				if event.Op&fsnotify.Write != 0 {
-					LoadProxyConfigFromConfigFile(filePath)
-				}
-			case err, ok := <-watcher.Errors:
-				if !ok {
-					return
-				}
-				slog.Info("Filesystem watcher error", "error", err.Error())
-				panic("Filesystem watcher error")
-			}
-		}
-	}()
-
-	err = watcher.Add(filePath)
-	if err != nil {
-		slog.Info("Error adding watcher to file", "error", err)
-		panic("Error adding watcher to file")
+	if err := watcher.Add(filePath); err != nil {
+		slog.Error("Error adding config file to watcher", "error", err)
+		return err
 	}
-	slog.Info("Started watching gateway file: " + filePath)
 
-	<-done
+	for {
+		select {
+		case <-ctx.Done():
+			slog.Info("Config file watcher shutting down...")
+			return nil
+		case event, ok := <-watcher.Events:
+			if !ok {
+				return nil
+			}
+			if event.Op&fsnotify.Write != 0 {
+				if err := LoadProxyConfigFromConfigFile(filePath); err != nil {
+					slog.Error("Failed to load config file", "error", err)
+					return err
+				}
+			}
+		case err, ok := <-watcher.Errors:
+			if !ok {
+				return nil
+			}
+			slog.Error("Filesystem watcher error", "error", err)
+			return err
+		}
+	}
 }
