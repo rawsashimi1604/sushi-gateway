@@ -6,6 +6,7 @@ import (
 	"log"
 	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/api"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
@@ -15,7 +16,13 @@ import (
 )
 
 func main() {
-	gateway.GlobalAppConfig = gateway.LoadGlobalConfig()
+
+	// Load gateway environment config
+	loadedConfig, err := gateway.LoadGlobalConfig()
+	if err != nil {
+		os.Exit(1)
+	}
+	gateway.GlobalAppConfig = loadedConfig
 
 	// Setup error group with cancellation context
 	errGrpCtx, cancel := context.WithCancel(context.Background())
