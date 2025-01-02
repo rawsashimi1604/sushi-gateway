@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -30,7 +31,7 @@ type AppConfig struct {
 
 var GlobalAppConfig *AppConfig
 
-func LoadGlobalConfig() *AppConfig {
+func LoadGlobalConfig() (*AppConfig, error) {
 	slog.Info("Loading Global application config for sushi gateway from environment variables...")
 	godotenv.Load()
 
@@ -142,7 +143,8 @@ func LoadGlobalConfig() *AppConfig {
 		for _, err := range errors {
 			slog.Error(err)
 		}
-		panic("Errors detected when loading environment configuration...")
+		slog.Error("Errors detected when loading environment configuration exiting...")
+		return nil, fmt.Errorf("failed to load environment configuration")
 	}
 
 	config := &AppConfig{
@@ -161,5 +163,5 @@ func LoadGlobalConfig() *AppConfig {
 		DbConnectionPort:        dbConnectionPort,
 	}
 
-	return config
+	return config, nil
 }

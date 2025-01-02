@@ -55,9 +55,10 @@ func TestLoadGlobalConfig_DBLessMode(t *testing.T) {
 	os.Setenv("PERSISTENCE_CONFIG", "dbless")
 	os.Setenv("CONFIG_FILE_PATH", "config.json")
 
-	config := LoadGlobalConfig()
+	config, err := LoadGlobalConfig()
 
 	assert.NotNil(t, config)
+	assert.NoError(t, err)
 	assert.Equal(t, "admin", config.AdminUser)
 	assert.Equal(t, "password", config.AdminPassword)
 	assert.Equal(t, "dbless", config.PersistenceConfig)
@@ -81,9 +82,10 @@ func TestLoadGlobalConfig_DBMode(t *testing.T) {
 	os.Setenv("DB_CONNECTION_PASS", "pass")
 	os.Setenv("DB_CONNECTION_PORT", "5432")
 
-	config := LoadGlobalConfig()
+	config, err := LoadGlobalConfig()
 
 	assert.NotNil(t, config)
+	assert.NoError(t, err)
 	assert.Equal(t, "admin", config.AdminUser)
 	assert.Equal(t, "password", config.AdminPassword)
 	assert.Equal(t, constant.DB_MODE, config.PersistenceConfig)
@@ -108,9 +110,10 @@ func TestLoadGlobalConfig_WithCustomCerts(t *testing.T) {
 	os.Setenv("SERVER_KEY_PATH", "/custom/key.pem")
 	os.Setenv("CA_CERT_PATH", "/custom/ca.pem")
 
-	config := LoadGlobalConfig()
+	config, err := LoadGlobalConfig()
 
 	assert.NotNil(t, config)
+	assert.NoError(t, err)
 	assert.Equal(t, "/custom/cert.pem", config.ServerCertPath)
 	assert.Equal(t, "/custom/key.pem", config.ServerKeyPath)
 	assert.Equal(t, "/custom/ca.pem", config.CACertPath)
@@ -128,9 +131,8 @@ func TestLoadGlobalConfig_FailingCustomCerts(t *testing.T) {
 	os.Setenv("SERVER_CERT_PATH", "/custom/cert.pem")
 	// Deliberately omit SERVER_KEY_PATH to trigger error
 
-	assert.Panics(t, func() {
-		LoadGlobalConfig()
-	}, "should panic when only cert path is provided without key path")
+	_, err := LoadGlobalConfig()
+	assert.Error(t, err)
 
 	// Reset and try the opposite case
 	cleanup()
@@ -141,7 +143,6 @@ func TestLoadGlobalConfig_FailingCustomCerts(t *testing.T) {
 	os.Setenv("SERVER_KEY_PATH", "/custom/key.pem")
 	// Deliberately omit SERVER_CERT_PATH to trigger error
 
-	assert.Panics(t, func() {
-		LoadGlobalConfig()
-	}, "should panic when only key path is provided without cert path")
+	_, err = LoadGlobalConfig()
+	assert.Error(t, err)
 }
