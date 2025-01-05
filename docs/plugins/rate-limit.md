@@ -4,7 +4,7 @@ The Rate Limiting (`rate_limit`) plugin is used to control the number of API req
 
 ## How It Works
 
-The Rate Limiting plugin applies rules to incoming requests based on a defined configuration. It tracks requests and rejects those that exceed the allowed limits with a **429 Too Many Requests** response.
+The Rate Limiting plugin applies rules to incoming requests based on a defined configuration using the [token bucket algorithm](https://en.wikipedia.org/wiki/Token_bucket). It tracks requests and rejects those that exceed the allowed limits with a **429 Too Many Requests** response.
 
 ### Key Features
 

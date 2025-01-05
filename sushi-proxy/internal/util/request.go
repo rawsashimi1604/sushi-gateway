@@ -2,10 +2,13 @@ package util
 
 import (
 	"fmt"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"log/slog"
+	"net"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 func GetServiceAndRouteFromRequest(proxyConfig *model.ProxyConfig, req *http.Request) (*model.Service, *model.Route, *model.HttpError) {
@@ -47,6 +50,17 @@ func GetServiceAndRouteFromRequest(proxyConfig *model.ProxyConfig, req *http.Req
 		Message:  "Service not found",
 		HttpCode: http.StatusNotFound,
 	}
+}
+
+// Gets the IP address from a remote address
+func GetHostIp(remoteAddress string) (string, *model.HttpError) {
+
+	ipAddr, _, err := net.SplitHostPort(remoteAddress)
+	if err != nil {
+		slog.Error("unable to get the host from ip address: " + err.Error())
+		return "", model.NewHttpError(http.StatusInternalServerError, "INTERNAL_SERVER_ERROR", "something went wrong in the server.")
+	}
+	return ipAddr, nil
 }
 
 // Check whether the route exists in the service, match either static or dynamic routes

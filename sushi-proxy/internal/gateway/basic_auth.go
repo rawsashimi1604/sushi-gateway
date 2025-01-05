@@ -108,14 +108,8 @@ func (plugin BasicAuthPlugin) authorize(username string, password string) *model
 
 	config := plugin.config
 
-	usernameFromConfig, okUser := config["username"].(string)
-	passwordFromConfig, okPass := config["password"].(string)
-
-	// Invalid configuration
-	// TODO: handle this better, do validation in the gateway file
-	if !okUser || !okPass {
-		return invalidCredsErr
-	}
+	usernameFromConfig, _ := config["username"].(string)
+	passwordFromConfig, _ := config["password"].(string)
 
 	if username == usernameFromConfig && password == passwordFromConfig {
 		return nil

@@ -107,6 +107,12 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 	lb := NewLoadBalancer()
 	upstreamIndexToRoute := lb.GetCurrentUpstream(*service)
 
+	clientIp, err := util.GetHostIp(r.RemoteAddr)
+	if err != nil {
+		slog.Error("Error getting client ip", "error", err)
+		err.WriteLogMessage()
+	}
+
 	// Map the service and route to log
 	log := map[string]interface{}{
 		"service": map[string]interface{}{
@@ -128,7 +134,7 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 			"size":     util.GetContentLength(r.Header.Get("Content-Length")),
 			"headers":  r.Header,
 		},
-		"client_ip":  r.RemoteAddr,
+		"client_ip":  clientIp,
 		"started_at": time.Now(),
 	}
 	return log, nil
