@@ -17,9 +17,9 @@ type JwtPlugin struct {
 }
 
 type JwtCredentials struct {
-	alg    string `json:"alg"`
-	iss    string `json:"iss"`
-	secret string `json:"secret"`
+	alg    string
+	iss    string
+	secret string
 }
 
 func NewJwtPlugin(config map[string]interface{}) *Plugin {
