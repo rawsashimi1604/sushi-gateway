@@ -80,7 +80,7 @@ func (plugin RateLimitPlugin) Validate() error {
 	return nil
 }
 
-func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *model.Service, route *model.Route, r *http.Request) (string, *model.HttpError) {
+func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *model.Service, route *model.Route) (string, *model.HttpError) {
 	// Check whether global, service or route level rate limit.
 	for _, servicePlugin := range service.Plugins {
 		name := servicePlugin.Name
@@ -120,7 +120,12 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		slog.Info("Executing rate limit function...")
 
 		service, route, err := util.GetServiceAndRouteFromRequest(plugin.proxyConfig, r)
-		rateLimitOperationLevel, err := plugin.detectRateLimitOperationLevel(service, route, r)
+		if err != nil {
+			err.WriteJSONResponse(w)
+			return
+		}
+
+		rateLimitOperationLevel, err := plugin.detectRateLimitOperationLevel(service, route)
 		if err != nil {
 			err.WriteJSONResponse(w)
 			return
