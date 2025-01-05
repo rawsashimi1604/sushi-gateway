@@ -74,7 +74,7 @@ We ❤️ contributions! Check out the [Contributing Guide](CONTRIBUTING.md) to 
   - Some tests require a database to be running, if you wish to skip the tests that require a database to be running, use the following command:
     - `SKIP_INTEGRATION_TESTS=true go test ./...`
 - Use the `docker-compose.yml` file to quickly start up dev servers to test proxy
-  - `docker compose up -d`
+  - `docker compose up -d`  
 
 ## Start a database
 
