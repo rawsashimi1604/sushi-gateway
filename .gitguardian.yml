@@ -1,0 +1,4 @@
+version: 1
+paths-ignore:
+  - "docs/**"
+  - "docker-compose.yml"
