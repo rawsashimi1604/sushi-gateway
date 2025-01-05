@@ -127,15 +127,17 @@ func verifyAndParseAuthHeaderJwt(req *http.Request) (string, *model.HttpError) {
 func (plugin JwtPlugin) validateToken(token string) *model.HttpError {
 
 	config := plugin.config
+
 	credentials := JwtCredentials{
-		alg:    config["alg"].(string),
-		iss:    config["iss"].(string),
-		secret: config["secret"].(string),
+		alg: config["alg"].(string),
+		iss: config["iss"].(string),
 	}
 
 	if credentials.alg == constant.HS_256 {
+		credentials.secret = config["secret"].(string)
 		return plugin.validateHS256(credentials, token)
 	} else {
+		credentials.publicKey = config["publicKey"].(string)
 		return plugin.validateRS256(credentials, token)
 	}
 }
