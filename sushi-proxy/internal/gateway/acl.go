@@ -73,7 +73,13 @@ func (plugin AclPlugin) Execute(next http.Handler) http.Handler {
 		slog.Info("Executing acl function...")
 
 		// Check both forwarded ip and client ip
-		clientIP := r.RemoteAddr
+		clientIP, err := util.GetHostIp(r.RemoteAddr)
+		if err != nil {
+			err.WriteLogMessage()
+			err.WriteJSONResponse(w)
+			return
+		}
+
 		forwardedIP := r.Header.Get(constant.X_FORWARDED_FOR)
 
 		// If whitelist exists, only allow whitelisted IPs

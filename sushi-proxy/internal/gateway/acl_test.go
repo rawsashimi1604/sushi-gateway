@@ -37,7 +37,7 @@ func TestWhitelistSuccess(t *testing.T) {
 	config := map[string]interface{}{
 		"whitelist": []string{"127.0.0.1"},
 	}
-	rr := handleAclRequest(t, "127.0.0.1", config)
+	rr := handleAclRequest(t, "127.0.0.1:8080", config)
 	if rr.Code != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v", rr.Code, http.StatusOK)
 	}
@@ -47,7 +47,7 @@ func TestWhitelistBlocked(t *testing.T) {
 	config := map[string]interface{}{
 		"whitelist": []string{"127.0.0.1"},
 	}
-	rr := handleAclRequest(t, "192.168.1.1", config)
+	rr := handleAclRequest(t, "192.168.1.1:8080", config)
 	if rr.Code != http.StatusForbidden {
 		t.Errorf("handler returned wrong status code: got %v want %v", rr.Code, http.StatusForbidden)
 	}
@@ -57,7 +57,7 @@ func TestBlacklistBlocked(t *testing.T) {
 	config := map[string]interface{}{
 		"blacklist": []string{"192.168.1.1"},
 	}
-	rr := handleAclRequest(t, "192.168.1.1", config)
+	rr := handleAclRequest(t, "192.168.1.1:8080", config)
 	if rr.Code != http.StatusForbidden {
 		t.Errorf("handler returned wrong status code: got %v want %v", rr.Code, http.StatusForbidden)
 	}
@@ -67,7 +67,7 @@ func TestBlacklistSuccess(t *testing.T) {
 	config := map[string]interface{}{
 		"blacklist": []string{"192.168.1.1"},
 	}
-	rr := handleAclRequest(t, "127.0.0.1", config)
+	rr := handleAclRequest(t, "127.0.0.1:8080", config)
 	if rr.Code != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v", rr.Code, http.StatusOK)
 	}

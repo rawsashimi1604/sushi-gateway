@@ -140,8 +140,7 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		}
 
 		rateLimitOperationLevel := plugin.detectRateLimitOperationLevel(service, route)
-		clientIpHostPort := r.RemoteAddr
-		clientIp, err := util.GetHostIp(clientIpHostPort)
+		clientIp, err := util.GetHostIp(r.RemoteAddr)
 		if err != nil {
 			err.WriteLogMessage()
 			err.WriteJSONResponse(w)
