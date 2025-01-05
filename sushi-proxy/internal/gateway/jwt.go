@@ -17,9 +17,10 @@ type JwtPlugin struct {
 }
 
 type JwtCredentials struct {
-	alg    string
-	iss    string
-	secret string
+	alg       string
+	iss       string
+	secret    string
+	publicKey string
 }
 
 func NewJwtPlugin(config map[string]interface{}) *Plugin {
@@ -63,6 +64,12 @@ func (plugin JwtPlugin) Validate() error {
 		publicKey, ok := plugin.config["publicKey"].(string)
 		if !ok || publicKey == "" {
 			return fmt.Errorf("publicKey must be a non-empty string")
+		}
+
+		// Validate the RSA public key format and structure
+		_, err := util.ParseRSAPublicKeyFromPEM([]byte(publicKey))
+		if err != nil {
+			return fmt.Errorf("invalid RSA public key: %v", err)
 		}
 	}
 
@@ -126,7 +133,46 @@ func (plugin JwtPlugin) validateToken(token string) *model.HttpError {
 		secret: config["secret"].(string),
 	}
 
-	return plugin.validateHS256(credentials, token)
+	if credentials.alg == constant.HS_256 {
+		return plugin.validateHS256(credentials, token)
+	} else {
+		return plugin.validateRS256(credentials, token)
+	}
+}
+
+func (plugin JwtPlugin) validateRS256(credentials JwtCredentials, token string) *model.HttpError {
+	tokenInvalidErr := model.NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
+
+	// Parse public key
+	rsaPublicKey, err := util.ParseRSAPublicKeyFromPEM([]byte(credentials.publicKey))
+	if err != nil {
+		slog.Info("Failed to parse RSA public key: " + err.Error())
+		return model.NewHttpError(http.StatusInternalServerError, "INTERNAL_SERVER_ERROR", "Something went wrong")
+	}
+
+	// Parse and validate the token
+	jwtToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return rsaPublicKey, nil
+	})
+
+	if err != nil {
+		slog.Info("Error parsing token: " + err.Error())
+		return tokenInvalidErr
+	}
+
+	if !jwtToken.Valid {
+		return tokenInvalidErr
+	}
+
+	// Check claims if iss is valid from the token
+	if !plugin.isClaimValid(jwtToken, credentials.iss) {
+		return tokenInvalidErr
+	}
+
+	return nil
 }
 
 func (plugin JwtPlugin) validateHS256(credentials JwtCredentials, token string) *model.HttpError {
@@ -153,17 +199,26 @@ func (plugin JwtPlugin) validateHS256(credentials JwtCredentials, token string) 
 	}
 
 	// Check claims if iss is valid from the token
-	claims, ok := jwtToken.Claims.(jwt.MapClaims)
+	if !plugin.isClaimValid(jwtToken, credentials.iss) {
+		return tokenInvalidErr
+	}
+
+	return nil
+}
+
+func (plugin JwtPlugin) isClaimValid(token *jwt.Token, issuer string) bool {
+	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok {
 		if iss, ok := claims["iss"].(string); ok {
-			if iss == credentials.iss {
-				return nil
+			if iss == issuer {
+				return true
 			} else {
 				slog.Info(fmt.Sprintf("Invalid JWT issuer: %s", iss))
-				return tokenInvalidErr
+				return false
 			}
 		}
 	}
 
-	return tokenInvalidErr
+	slog.Error("Invalid JWT claims")
+	return false
 }
