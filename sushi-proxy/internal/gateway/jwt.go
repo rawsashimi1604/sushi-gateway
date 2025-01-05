@@ -121,7 +121,7 @@ func (plugin JwtPlugin) validateToken(token string) (*jwt.Token, *model.HttpErro
 		// TODO: do for other alg types (RSA 256)
 		if credentials.alg == constant.HS_256 {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
 		}
 		return []byte(credentials.secret), nil
