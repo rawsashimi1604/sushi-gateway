@@ -50,6 +50,10 @@ Below is an example of configuring the JWT plugin:
 
 As for and example for configuring the JWT plugin for `RS256` algorithms:
 
+::: tip
+The public key should be seperated by new lines: `\n` as `json` files do not support multi-line strings.
+:::
+
 ```json
 {
   "name": "jwt",
@@ -57,15 +61,7 @@ As for and example for configuring the JWT plugin for `RS256` algorithms:
   "config": {
     "alg": "RS256",
     "iss": "someIssuer",
-    "publicKey": "-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnOAjYfgEIPkSuYR58sWr
-K21TeuRU03O2SAM9MxY4ojuK61SiX5cAEycQB7JL8okgAu1Sja8PXebPxX3mo+Ea
-1lCI+SZ27wBPpqeqpmDKxwbaacDFJYH7TaoctTX+pOuCtjS4h1BjrVaNn0SiLay2
-KfSJt0AGTppidQC6Llg7aG1LLMkjISzic3IHUR1s9fAVj85qAEY889LYfwitKzln
-xGO68PkV1dOCsJCquFOSRF92nA/DC0IMIXHGXEMP/GlXo2S4MB6e9z8Ti+R0HV96
-99RxtH/GLZM+J3no+Jk5zbiZpSzTJCecmETYpn+jrozDnpwH/dc5GFQhMIROSXX9
-RQIDAQAB
------END PUBLIC KEY-----"
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnOAjYfgEIPkSuYR58sWr\nK21TeuRU03O2SAM9MxY4ojuK61SiX5cAEycQB7JL8okgAu1Sja8PXebPxX3mo+Ea\n1lCI+SZ27wBPpqeqpmDKxwbaacDFJYH7TaoctTX+pOuCtjS4h1BjrVaNn0SiLay2\nKfSJt0AGTppidQC6Llg7aG1LLMkjISzic3IHUR1s9fAVj85qAEY889LYfwitKzln\nxGO68PkV1dOCsJCquFOSRF92nA/DC0IMIXHGXEMP/GlXo2S4MB6e9z8Ti+R0HV96\n99RxtH/GLZM+J3no+Jk5zbiZpSzTJCecmETYpn+jrozDnpwH/dc5GFQhMIROSXX9\nRQIDAQAB\n-----END PUBLIC KEY-----"
   }
 }
 ```
