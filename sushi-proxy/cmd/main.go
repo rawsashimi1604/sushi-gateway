@@ -102,6 +102,7 @@ func main() {
 		// Do the first load on the config file
 		if err := gateway.LoadProxyConfigFromConfigFile(gateway.GlobalAppConfig.ConfigFilePath); err != nil {
 			slog.Error("Failed to load initial config file", "error", err)
+			os.Exit(1)
 		}
 
 		// Start the file watcher
