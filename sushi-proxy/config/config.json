@@ -48,11 +48,11 @@
       {
         "id": "plugin_6",
         "name": "jwt",
-        "enabled": false,
+        "enabled": true,
         "config": {
-          "alg": "HS256",
+          "alg": "RS256",
           "iss": "someIssuerKey",
-          "secret": "123secret456"
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxiKfOSgDAdCMaUS27Ume\nVVeWUvbXZIbJ+qPesmOWfilz2dNfBk4NE+Do7rfIezZNCXoNLHJxo6Ayjz1SzidT\nNLSkFrHOlKazg4dqW9DTYWMe4DczheAPnNymrpvK3rFKIF6LD23Vq530zfnsjUmw\nWmNaXFqwbQkYkjrRxFcHGzhqPN/KmcZRpXcEkDydafTpcblfbhBn9Xmap7IzX+aX\nFa6JA5cI7M6w0Do7JWHseXYBBA4SxwYH424LqTuKMueivvhEhb+TTggriNpyIVKy\nJhdj41jUycqVRK95TKJgf5TmQYfATpeLBy9kGxoEhazl1dOpPezw12xSPT3H3giR\nUwIDAQAB\n-----END PUBLIC KEY-----"
         }
       },
       {
