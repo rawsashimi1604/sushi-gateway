@@ -13,10 +13,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
-// TODO: cron job to sync config in the case of db configuration.
-// TODO: add method to sync config.
-
-// Reads from gateway.json file from root directory...
+// Reads from declarative config file or database...
 var GlobalProxyConfig model.ProxyConfig
 var configLock = &sync.RWMutex{}
 
