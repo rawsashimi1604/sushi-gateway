@@ -48,7 +48,7 @@
       {
         "id": "plugin_6",
         "name": "jwt",
-        "enabled": true,
+        "enabled": false,
         "config": {
           "alg": "RS256",
           "iss": "someIssuerKey",
