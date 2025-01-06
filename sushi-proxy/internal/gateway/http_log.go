@@ -164,5 +164,8 @@ func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogC
 		return model.NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log to "+config.method+" "+config.httpEndpoint)
 	}
 	defer resp.Body.Close()
+
+	slog.Info("Successfully sent log to " + config.method + " " + config.httpEndpoint)
+
 	return nil
 }
