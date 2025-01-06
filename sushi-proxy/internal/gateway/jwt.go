@@ -67,7 +67,6 @@ func (plugin JwtPlugin) Validate() error {
 		}
 
 		// Validate the RSA public key format and structure
-		slog.Info(publicKey)
 		_, err := jwt.ParseRSAPublicKeyFromPEM([]byte(publicKey))
 		if err != nil {
 			return fmt.Errorf("invalid RSA public key: %v", err)
