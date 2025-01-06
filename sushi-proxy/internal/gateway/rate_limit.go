@@ -163,6 +163,9 @@ func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 		defer limiter.mu.Unlock()
 
 		slog.Info("Rate limiting for IP: " + clientIp)
+		slog.Info("Remaining seconds: " + fmt.Sprintf("%f", limiter.limiterSec.Tokens()))
+		slog.Info("Remaining minutes: " + fmt.Sprintf("%f", limiter.limiterMin.Tokens()))
+		slog.Info("Remaining hours: " + fmt.Sprintf("%f", limiter.limiterHr.Tokens()))
 
 		// Check all limits
 		if !limiter.limiterSec.Allow() {
