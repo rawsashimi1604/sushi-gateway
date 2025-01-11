@@ -21,6 +21,11 @@ const restaurantData = [
   { id: 2, name: "Roll House", location: "456 Roll Ave." },
 ];
 
+// GET /health
+app.get("/health", (req, res) => {
+  res.status(200).json({ app_id: process.env.APP_ID, data: "ok" });
+});
+
 // GET /v1/sushi
 app.get("/v1/sushi", (req, res) => {
   res.json({ app_id: process.env.APP_ID, data: sushiData });
