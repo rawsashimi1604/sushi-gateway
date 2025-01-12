@@ -93,6 +93,26 @@ func main() {
 			gateway.GlobalAppConfig.PersistenceSyncInterval)
 	}
 
+	// Start health checker, we start the health checker before the servers start, so that we can verify the health of the services before they are proxied.
+	// We also add it to the error group, so that it can be stopped gracefully when the gateway is shutdown.
+	healthChecker := gateway.NewHealtherChecker()
+	healthChecker.CheckHealthForAllServices() // Initial health check, run it once before starting the ticker
+	errGroup.Go(func() error {
+		ticker := time.NewTicker(5 * time.Second)
+		defer ticker.Stop()
+
+		// Periodic health checks
+		for {
+			select {
+			case <-errGrpCtx.Done():
+				slog.Info("Stopping health checker...")
+				return nil // Stop the health checker by exiting the infinite loop
+			case <-ticker.C:
+				healthChecker.CheckHealthForAllServices()
+			}
+		}
+	})
+
 	adminServer := &http.Server{
 		Addr:    ":" + constant.PORT_ADMIN_API,
 		Handler: adminApiRouter,
@@ -165,27 +185,6 @@ func main() {
 			return err
 		}
 		return nil
-	})
-
-	// Start health checker
-	healthChecker := gateway.NewHealtherChecker()
-	errGroup.Go(func() error {
-		ticker := time.NewTicker(5 * time.Second)
-		defer ticker.Stop()
-
-		// Initial health check
-		healthChecker.CheckHealthForAllServices()
-
-		// Periodic health checks
-		for {
-			select {
-			case <-errGrpCtx.Done():
-				slog.Info("Stopping health checker...")
-				return nil
-			case <-ticker.C:
-				healthChecker.CheckHealthForAllServices()
-			}
-		}
 	})
 
 	// Wait for all servers and handle errors
