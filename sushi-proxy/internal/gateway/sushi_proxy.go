@@ -131,6 +131,14 @@ func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *mode
 	// Handle load balancing
 	loadBalancer := NewLoadBalancer(GlobalHealthChecker)
 	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService)
+	if upstreamIndex == model.NoUpstreamsAvailable {
+		return "", &model.HttpError{
+			Code:     "ERROR_NO_UPSTREAMS_AVAILABLE",
+			Message:  "No upstreams available for service: " + matchedService.Name,
+			HttpCode: http.StatusServiceUnavailable,
+		}
+	}
+
 	upstream := matchedService.Upstreams[upstreamIndex]
 
 	// Get the proxy URL...
