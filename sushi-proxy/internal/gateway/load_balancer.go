@@ -24,6 +24,8 @@ func (lb *LoadBalancer) GetNextUpstream(service model.Service) int {
 	switch service.LoadBalancingStrategy {
 	case model.RoundRobin:
 		return lb.handleRoundRobin(service)
+	case model.IPHash:
+		return lb.handleIPHash(service)
 	default:
 		return 0
 	}
@@ -45,6 +47,10 @@ func (lb *LoadBalancer) GetCurrentUpstream(service model.Service) int {
 // ResetLoadBalancers the load balancer caches
 func ResetLoadBalancers() {
 	roundRobinCache = sync.Map{}
+}
+
+func (lb *LoadBalancer) handleIPHash(service model.Service) int {
+	return 0
 }
 
 func (lb *LoadBalancer) handleRoundRobin(service model.Service) int {
