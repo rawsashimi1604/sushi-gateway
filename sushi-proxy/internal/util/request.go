@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -61,6 +62,41 @@ func GetHostIp(remoteAddress string) (string, *model.HttpError) {
 		return "", model.NewHttpError(http.StatusInternalServerError, "INTERNAL_SERVER_ERROR", "something went wrong in the server.")
 	}
 	return ipAddr, nil
+}
+
+// GetHostAndPortFromURL parses a URL string (with scheme, example: http://127.0.0.1:8080) and returns the host and port
+// If no port is specified in the URL:
+// - HTTP defaults to 80
+// - HTTPS defaults to 443
+func GetHostAndPortFromURL(urlStr string) (string, int, error) {
+	parsedURL, err := url.Parse(urlStr)
+	if err != nil {
+		return "", 0, fmt.Errorf("failed to parse URL: %w", err)
+	}
+
+	// Get host and port from URL
+	host := parsedURL.Hostname()
+	port := parsedURL.Port()
+
+	// If port is not specified, use default ports based on scheme
+	if port == "" {
+		switch parsedURL.Scheme {
+		case "http":
+			port = "80"
+		case "https":
+			port = "443"
+		default:
+			return "", 0, fmt.Errorf("unsupported scheme: %s", parsedURL.Scheme)
+		}
+	}
+
+	// Convert port string to integer
+	portNum, err := strconv.Atoi(port)
+	if err != nil {
+		return "", 0, fmt.Errorf("invalid port number: %w", err)
+	}
+
+	return host, portNum, nil
 }
 
 // Check whether the route exists in the service, match either static or dynamic routes
