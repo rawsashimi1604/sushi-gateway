@@ -29,6 +29,9 @@ func (sv *ServiceValidator) ValidateService(service model.Service) error {
 	if err := validateUpstream(&service); err != nil {
 		return err
 	}
+	if err := validateHealthCheckPath(&service); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -62,5 +65,23 @@ func validateUpstream(service *model.Service) error {
 	if len(service.Upstreams) == 0 {
 		return fmt.Errorf("service :%s must have at least one upstream", service.Name)
 	}
+	return nil
+}
+
+func validateHealthCheckPath(service *model.Service) error {
+	// SKip as health check is not enabled
+	if !service.Health.Enabled {
+		return nil
+	}
+	if service.Health.Path == "" {
+		return fmt.Errorf("service: %s health check path is required", service.Name)
+	}
+	if !strings.HasPrefix(service.Health.Path, "/") {
+		return fmt.Errorf("service path: %s must start with /", service.Health.Path)
+	}
+	if strings.HasSuffix(service.Health.Path, "/") {
+		return fmt.Errorf("service path: %s must not end with /", service.Health.Path)
+	}
+
 	return nil
 }
