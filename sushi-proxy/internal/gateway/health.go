@@ -75,13 +75,13 @@ func (hc *HealthChecker) CheckHealthForAllServices() {
 				res, err := http.Get(healthCheckPath)
 				if err != nil {
 					hc.serviceHealthMap[service.Name][u.Id] = Unhealthy
-					slog.Error("Service: " + service.Name + " upstream: " + u.Id + " is unhealthy. Something went wrong, unable to ping /health route")
+					slog.Error("Service: " + service.Name + " upstream: " + u.Id + " is unhealthy. Something went wrong, unable to ping health path: " + healthCheckPath)
 					return
 				}
 
 				if res.StatusCode != http.StatusOK {
 					hc.serviceHealthMap[service.Name][u.Id] = Unhealthy
-					slog.Error("Service: " + service.Name + " upstream: " + u.Id + " is unhealthy. Status not 200 OK")
+					slog.Error("Service: " + service.Name + " upstream: " + u.Id + " is unhealthy. Status not 200 OK for health path: " + healthCheckPath)
 					return
 				}
 
