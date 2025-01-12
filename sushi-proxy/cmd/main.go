@@ -93,26 +93,6 @@ func main() {
 			gateway.GlobalAppConfig.PersistenceSyncInterval)
 	}
 
-	// Start health checker, we start the health checker before the servers start, so that we can verify the health of the services before they are proxied.
-	// We also add it to the error group, so that it can be stopped gracefully when the gateway is shutdown.
-	healthChecker := gateway.NewHealtherChecker()
-	healthChecker.CheckHealthForAllServices() // Initial health check, run it once before starting the ticker
-	errGroup.Go(func() error {
-		ticker := time.NewTicker(5 * time.Second)
-		defer ticker.Stop()
-
-		// Periodic health checks
-		for {
-			select {
-			case <-errGrpCtx.Done():
-				slog.Info("Stopping health checker...")
-				return nil // Stop the health checker by exiting the infinite loop
-			case <-ticker.C:
-				healthChecker.CheckHealthForAllServices()
-			}
-		}
-	})
-
 	adminServer := &http.Server{
 		Addr:    ":" + constant.PORT_ADMIN_API,
 		Handler: adminApiRouter,
@@ -131,6 +111,27 @@ func main() {
 			return gateway.WatchConfigFile(errGrpCtx, gateway.GlobalAppConfig.ConfigFilePath)
 		})
 	}
+
+	// Start health checker, we start the health checker before the servers start, so that we can verify the health of the services before they are proxied.
+	// We start it after retrieving the config from the db in case of DB mode, or config file in case of DBLESS mode, so that we have the config to check.
+	// We also add it to the error group, so that it can be stopped gracefully when the gateway is shutdown.
+	healthChecker := gateway.NewHealtherChecker()
+	healthChecker.CheckHealthForAllServices() // Initial health check, run it once before starting the ticker
+	errGroup.Go(func() error {
+		ticker := time.NewTicker(5 * time.Second)
+		defer ticker.Stop()
+
+		// Periodic health checks
+		for {
+			select {
+			case <-errGrpCtx.Done():
+				slog.Info("Stopping health checker...")
+				return nil // Stop the health checker by exiting the infinite loop
+			case <-ticker.C:
+				healthChecker.CheckHealthForAllServices()
+			}
+		}
+	})
 
 	// Start all servers concurrently
 	// Start HTTP server
