@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/api"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
@@ -164,6 +165,27 @@ func main() {
 			return err
 		}
 		return nil
+	})
+
+	// Start health checker
+	healthChecker := gateway.NewHealtherChecker()
+	errGroup.Go(func() error {
+		ticker := time.NewTicker(5 * time.Second)
+		defer ticker.Stop()
+
+		// Initial health check
+		healthChecker.CheckHealthForAllServices()
+
+		// Periodic health checks
+		for {
+			select {
+			case <-errGrpCtx.Done():
+				slog.Info("Stopping health checker...")
+				return nil
+			case <-ticker.C:
+				healthChecker.CheckHealthForAllServices()
+			}
+		}
 	})
 
 	// Wait for all servers and handle errors

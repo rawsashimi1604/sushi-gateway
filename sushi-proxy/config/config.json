@@ -98,22 +98,6 @@
   },
   "services": [
     {
-      "name": "starwars-svc",
-      "base_path": "/swapi",
-      "protocol": "https",
-      "load_balancing_strategy": "round_robin",
-      "upstreams": [{ "id": "upstream_1", "host": "swapi.dev", "port": 443 }],
-      "plugins": [],
-      "routes": [
-        {
-          "name": "get-people",
-          "path": "/api/people/{id}",
-          "methods": ["GET"],
-          "plugins": []
-        }
-      ]
-    },
-    {
       "name": "sushi-svc",
       "base_path": "/sushi-service",
       "protocol": "http",
@@ -124,6 +108,10 @@
         { "id": "upstream_3", "host": "localhost", "port": 8003 }
       ],
       "plugins": [],
+      "health": {
+        "enabled": true,
+        "path": "/health"
+      },
       "routes": [
         {
           "name": "get-sushi",

@@ -23,6 +23,11 @@ type Upstream struct {
 	Port int    `json:"port"`
 }
 
+type Health struct {
+	Enabled bool   `json:"enabled"`
+	Path    string `json:"path"`
+}
+
 type Route struct {
 	Name    string         `json:"name"`
 	Path    string         `json:"path"`
@@ -38,4 +43,5 @@ type Service struct {
 	Upstreams             []Upstream             `json:"upstreams"`
 	Plugins               []PluginConfig         `json:"plugins"`
 	Routes                []Route                `json:"routes"`
+	Health                Health                 `json:"health"`
 }
