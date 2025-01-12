@@ -86,7 +86,7 @@ func (hc *HealthChecker) CheckHealthForAllServices() {
 				}
 
 				hc.serviceHealthMap[service.Name][u.Id] = Healthy
-				slog.Info("Service: " + service.Name + " upstream: " + u.Id + " is healthy. Status 200 OK")
+				slog.Info("Service: " + service.Name + " upstream: " + u.Id + " is healthy. Status 200 OK for health path: " + healthCheckPath)
 			}(&u)
 		}
 	}
