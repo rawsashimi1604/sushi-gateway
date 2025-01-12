@@ -26,12 +26,14 @@ var GlobalHealthChecker = NewHealthChecker()
 // service -> upstream -> health status
 type HealthChecker struct {
 	serviceHealthMap map[string]map[string]HealthStatus
+	mutex            sync.RWMutex
 }
 
 func NewHealthChecker() *HealthChecker {
 	serviceHealthMap := make(map[string]map[string]HealthStatus)
 	return &HealthChecker{
 		serviceHealthMap: serviceHealthMap,
+		mutex:            sync.RWMutex{},
 	}
 }
 
@@ -42,6 +44,12 @@ func (hc *HealthChecker) Initialize() {
 			hc.serviceHealthMap[service.Name][upstream.Id] = NotAvailable
 		}
 	}
+}
+
+func (hc *HealthChecker) UpdateHealthMap(serviceName string, upstreamId string, status HealthStatus) {
+	hc.mutex.Lock()
+	defer hc.mutex.Unlock()
+	hc.serviceHealthMap[serviceName][upstreamId] = status
 }
 
 func (hc *HealthChecker) CheckHealthForAllServices() {
@@ -78,18 +86,18 @@ func (hc *HealthChecker) CheckHealthForAllServices() {
 
 				res, err := http.Get(healthCheckPath)
 				if err != nil {
-					hc.serviceHealthMap[s.Name][u.Id] = Unhealthy
+					hc.UpdateHealthMap(s.Name, u.Id, Unhealthy)
 					slog.Error("Service: " + s.Name + " upstream: " + u.Id + " is unhealthy. Something went wrong, unable to ping health path: " + healthCheckPath)
 					return
 				}
 
 				if res.StatusCode != http.StatusOK {
-					hc.serviceHealthMap[s.Name][u.Id] = Unhealthy
+					hc.UpdateHealthMap(s.Name, u.Id, Unhealthy)
 					slog.Error("Service: " + s.Name + " upstream: " + u.Id + " is unhealthy. Status not 200 OK for health path: " + healthCheckPath)
 					return
 				}
 
-				hc.serviceHealthMap[s.Name][u.Id] = Healthy
+				hc.UpdateHealthMap(s.Name, u.Id, Healthy)
 				slog.Info("Service: " + s.Name + " upstream: " + u.Id + " is healthy. Status 200 OK for health path: " + healthCheckPath)
 			}(&s, &u)
 		}
