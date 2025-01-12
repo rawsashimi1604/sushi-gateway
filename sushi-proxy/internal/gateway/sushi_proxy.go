@@ -3,15 +3,16 @@ package gateway
 import (
 	"bytes"
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"strings"
+
+	"github.com/gorilla/mux"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 )
 
 type SushiProxy struct {
@@ -128,7 +129,7 @@ func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *mode
 	}
 
 	// Handle load balancing
-	loadBalancer := NewLoadBalancer()
+	loadBalancer := NewLoadBalancer(GlobalHealthChecker)
 	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService)
 	upstream := matchedService.Upstreams[upstreamIndex]
 

@@ -104,7 +104,7 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 			"Error parsing service and route from request")
 	}
 
-	lb := NewLoadBalancer()
+	lb := NewLoadBalancer(GlobalHealthChecker)
 	upstreamIndexToRoute := lb.GetCurrentUpstream(*service)
 
 	clientIp, err := util.GetHostIp(r.RemoteAddr)
