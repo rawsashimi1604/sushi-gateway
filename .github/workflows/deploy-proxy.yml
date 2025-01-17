@@ -8,7 +8,7 @@ on:
         required: true
         type: string
 jobs:
-  deploy-docker:
+  deploy-docker-proxy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
