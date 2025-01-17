@@ -14,6 +14,7 @@ def get_docker_tag(branch_name):
 
 
 def write_to_github(docker_tag):
+    print(f"Writing docker tag:: {docker_tag} to github environment and outputs")
     # Write the docker tag to github environment and github outputs
     env_file = os.getenv('GITHUB_ENV')
     with open(env_file, "a") as file:
