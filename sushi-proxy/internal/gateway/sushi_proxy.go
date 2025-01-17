@@ -130,7 +130,14 @@ func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *mode
 
 	// Handle load balancing
 	loadBalancer := NewLoadBalancer(GlobalHealthChecker)
-	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService)
+	remoteIpAddress, err := util.GetHostIp(req.RemoteAddr)
+	if err != nil {
+		slog.Error("Error getting remote IP address: " + err.Error())
+		remoteIpAddress = "default"
+		return "", err
+	}
+
+	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService, remoteIpAddress)
 	if upstreamIndex == model.NoUpstreamsAvailable {
 		return "", &model.HttpError{
 			Code:     "ERROR_NO_UPSTREAMS_AVAILABLE",

@@ -15,17 +15,21 @@ type LoadBalancer struct {
 // Stores the counter of upstream to map to
 var roundRobinCache sync.Map
 
+// Create a consistent hash cache based on service name
+// Stores the consistent hash ring for each service
+var consistentHashCache sync.Map
+
 func NewLoadBalancer(healthChecker *HealthChecker) *LoadBalancer {
 	return &LoadBalancer{healthChecker: healthChecker}
 }
 
 // Gets the index of upstream to forward the request to based on the load balancing algorithm
-func (lb *LoadBalancer) GetNextUpstream(service model.Service) int {
+func (lb *LoadBalancer) GetNextUpstream(service model.Service, clientIP string) int {
 	switch service.LoadBalancingStrategy {
 	case model.RoundRobin:
 		return lb.handleRoundRobin(service)
 	case model.IPHash:
-		return lb.handleIPHash(service)
+		return lb.handleIPHash(service, clientIP)
 	default:
 		return 0
 	}
@@ -39,6 +43,11 @@ func (lb *LoadBalancer) GetCurrentUpstream(service model.Service) int {
 			return val.(int)
 		}
 		return 0
+	case model.IPHash:
+		if val, ok := consistentHashCache.Load(service.Name); ok {
+			return val.(int)
+		}
+		return 0
 	default:
 		return 0
 	}
@@ -47,10 +56,66 @@ func (lb *LoadBalancer) GetCurrentUpstream(service model.Service) int {
 // ResetLoadBalancers the load balancer caches
 func ResetLoadBalancers() {
 	roundRobinCache = sync.Map{}
+	consistentHashCache = sync.Map{}
 }
 
-func (lb *LoadBalancer) handleIPHash(service model.Service) int {
-	return 0
+func (lb *LoadBalancer) handleIPHash(service model.Service, clientIP string) int {
+	// Get or create consistent hash ring for this service
+	ring, _ := consistentHashCache.LoadOrStore(service.Name, NewConsistentHashRing(service))
+	consistentRing := ring.(*ConsistentHashRing)
+
+	// If health check is not enabled, just use the consistent hash ring directly
+	if !service.Health.Enabled {
+		if len(service.Upstreams) == 1 {
+			return 0
+		}
+
+		// Get the upstream from the ring using client IP
+		upstream := consistentRing.GetUpstream(clientIP)
+
+		// Find the index of the upstream in the service's upstreams
+		for i, u := range service.Upstreams {
+			if u.Id == upstream.Id {
+				return i
+			}
+		}
+		return 0
+	}
+
+	// Health check is enabled, so we need to get the healthy upstreams
+	healthyUpstreams := lb.healthChecker.GetHealthyUpstreams(service)
+	if len(healthyUpstreams) == 0 {
+		return model.NoUpstreamsAvailable
+	}
+
+	if len(service.Upstreams) == 1 {
+		return 0
+	}
+
+	// Get the upstream from the ring using client IP
+	upstream := consistentRing.GetUpstream(clientIP)
+
+	// Check if the selected upstream is healthy
+	for i, u := range service.Upstreams {
+		if u.Id == upstream.Id {
+			if status, exists := lb.healthChecker.serviceHealthMap[service.Name][u.Id]; exists {
+				if status == Healthy {
+					return i
+				}
+			}
+		}
+	}
+
+	// If the selected upstream is not healthy, find the first healthy one
+	for i, u := range service.Upstreams {
+		if status, exists := lb.healthChecker.serviceHealthMap[service.Name][u.Id]; exists {
+			if status == Healthy {
+				return i
+			}
+		}
+	}
+
+	return model.NoUpstreamsAvailable
 }
 
 func (lb *LoadBalancer) handleRoundRobin(service model.Service) int {
