@@ -4,7 +4,7 @@
             <!-- Promo Pill -->
             <a href="https://github.com/rawsashimi1604/sushi-gateway" class="hero__pill" target="_blank">
                 <img src="/images/Logo.png" alt="Sushi Gateway logo" width="20" height="20" />
-                <span>Sushi Gateway v0.1 Released</span>
+                <span>Sushi Gateway v0.3.0 Released</span>
             </a>
 
             <!-- Heading -->
