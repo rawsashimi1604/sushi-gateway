@@ -1,0 +1,11 @@
+name: Run Continuous Integration (CI)
+
+on:
+  pull_request:
+    branches:
+      - main
+      - release/*
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml

@@ -1,7 +1,7 @@
 name: Deploy and Release new version
 
 on:
-  pull_request:
+  push:
     branches:
       - main
       - release/*
