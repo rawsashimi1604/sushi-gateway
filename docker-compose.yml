@@ -12,9 +12,38 @@ services:
     ports:
       - "8001:3000"
     environment:
-      - APP_ID=8001
-      - JWT_ISSUER=someIssuerKey
-      - JWT_SECRET=123secret456
+      APP_ID: 8001
+      JWT_ISSUER: someIssuerKey
+      JWT_SECRET: 123secret456
+      JWT_PRIVATE_KEY: |
+        -----BEGIN PRIVATE KEY-----
+        MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGIp85KAMB0Ixp
+        RLbtSZ5VV5ZS9tdkhsn6o96yY5Z+KXPZ018GTg0T4Ojut8h7Nk0Jeg0scnGjoDKP
+        PVLOJ1M0tKQWsc6UprODh2pb0NNhYx7gNzOF4A+c3Kaum8resUogXosPbdWrnfTN
+        +eyNSbBaY1pcWrBtCRiSOtHEVwcbOGo838qZxlGldwSQPJ1p9OlxuV9uEGf1eZqn
+        sjNf5pcVrokDlwjszrDQOjslYex5dgEEDhLHBgfjbgupO4oy56K++ESFv5NOCCuI
+        2nIhUrImF2PjWNTJypVEr3lMomB/lOZBh8BOl4sHL2QbGgSFrOXV06k97PDXbFI9
+        PcfeCJFTAgMBAAECggEAA2DZv0XaKCmnJ7BX6wZKbrnde4Y2m/q/Cx46LUrwTIVJ
+        +di5ytYP27BbRNegtSSrxScKYcu9wPZdTXCbddbZJgN30h12rpkSY568sWjAOtEz
+        Slnb79E1b2K23xP29XRuasxuVCAE+MRAKOGY0bvnlf2gWndw8uIatbR5fLemt0G8
+        +BFwp1XnoXBUz28B6uCC8+d7Tskfw0AWYH+QTq0yI+zCkj2jI7ZizZ/AIRrFJjhU
+        MoZafcDiUGrTxSaSYissHHrhbmV79SFvsGAZk2imZoVxvvx/I1VryvaKyqDTMonE
+        6dATs8ePVMmGbRw5hn3+2fFxpATLq2nOGS0GglMEIQKBgQDutUMrudqILVdnW45C
+        QNXeBUOWHbAoxny3owzVmaaoN08v+46L49yOtNOm0fEOp+Nsf+KmTr/QrwUEC1IG
+        wSb+4w+e5vMBiWDHFHxt8hIt/PEvt5c4MW9iasV+zqXffrma0JMWgaAQ/UHcE2pO
+        oG+JmcJAb+oDAfP7XrXmC24dEQKBgQDUfPRM1YJizqdIV5ISVcxUaNKFXU9YrhFP
+        hofOiRf1vUDDvPhDTKmsGIZTx7DnXdJGRqVs50yJ1rQuPKwlhjfbjsG/KhuTo2Va
+        UNRkkU2x1qj0j/EvE3sXEXtOTTNmMUeNhCAfxB/stcGFl/FkLHhwVSZaMH+TpnKs
+        RlvDuzEYIwKBgCZ4bATmBQQhWo67wKeIz27ipkvRKQzJQFxQGMdr5eICV+7Bue1t
+        oaQWHG4sM49LG2nnCl4HHv7A1iwarvOLuX8mlOPlEJDU1RYAhTUq6CclNrGcAvD5
+        dpwD3SRcpXrpb3w11R6xcVyLlEuljWJylMc2UooT/0DQ1cNTNjmG6g4hAoGAC48E
+        hw1yO0e8h83jr0WliM3u7bxGra9CV84coxqICCEUXdFwu9B2xlrLK9GICP3si1Aa
+        fZMTccgRIxa/0oa7kSDx3yE+QMi5obEV7KaO0Ga56BvQZdwsbPPRfk/qxNtXZhZS
+        3QeBKRI2BbtfMTDOGGY5YNyUhAag5Egrg7kyEXsCgYEAlsvXkw2YRTCcZqlSUPKX
+        a4KOsvedvNf28w7dVYZRdH1GsAtuZvKPNECDUFFQXv6Md53WcGC0ug2jwqmAYj1k
+        AQ6ctqhq3Cj1ixm6wMVEjAeyW63Oyo/q/dX3GZHoPs2HvHkaRJ0c1Vwp9e2fdfR6
+        /oP9VHaxu9APdaGYmcgXKO8=
+        -----END PRIVATE KEY-----
 
   sushi-svc-2:
     networks:
@@ -24,9 +53,38 @@ services:
     ports:
       - "8002:3000"
     environment:
-      - APP_ID=8002
-      - JWT_ISSUER=someIssuerKey
-      - JWT_SECRET=123secret456
+      APP_ID: 8002
+      JWT_ISSUER: someIssuerKey
+      JWT_SECRET: 123secret456
+      JWT_PRIVATE_KEY: |
+        -----BEGIN PRIVATE KEY-----
+        MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGIp85KAMB0Ixp
+        RLbtSZ5VV5ZS9tdkhsn6o96yY5Z+KXPZ018GTg0T4Ojut8h7Nk0Jeg0scnGjoDKP
+        PVLOJ1M0tKQWsc6UprODh2pb0NNhYx7gNzOF4A+c3Kaum8resUogXosPbdWrnfTN
+        +eyNSbBaY1pcWrBtCRiSOtHEVwcbOGo838qZxlGldwSQPJ1p9OlxuV9uEGf1eZqn
+        sjNf5pcVrokDlwjszrDQOjslYex5dgEEDhLHBgfjbgupO4oy56K++ESFv5NOCCuI
+        2nIhUrImF2PjWNTJypVEr3lMomB/lOZBh8BOl4sHL2QbGgSFrOXV06k97PDXbFI9
+        PcfeCJFTAgMBAAECggEAA2DZv0XaKCmnJ7BX6wZKbrnde4Y2m/q/Cx46LUrwTIVJ
+        +di5ytYP27BbRNegtSSrxScKYcu9wPZdTXCbddbZJgN30h12rpkSY568sWjAOtEz
+        Slnb79E1b2K23xP29XRuasxuVCAE+MRAKOGY0bvnlf2gWndw8uIatbR5fLemt0G8
+        +BFwp1XnoXBUz28B6uCC8+d7Tskfw0AWYH+QTq0yI+zCkj2jI7ZizZ/AIRrFJjhU
+        MoZafcDiUGrTxSaSYissHHrhbmV79SFvsGAZk2imZoVxvvx/I1VryvaKyqDTMonE
+        6dATs8ePVMmGbRw5hn3+2fFxpATLq2nOGS0GglMEIQKBgQDutUMrudqILVdnW45C
+        QNXeBUOWHbAoxny3owzVmaaoN08v+46L49yOtNOm0fEOp+Nsf+KmTr/QrwUEC1IG
+        wSb+4w+e5vMBiWDHFHxt8hIt/PEvt5c4MW9iasV+zqXffrma0JMWgaAQ/UHcE2pO
+        oG+JmcJAb+oDAfP7XrXmC24dEQKBgQDUfPRM1YJizqdIV5ISVcxUaNKFXU9YrhFP
+        hofOiRf1vUDDvPhDTKmsGIZTx7DnXdJGRqVs50yJ1rQuPKwlhjfbjsG/KhuTo2Va
+        UNRkkU2x1qj0j/EvE3sXEXtOTTNmMUeNhCAfxB/stcGFl/FkLHhwVSZaMH+TpnKs
+        RlvDuzEYIwKBgCZ4bATmBQQhWo67wKeIz27ipkvRKQzJQFxQGMdr5eICV+7Bue1t
+        oaQWHG4sM49LG2nnCl4HHv7A1iwarvOLuX8mlOPlEJDU1RYAhTUq6CclNrGcAvD5
+        dpwD3SRcpXrpb3w11R6xcVyLlEuljWJylMc2UooT/0DQ1cNTNjmG6g4hAoGAC48E
+        hw1yO0e8h83jr0WliM3u7bxGra9CV84coxqICCEUXdFwu9B2xlrLK9GICP3si1Aa
+        fZMTccgRIxa/0oa7kSDx3yE+QMi5obEV7KaO0Ga56BvQZdwsbPPRfk/qxNtXZhZS
+        3QeBKRI2BbtfMTDOGGY5YNyUhAag5Egrg7kyEXsCgYEAlsvXkw2YRTCcZqlSUPKX
+        a4KOsvedvNf28w7dVYZRdH1GsAtuZvKPNECDUFFQXv6Md53WcGC0ug2jwqmAYj1k
+        AQ6ctqhq3Cj1ixm6wMVEjAeyW63Oyo/q/dX3GZHoPs2HvHkaRJ0c1Vwp9e2fdfR6
+        /oP9VHaxu9APdaGYmcgXKO8=
+        -----END PRIVATE KEY-----
 
   sushi-svc-3:
     networks:
@@ -36,9 +94,38 @@ services:
     ports:
       - "8003:3000"
     environment:
-      - APP_ID=8003
-      - JWT_ISSUER=someIssuerKey
-      - JWT_SECRET=123secret456
+      APP_ID: 8003
+      JWT_ISSUER: someIssuerKey
+      JWT_SECRET: 123secret456
+      JWT_PRIVATE_KEY: |
+        -----BEGIN PRIVATE KEY-----
+        MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGIp85KAMB0Ixp
+        RLbtSZ5VV5ZS9tdkhsn6o96yY5Z+KXPZ018GTg0T4Ojut8h7Nk0Jeg0scnGjoDKP
+        PVLOJ1M0tKQWsc6UprODh2pb0NNhYx7gNzOF4A+c3Kaum8resUogXosPbdWrnfTN
+        +eyNSbBaY1pcWrBtCRiSOtHEVwcbOGo838qZxlGldwSQPJ1p9OlxuV9uEGf1eZqn
+        sjNf5pcVrokDlwjszrDQOjslYex5dgEEDhLHBgfjbgupO4oy56K++ESFv5NOCCuI
+        2nIhUrImF2PjWNTJypVEr3lMomB/lOZBh8BOl4sHL2QbGgSFrOXV06k97PDXbFI9
+        PcfeCJFTAgMBAAECggEAA2DZv0XaKCmnJ7BX6wZKbrnde4Y2m/q/Cx46LUrwTIVJ
+        +di5ytYP27BbRNegtSSrxScKYcu9wPZdTXCbddbZJgN30h12rpkSY568sWjAOtEz
+        Slnb79E1b2K23xP29XRuasxuVCAE+MRAKOGY0bvnlf2gWndw8uIatbR5fLemt0G8
+        +BFwp1XnoXBUz28B6uCC8+d7Tskfw0AWYH+QTq0yI+zCkj2jI7ZizZ/AIRrFJjhU
+        MoZafcDiUGrTxSaSYissHHrhbmV79SFvsGAZk2imZoVxvvx/I1VryvaKyqDTMonE
+        6dATs8ePVMmGbRw5hn3+2fFxpATLq2nOGS0GglMEIQKBgQDutUMrudqILVdnW45C
+        QNXeBUOWHbAoxny3owzVmaaoN08v+46L49yOtNOm0fEOp+Nsf+KmTr/QrwUEC1IG
+        wSb+4w+e5vMBiWDHFHxt8hIt/PEvt5c4MW9iasV+zqXffrma0JMWgaAQ/UHcE2pO
+        oG+JmcJAb+oDAfP7XrXmC24dEQKBgQDUfPRM1YJizqdIV5ISVcxUaNKFXU9YrhFP
+        hofOiRf1vUDDvPhDTKmsGIZTx7DnXdJGRqVs50yJ1rQuPKwlhjfbjsG/KhuTo2Va
+        UNRkkU2x1qj0j/EvE3sXEXtOTTNmMUeNhCAfxB/stcGFl/FkLHhwVSZaMH+TpnKs
+        RlvDuzEYIwKBgCZ4bATmBQQhWo67wKeIz27ipkvRKQzJQFxQGMdr5eICV+7Bue1t
+        oaQWHG4sM49LG2nnCl4HHv7A1iwarvOLuX8mlOPlEJDU1RYAhTUq6CclNrGcAvD5
+        dpwD3SRcpXrpb3w11R6xcVyLlEuljWJylMc2UooT/0DQ1cNTNjmG6g4hAoGAC48E
+        hw1yO0e8h83jr0WliM3u7bxGra9CV84coxqICCEUXdFwu9B2xlrLK9GICP3si1Aa
+        fZMTccgRIxa/0oa7kSDx3yE+QMi5obEV7KaO0Ga56BvQZdwsbPPRfk/qxNtXZhZS
+        3QeBKRI2BbtfMTDOGGY5YNyUhAag5Egrg7kyEXsCgYEAlsvXkw2YRTCcZqlSUPKX
+        a4KOsvedvNf28w7dVYZRdH1GsAtuZvKPNECDUFFQXv6Md53WcGC0ug2jwqmAYj1k
+        AQ6ctqhq3Cj1ixm6wMVEjAeyW63Oyo/q/dX3GZHoPs2HvHkaRJ0c1Vwp9e2fdfR6
+        /oP9VHaxu9APdaGYmcgXKO8=
+        -----END PRIVATE KEY-----
 
   sushi-http-log-consumer:
     networks:

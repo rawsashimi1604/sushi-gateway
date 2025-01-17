@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -30,8 +31,8 @@ type AppConfig struct {
 
 var GlobalAppConfig *AppConfig
 
-func LoadGlobalConfig() *AppConfig {
-	slog.Info("Loading global app gateway")
+func LoadGlobalConfig() (*AppConfig, error) {
+	slog.Info("Loading Global application config for sushi gateway from environment variables...")
 	godotenv.Load()
 
 	errors := make([]string, 0)
@@ -59,12 +60,12 @@ func LoadGlobalConfig() *AppConfig {
 		slog.Info("Since no certs were found, auto generating self signed certs for the TLS server...")
 		if err := GenerateSelfSignedCerts("."); err != nil {
 			slog.Error("Failed to generate self-signed certificates", "error", err)
-			panic("Failed to generate self-signed certificates")
+			errors = append(errors, "Failed to generate self-signed certificates")
+		} else {
+			// Set certificate paths
+			serverCertPath = filepath.Join(".", "server.crt")
+			serverKeyPath = filepath.Join(".", "server.key")
 		}
-
-		// Set certificate paths
-		serverCertPath = filepath.Join(".", "server.crt")
-		serverKeyPath = filepath.Join(".", "server.key")
 	}
 
 	// Optional, we only need CA Certs for MTLS communications
@@ -142,7 +143,8 @@ func LoadGlobalConfig() *AppConfig {
 		for _, err := range errors {
 			slog.Error(err)
 		}
-		panic("Errors detected when loading environment configuration...")
+		slog.Error("Errors detected when loading environment configuration exiting...")
+		return nil, fmt.Errorf("failed to load environment configuration")
 	}
 
 	config := &AppConfig{
@@ -161,5 +163,5 @@ func LoadGlobalConfig() *AppConfig {
 		DbConnectionPort:        dbConnectionPort,
 	}
 
-	return config
+	return config, nil
 }

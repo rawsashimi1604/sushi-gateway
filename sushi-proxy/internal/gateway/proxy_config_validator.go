@@ -100,6 +100,8 @@ func validateServices(config *model.ProxyConfig) error {
 			return err
 		}
 
+		// TODO: add validation for service route paths and methods, they must be unique.
+
 		serviceNames = append(serviceNames, service.Name)
 		servicePaths = append(servicePaths, service.BasePath)
 	}

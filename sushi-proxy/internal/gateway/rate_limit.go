@@ -5,37 +5,54 @@ import (
 	"log/slog"
 	"net/http"
 	"sync"
-	"time"
+
+	"golang.org/x/time/rate"
 
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 )
 
-// Global rate limit stores
-var globalRateLimitSecStore = RateLimitStore{
-	mu:    sync.Mutex{},
-	rates: make(map[string]map[string]int),
+// IPRateLimiter holds the rate limiter for an IP address
+type IPRateLimiter struct {
+	mu         sync.RWMutex
+	limiterSec *rate.Limiter
+	limiterMin *rate.Limiter
+	limiterHr  *rate.Limiter
 }
 
-var globalRateLimitMinStore = RateLimitStore{
-	mu:    sync.Mutex{},
-	rates: make(map[string]map[string]int),
-}
-
-var globalRateLimitHourStore = RateLimitStore{
-	mu:    sync.Mutex{},
-	rates: make(map[string]map[string]int),
-}
-
+// RateLimitStore stores rate limiters for different scopes, that points to ip
 type RateLimitStore struct {
-	mu    sync.Mutex
-	rates map[string]map[string]int
+	limits map[string]map[string]*IPRateLimiter // scope -> ip -> limiter
+}
+
+// Global rate limit stores
+var globalRateLimitStore = &RateLimitStore{
+	limits: make(map[string]map[string]*IPRateLimiter),
 }
 
 type RateLimitPlugin struct {
 	config      map[string]interface{}
 	proxyConfig *model.ProxyConfig
+}
+
+// getLimiter retrieves or creates a rate limiter for an IP address
+func (s *RateLimitStore) getLimiter(scope, ip string, secLimit, minLimit, hrLimit float64) *IPRateLimiter {
+	if s.limits[scope] == nil {
+		s.limits[scope] = make(map[string]*IPRateLimiter)
+	}
+
+	if limiter, exists := s.limits[scope][ip]; exists {
+		return limiter
+	}
+
+	limiter := &IPRateLimiter{
+		limiterSec: rate.NewLimiter(rate.Limit(secLimit), 1),                // per second
+		limiterMin: rate.NewLimiter(rate.Limit(minLimit/60), int(minLimit)), // per minute
+		limiterHr:  rate.NewLimiter(rate.Limit(hrLimit/3600), int(hrLimit)), // per hour
+	}
+	s.limits[scope][ip] = limiter
+	return limiter
 }
 
 func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *model.ProxyConfig) *Plugin {
@@ -80,140 +97,99 @@ func (plugin RateLimitPlugin) Validate() error {
 	return nil
 }
 
-func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *model.Service, route *model.Route, r *http.Request) (string, *model.HttpError) {
+func (plugin RateLimitPlugin) detectRateLimitOperationLevel(service *model.Service, route *model.Route) string {
 	// Check whether global, service or route level rate limit.
 	for _, servicePlugin := range service.Plugins {
 		name := servicePlugin.Name
 		if name == constant.PLUGIN_RATE_LIMIT {
-			return "service", nil
+			return "Service"
 		}
 	}
 
 	for _, routePlugin := range route.Plugins {
 		name := routePlugin.Name
 		if name == constant.PLUGIN_RATE_LIMIT {
-			return "route", nil
+			return "Route"
 		}
 	}
 
-	return "global", nil
+	return "Global"
 }
 
 func (plugin RateLimitPlugin) getMapKeyEntry(configLevel string, service *model.Service, route *model.Route) string {
-	if configLevel == "global" {
-		return "global"
+	if configLevel == "Global" {
+		return "Global"
+	} else if configLevel == "Service" {
+		return fmt.Sprintf("Service::%s", service.Name)
+	} else {
+		return fmt.Sprintf("Route::%s", route.Name)
 	}
 
-	if configLevel == "service" {
-		return service.Name
-	}
-
-	if configLevel == "route" {
-		return fmt.Sprintf("%s_%s", service.Name, route.Name)
-	}
-
-	return "global"
 }
 
+// Execute implementation
 func (plugin RateLimitPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing rate limit function...")
 
 		service, route, err := util.GetServiceAndRouteFromRequest(plugin.proxyConfig, r)
-		rateLimitOperationLevel, err := plugin.detectRateLimitOperationLevel(service, route, r)
 		if err != nil {
+			err.WriteLogMessage()
 			err.WriteJSONResponse(w)
 			return
 		}
 
-		clientIp := r.RemoteAddr
-
-		// Get proxy configs
-		config := plugin.config
-		limitSec := int64(config["limit_second"].(float64))
-		limitMin := int64(config["limit_min"].(float64))
-		limitHour := int64(config["limit_hour"].(float64))
-
-		// Async safe operation
-		globalRateLimitSecStore.mu.Lock()
-		globalRateLimitMinStore.mu.Lock()
-		globalRateLimitHourStore.mu.Lock()
-
-		mapEntry := plugin.getMapKeyEntry(rateLimitOperationLevel, service, route)
-		secCount, secExists := globalRateLimitSecStore.rates[mapEntry][clientIp]
-		if !secExists {
-			// If no ip hit, create a new entry, depending on the plugin configuration level. )
-			globalRateLimitSecStore.rates[mapEntry] = make(map[string]int)
-			globalRateLimitSecStore.rates[mapEntry][clientIp] = 1
-
-			// Sec counter.
-			go func() {
-				time.Sleep(1 * time.Second)
-				globalRateLimitSecStore.mu.Lock()
-				delete(globalRateLimitSecStore.rates[mapEntry], clientIp)
-				globalRateLimitSecStore.mu.Unlock()
-			}()
+		rateLimitOperationLevel := plugin.detectRateLimitOperationLevel(service, route)
+		clientIp, err := util.GetHostIp(r.RemoteAddr)
+		if err != nil {
+			err.WriteLogMessage()
+			err.WriteJSONResponse(w)
+			return
 		}
 
-		minCount, minExists := globalRateLimitMinStore.rates[mapEntry][clientIp]
-		if !minExists {
-			// If no ip hit, create a new entry.
-			globalRateLimitMinStore.rates[mapEntry] = make(map[string]int)
-			globalRateLimitMinStore.rates[mapEntry][clientIp] = 1
+		// Get rate limits from config
+		limitSec := plugin.config["limit_second"].(float64)
+		limitMin := plugin.config["limit_min"].(float64)
+		limitHour := plugin.config["limit_hour"].(float64)
 
-			// Min counter.
-			go func() {
-				time.Sleep(1 * time.Minute)
-				globalRateLimitMinStore.mu.Lock()
-				delete(globalRateLimitMinStore.rates[mapEntry], clientIp)
-				globalRateLimitMinStore.mu.Unlock()
-			}()
-		}
+		// Get scope key
+		scope := plugin.getMapKeyEntry(rateLimitOperationLevel, service, route)
 
-		hourCount, hourExists := globalRateLimitHourStore.rates[mapEntry][clientIp]
-		if !hourExists {
-			// If no ip hit, create a new entry.
-			globalRateLimitHourStore.rates[mapEntry] = make(map[string]int)
-			globalRateLimitHourStore.rates[mapEntry][clientIp] = 1
+		// Get or create limiter for this IP
+		limiter := globalRateLimitStore.getLimiter(scope, clientIp, limitSec, limitMin, limitHour)
 
-			// Hour counter.
-			go func() {
-				time.Sleep(1 * time.Hour)
-				globalRateLimitHourStore.mu.Lock()
-				delete(globalRateLimitHourStore.rates[mapEntry], clientIp)
-				globalRateLimitHourStore.mu.Unlock()
-			}()
-		}
+		// Guard against race conditions
+		limiter.mu.Lock()
+		defer limiter.mu.Unlock()
 
-		globalRateLimitSecStore.rates[mapEntry][clientIp] = secCount + 1
-		globalRateLimitMinStore.rates[mapEntry][clientIp] = minCount + 1
-		globalRateLimitHourStore.rates[mapEntry][clientIp] = hourCount + 1
-		globalRateLimitSecStore.mu.Unlock()
-		globalRateLimitMinStore.mu.Unlock()
-		globalRateLimitHourStore.mu.Unlock()
+		slog.Info("Rate limiting for IP: " + clientIp)
+		slog.Info("Remaining seconds: " + fmt.Sprintf("%f", limiter.limiterSec.Tokens()))
+		slog.Info("Remaining minutes: " + fmt.Sprintf("%f", limiter.limiterMin.Tokens()))
+		slog.Info("Remaining hours: " + fmt.Sprintf("%f", limiter.limiterHr.Tokens()))
 
-		if int64(secCount) > limitSec {
+		// Check all limits
+		if !limiter.limiterSec.Allow() {
 			err := model.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_SECOND_EXCEEDED",
-				"Rate limit exceeded for "+mapEntry)
+				fmt.Sprintf("Rate limit exceeded for %s (per second)", scope))
 			err.WriteLogMessage()
 			err.WriteJSONResponse(w)
 			return
 		}
 
-		if int64(minCount) > limitMin {
+		if !limiter.limiterMin.Allow() {
 			err := model.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_MINUTE_EXCEEDED",
-				"Rate limit exceeded for "+mapEntry)
+				fmt.Sprintf("Rate limit exceeded for %s (per minute)", scope))
 			err.WriteLogMessage()
 			err.WriteJSONResponse(w)
 			return
 		}
 
-		if int64(hourCount) > limitHour {
+		if !limiter.limiterHr.Allow() {
 			err := model.NewHttpError(http.StatusTooManyRequests,
 				"RATE_LIMIT_HOUR_EXCEEDED",
-				"Rate limit exceeded for "+mapEntry)
+				fmt.Sprintf("Rate limit exceeded for %s (per hour)", scope))
 			err.WriteLogMessage()
 			err.WriteJSONResponse(w)
 			return

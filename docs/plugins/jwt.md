@@ -6,13 +6,14 @@ The JSON Web Token (JWT) (`jwt`) plugin provides a robust mechanism for securing
 
 The JWT plugin inspects the `Authorization` header of incoming requests for a Bearer token. It validates the token’s signature and claims using the configured algorithm and secret or public key.
 
-Currently, only **HS256** (HMAC-SHA256) is supported, with **RS256** (RSA-SHA256) planned for future releases.
+Currently, only **HS256** (HMAC-SHA256) and **RS256** (RSA-SHA256) is supported.
 
 ### Key Features
 
 - Supports token validation for stateless authentication.
 - Configurable issuer (`iss`) to ensure tokens come from trusted sources.
 - Validates token signatures using a secret key.
+- Validates token signatures against a public key.
 
 ::: tip
 Learn how to integrate this plugin into your setup in the **[Plugins Overview](../plugins/index.md)**.
@@ -20,11 +21,12 @@ Learn how to integrate this plugin into your setup in the **[Plugins Overview](.
 
 ## Configuration Fields
 
-| Field    | Type   | Description                                               | Example Value   |
-| -------- | ------ | --------------------------------------------------------- | --------------- |
-| `alg`    | String | Algorithm for token signature validation (e.g., `HS256`). | `HS256`         |
-| `iss`    | String | The expected issuer of the JWT.                           | `someIssuerKey` |
-| `secret` | String | Secret key for validating the JWT signature.              | `123secret456`  |
+| Field       | Type   | Description                                               | Example Value              |
+| ----------- | ------ | --------------------------------------------------------- | -------------------------- |
+| `alg`       | String | Algorithm for token signature validation (e.g., `HS256`). | `HS256`                    |
+| `iss`       | String | The expected issuer of the JWT.                           | `someIssuerKey`            |
+| `secret`    | String | Secret key for validating the JWT signature.              | `123secret456`             |
+| `publicKey` | String | Public key certificate.                                   | `some RSA public key here` |
 
 ::: warning
 Currently, only **HS256** is supported. Future releases will include support for **RS256**.
@@ -46,11 +48,30 @@ Below is an example of configuring the JWT plugin:
 }
 ```
 
+As for and example for configuring the JWT plugin for `RS256` algorithms:
+
+::: tip
+The public key should be seperated by new lines: `\n` as `json` files do not support multi-line strings.
+:::
+
+```json
+{
+  "name": "jwt",
+  "enabled": true,
+  "config": {
+    "alg": "RS256",
+    "iss": "someIssuer",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnOAjYfgEIPkSuYR58sWr\nK21TeuRU03O2SAM9MxY4ojuK61SiX5cAEycQB7JL8okgAu1Sja8PXebPxX3mo+Ea\n1lCI+SZ27wBPpqeqpmDKxwbaacDFJYH7TaoctTX+pOuCtjS4h1BjrVaNn0SiLay2\nKfSJt0AGTppidQC6Llg7aG1LLMkjISzic3IHUR1s9fAVj85qAEY889LYfwitKzln\nxGO68PkV1dOCsJCquFOSRF92nA/DC0IMIXHGXEMP/GlXo2S4MB6e9z8Ti+R0HV96\n99RxtH/GLZM+J3no+Jk5zbiZpSzTJCecmETYpn+jrozDnpwH/dc5GFQhMIROSXX9\nRQIDAQAB\n-----END PUBLIC KEY-----"
+  }
+}
+```
+
 ### Explanation
 
-- **`alg`**: Defines the algorithm for signature validation (only `HS256` is currently supported).
+- **`alg`**: Defines the algorithm for signature validation (only `HS256` and `RS256` is currently supported).
 - **`iss`**: Specifies the trusted issuer of the token.
 - **`secret`**: The secret key used for validating the token’s signature.
+- **`publicKey`**: The public key used for validating the token’s signature.
 
 ## Example HTTP Header
 

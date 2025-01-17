@@ -28,7 +28,7 @@ By providing functionality such as routing, load balancing, authentication, and 
 
 - **Dynamic Routing**: Route traffic efficiently with support for dynamic paths and advanced match criteria.
 - **Plugin System**: Extend functionality with modular plugins for security, rate limiting, logging, and more.
-- **Load Balancing**: Built-in strategies like round robin, weighted (in progress), and IP hash (in progress).
+- **Load Balancing**: Built-in strategies like round robin, weighted (in progress), and IP hash.
 - **Stateless and Stateful Modes**: Choose between declarative JSON configurations or database-backed persistence.
 - **Secure API Management**: Features such as Mutual TLS, API key authentication, and JWT support.
 - **Lightweight & Efficient**: Optimized for speed and scalability with a minimal footprint.

@@ -21,6 +21,11 @@ const restaurantData = [
   { id: 2, name: "Roll House", location: "456 Roll Ave." },
 ];
 
+// GET /health
+app.get("/health", (req, res) => {
+  res.status(200).json({ app_id: process.env.APP_ID, data: "ok" });
+});
+
 // GET /v1/sushi
 app.get("/v1/sushi", (req, res) => {
   res.json({ app_id: process.env.APP_ID, data: sushiData });
@@ -56,15 +61,46 @@ app.get("/v1/sushi/restaurant/:id", (req, res) => {
 });
 
 app.get("/v1/token", (req, res) => {
+  const signingMethod = req.query.alg
+  const availableSigningMethods = ["HS256", "RS256"]
+  
+  if (!availableSigningMethods.includes(signingMethod)) {
+    return res.status(400).json({ error: "Invalid signing method. Use 'HS256' or 'RS256'" });
+  }
+
   const payload = {
     app_id: process.env.APP_ID,
     iss: process.env.JWT_ISSUER,
   };
-  const secretKey = process.env.JWT_SECRET;
-  const token = jwt.sign(payload, secretKey, {
-    expiresIn: "1h",
-  });
-  res.json({ token });
+
+  let token;
+  try {
+    if (signingMethod === 'RS256') {
+      // For RS256, we need the private key
+      const privateKey = process.env.JWT_PRIVATE_KEY;
+      if (!privateKey) {
+        return res.status(500).json({ error: "RS256 private key not configured" });
+      }
+      token = jwt.sign(payload, privateKey, {
+        algorithm: 'RS256',
+        expiresIn: "1h"
+      });
+    } else if (signingMethod === 'HS256') {
+      // For HS256, we use the secret key
+      const secretKey = process.env.JWT_SECRET;
+      if (!secretKey) {
+        return res.status(500).json({ error: "HS256 secret key not configured" });
+      }
+      token = jwt.sign(payload, secretKey, {
+        algorithm: 'HS256',
+        expiresIn: "1h"
+      });
+    } 
+    res.json({ token });
+  } catch (err) {
+    console.error('Error generating token:', err);  
+    res.status(500).json({ error: "Failed to generate token" });
+  }
 });
 
 app.listen(port, () => {

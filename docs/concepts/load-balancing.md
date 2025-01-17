@@ -16,9 +16,9 @@ Sushi Gateway supports the following load balancing strategies:
 - **Description**: Distributes requests based on predefined weights assigned to each upstream.
 - **Use Case**: Ideal for scenarios where some upstreams have higher capacity or priority.
 
-### IP Hash _(In Progress)_
+### IP Hash
 
-- **Description**: Routes requests based on the client’s IP address, ensuring consistent upstream selection for the same client.
+- **Description**: Routes requests based on the client’s IP address, ensuring consistent upstream selection for the same client via a consistent hash ring.
 - **Use Case**: Useful for maintaining session persistence (sticky sessions).
 
 ## Example Configuration
