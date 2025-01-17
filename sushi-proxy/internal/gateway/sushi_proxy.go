@@ -3,15 +3,16 @@ package gateway
 import (
 	"bytes"
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"strings"
+
+	"github.com/gorilla/mux"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 )
 
 type SushiProxy struct {
@@ -128,8 +129,23 @@ func (s *SushiProxy) convertPathToProxyPassUrl(req *http.Request) (string, *mode
 	}
 
 	// Handle load balancing
-	loadBalancer := NewLoadBalancer()
-	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService)
+	loadBalancer := NewLoadBalancer(GlobalHealthChecker)
+	remoteIpAddress, err := util.GetHostIp(req.RemoteAddr)
+	if err != nil {
+		slog.Error("Error getting remote IP address: " + err.Error())
+		remoteIpAddress = "default"
+		return "", err
+	}
+
+	upstreamIndex := loadBalancer.GetNextUpstream(*matchedService, remoteIpAddress)
+	if upstreamIndex == model.NoUpstreamsAvailable {
+		return "", &model.HttpError{
+			Code:     "ERROR_NO_UPSTREAMS_AVAILABLE",
+			Message:  "No upstreams available for service: " + matchedService.Name,
+			HttpCode: http.StatusServiceUnavailable,
+		}
+	}
+
 	upstream := matchedService.Upstreams[upstreamIndex]
 
 	// Get the proxy URL...

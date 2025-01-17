@@ -21,6 +21,11 @@ const restaurantData = [
   { id: 2, name: "Roll House", location: "456 Roll Ave." },
 ];
 
+// GET /health
+app.get("/health", (req, res) => {
+  res.status(200).json({ app_id: process.env.APP_ID, data: "ok" });
+});
+
 // GET /v1/sushi
 app.get("/v1/sushi", (req, res) => {
   res.json({ app_id: process.env.APP_ID, data: sushiData });
@@ -63,8 +68,6 @@ app.get("/v1/token", (req, res) => {
     return res.status(400).json({ error: "Invalid signing method. Use 'HS256' or 'RS256'" });
   }
 
-
-
   const payload = {
     app_id: process.env.APP_ID,
     iss: process.env.JWT_ISSUER,
@@ -99,18 +102,6 @@ app.get("/v1/token", (req, res) => {
     res.status(500).json({ error: "Failed to generate token" });
   }
 });
-
-// app.get("/v1/token", (req, res) => {
-//   const payload = {
-//     app_id: process.env.APP_ID,
-//     iss: process.env.JWT_ISSUER,
-//   };
-//   const secretKey = process.env.JWT_SECRET;
-//   const token = jwt.sign(payload, secretKey, {
-//     expiresIn: "1h",
-//   });
-//   res.json({ token });
-// });
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

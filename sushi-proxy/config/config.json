@@ -50,9 +50,9 @@
         "name": "jwt",
         "enabled": false,
         "config": {
-          "alg": "HS256",
+          "alg": "RS256",
           "iss": "someIssuerKey",
-          "secret": "123secret456"
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxiKfOSgDAdCMaUS27Ume\nVVeWUvbXZIbJ+qPesmOWfilz2dNfBk4NE+Do7rfIezZNCXoNLHJxo6Ayjz1SzidT\nNLSkFrHOlKazg4dqW9DTYWMe4DczheAPnNymrpvK3rFKIF6LD23Vq530zfnsjUmw\nWmNaXFqwbQkYkjrRxFcHGzhqPN/KmcZRpXcEkDydafTpcblfbhBn9Xmap7IzX+aX\nFa6JA5cI7M6w0Do7JWHseXYBBA4SxwYH424LqTuKMueivvhEhb+TTggriNpyIVKy\nJhdj41jUycqVRK95TKJgf5TmQYfATpeLBy9kGxoEhazl1dOpPezw12xSPT3H3giR\nUwIDAQAB\n-----END PUBLIC KEY-----"
         }
       },
       {
@@ -98,32 +98,20 @@
   },
   "services": [
     {
-      "name": "starwars-svc",
-      "base_path": "/swapi",
-      "protocol": "https",
-      "load_balancing_strategy": "round_robin",
-      "upstreams": [{ "id": "upstream_1", "host": "swapi.dev", "port": 443 }],
-      "plugins": [],
-      "routes": [
-        {
-          "name": "get-people",
-          "path": "/api/people/{id}",
-          "methods": ["GET"],
-          "plugins": []
-        }
-      ]
-    },
-    {
       "name": "sushi-svc",
       "base_path": "/sushi-service",
       "protocol": "http",
-      "load_balancing_strategy": "round_robin",
+      "load_balancing_strategy": "ip_hash",
       "upstreams": [
         { "id": "upstream_1", "host": "localhost", "port": 8001 },
         { "id": "upstream_2", "host": "localhost", "port": 8002 },
         { "id": "upstream_3", "host": "localhost", "port": 8003 }
       ],
       "plugins": [],
+      "health": {
+        "enabled": true,
+        "path": "/health"
+      },
       "routes": [
         {
           "name": "get-sushi",

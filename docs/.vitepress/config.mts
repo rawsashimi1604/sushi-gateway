@@ -84,6 +84,10 @@ export default defineConfig({
             link: "/concepts/data-persistence",
           },
           {
+            text: "Health Checks",
+            link: "/concepts/health",
+          },
+          {
             text: "TLS",
             link: "/concepts/tls",
           },

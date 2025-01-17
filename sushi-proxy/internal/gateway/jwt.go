@@ -67,7 +67,7 @@ func (plugin JwtPlugin) Validate() error {
 		}
 
 		// Validate the RSA public key format and structure
-		_, err := util.ParseRSAPublicKeyFromPEM([]byte(publicKey))
+		_, err := jwt.ParseRSAPublicKeyFromPEM([]byte(publicKey))
 		if err != nil {
 			return fmt.Errorf("invalid RSA public key: %v", err)
 		}
@@ -146,7 +146,7 @@ func (plugin JwtPlugin) validateRS256(credentials JwtCredentials, token string) 
 	tokenInvalidErr := model.NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
 
 	// Parse public key
-	rsaPublicKey, err := util.ParseRSAPublicKeyFromPEM([]byte(credentials.publicKey))
+	rsaPublicKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte(credentials.publicKey))
 	if err != nil {
 		slog.Info("Failed to parse RSA public key: " + err.Error())
 		return model.NewHttpError(http.StatusInternalServerError, "INTERNAL_SERVER_ERROR", "Something went wrong")

@@ -104,14 +104,15 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 			"Error parsing service and route from request")
 	}
 
-	lb := NewLoadBalancer()
-	upstreamIndexToRoute := lb.GetCurrentUpstream(*service)
+	lb := NewLoadBalancer(GlobalHealthChecker)
 
 	clientIp, err := util.GetHostIp(r.RemoteAddr)
 	if err != nil {
 		slog.Error("Error getting client ip", "error", err)
 		err.WriteLogMessage()
 	}
+
+	upstreamIndexToRoute := lb.GetCurrentUpstream(*service, clientIp)
 
 	// Map the service and route to log
 	log := map[string]interface{}{
@@ -164,5 +165,8 @@ func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogC
 		return model.NewHttpError(http.StatusBadGateway, "ERR_SENDING_LOG", "Error sending log to "+config.method+" "+config.httpEndpoint)
 	}
 	defer resp.Body.Close()
+
+	slog.Info("Successfully sent log to " + config.method + " " + config.httpEndpoint)
+
 	return nil
 }
