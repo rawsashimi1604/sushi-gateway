@@ -481,3 +481,72 @@ func TestLoadBalancer_IPHash_SingleUpstream(t *testing.T) {
 		})
 	}
 }
+
+func TestLoadBalancer_GetCurrentUpstream_IPHash(t *testing.T) {
+	// Create test service with multiple upstreams
+	service := model.Service{
+		Name: "test-service",
+		Health: model.Health{
+			Enabled: false,
+			Path:    "/mock",
+		},
+		Upstreams: []model.Upstream{
+			{Id: "upstream1", Host: "localhost", Port: 8081},
+			{Id: "upstream2", Host: "localhost", Port: 8082},
+			{Id: "upstream3", Host: "localhost", Port: 8083},
+		},
+		LoadBalancingStrategy: model.IPHash,
+	}
+
+	tests := []struct {
+		name     string
+		clientIP string
+	}{
+		{
+			name:     "Should return same upstream for same IP",
+			clientIP: "192.168.1.1",
+		},
+		{
+			name:     "Should handle IPv6",
+			clientIP: "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ResetLoadBalancers()
+
+			healthChecker := &HealthChecker{
+				serviceHealthMap: map[string]map[string]HealthStatus{},
+			}
+
+			lb := NewLoadBalancer(healthChecker)
+
+			// Get initial upstream
+			initialUpstream := lb.GetCurrentUpstream(service, tt.clientIP)
+
+			// Verify the index is valid
+			assert.GreaterOrEqual(t, initialUpstream, 0)
+			assert.Less(t, initialUpstream, len(service.Upstreams))
+
+			// Multiple calls should return the same upstream for the same IP
+			for i := 0; i < 5; i++ {
+				currentUpstream := lb.GetCurrentUpstream(service, tt.clientIP)
+				assert.Equal(t, initialUpstream, currentUpstream,
+					"Same IP should map to same upstream on multiple GetCurrentUpstream calls")
+			}
+
+			// Different IP should potentially map to different upstream
+			differentIP := "192.168.1.100"
+			if tt.clientIP == differentIP {
+				differentIP = "192.168.1.200"
+			}
+			differentUpstream := lb.GetCurrentUpstream(service, differentIP)
+
+			// Note: There's a small chance this could be equal due to hash collision
+			if differentUpstream == initialUpstream {
+				t.Logf("Different IP mapped to same upstream (this is possible but rare)")
+			}
+		})
+	}
+}

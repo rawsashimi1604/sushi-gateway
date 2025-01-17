@@ -36,7 +36,7 @@ func (lb *LoadBalancer) GetNextUpstream(service model.Service, clientIP string) 
 }
 
 // Get the current upstream request is routed to.
-func (lb *LoadBalancer) GetCurrentUpstream(service model.Service) int {
+func (lb *LoadBalancer) GetCurrentUpstream(service model.Service, clientIP string) int {
 	switch service.LoadBalancingStrategy {
 	case model.RoundRobin:
 		if val, ok := roundRobinCache.Load(service.Name); ok {
@@ -44,10 +44,7 @@ func (lb *LoadBalancer) GetCurrentUpstream(service model.Service) int {
 		}
 		return 0
 	case model.IPHash:
-		if val, ok := consistentHashCache.Load(service.Name); ok {
-			return val.(int)
-		}
-		return 0
+		return lb.handleIPHash(service, clientIP)
 	default:
 		return 0
 	}

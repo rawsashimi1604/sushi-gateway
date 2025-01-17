@@ -105,13 +105,14 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 	}
 
 	lb := NewLoadBalancer(GlobalHealthChecker)
-	upstreamIndexToRoute := lb.GetCurrentUpstream(*service)
 
 	clientIp, err := util.GetHostIp(r.RemoteAddr)
 	if err != nil {
 		slog.Error("Error getting client ip", "error", err)
 		err.WriteLogMessage()
 	}
+
+	upstreamIndexToRoute := lb.GetCurrentUpstream(*service, clientIp)
 
 	// Map the service and route to log
 	log := map[string]interface{}{
