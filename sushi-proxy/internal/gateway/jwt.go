@@ -27,6 +27,7 @@ func NewJwtPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_JWT,
 		Priority: 1450,
+		Phase:    AccessPhase,
 		Handler: JwtPlugin{
 			config: config,
 		},

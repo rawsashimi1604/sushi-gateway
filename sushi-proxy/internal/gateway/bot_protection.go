@@ -19,6 +19,7 @@ func NewBotProtectionPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_BOT_PROTECTION,
 		Priority: 2500,
+		Phase:    AccessPhase,
 		Handler: BotProtectionPlugin{
 			config: config,
 		},
