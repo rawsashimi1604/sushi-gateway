@@ -41,7 +41,6 @@ func (plugin ResponseHandlerPlugin) Execute(next http.Handler) http.Handler {
 		// Get the capture writer injected from config
 		captureWriter, _ := plugin.config["capture_writer"].(*captureResponseWriter)
 
-		time.Sleep(100 * time.Millisecond)
 		// After response is sent, add metadata to the request context
 		// Add response metadata to request context after handling completes
 		ctx := r.Context()
