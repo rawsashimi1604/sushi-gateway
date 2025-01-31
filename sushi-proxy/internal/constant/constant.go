@@ -33,6 +33,7 @@ var AVAILABLE_PLUGINS = []string{
 	PLUGIN_CORS,
 }
 
+const PLUGIN_RESPONSE_HANDLER = "response_handler"
 const PLUGIN_BASIC_AUTH = "basic_auth"
 const PLUGIN_ACL = "acl"
 const PLUGIN_CORS = "cors"

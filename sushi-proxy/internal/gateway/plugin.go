@@ -16,8 +16,9 @@ import (
 type PluginPhase string
 
 const (
-	AccessPhase PluginPhase = "access"
-	LogPhase    PluginPhase = "log"
+	AccessPhase   PluginPhase = "access"
+	ResponsePhase PluginPhase = "response"
+	LogPhase      PluginPhase = "log"
 )
 
 type PluginExecutor interface {

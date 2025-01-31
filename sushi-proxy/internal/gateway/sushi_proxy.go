@@ -2,12 +2,14 @@ package gateway
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
@@ -26,7 +28,7 @@ func (proxy *SushiProxy) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/").HandlerFunc(proxy.RouteRequest())
 }
 
-// captureResponseWriter is used to capture the HTTP response
+// captureResponseWriter is used to capture and store metadata about the HTTP request along the middleware chain
 type captureResponseWriter struct {
 	http.ResponseWriter
 	statusCode int
@@ -37,6 +39,11 @@ type captureResponseWriter struct {
 func newCaptureResponseWriter(w http.ResponseWriter) *captureResponseWriter {
 	// Default the status code to 200 in case WriteHeader is not called
 	return &captureResponseWriter{ResponseWriter: w, statusCode: http.StatusOK}
+}
+
+func (w *captureResponseWriter) WriteHeader(status int) {
+	w.statusCode = status
+	w.ResponseWriter.WriteHeader(status)
 }
 
 func (w *captureResponseWriter) Write(data []byte) (int, error) {
@@ -53,9 +60,16 @@ func (w *captureResponseWriter) Header() http.Header {
 func (proxy *SushiProxy) RouteRequest() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		slog.Info("Handing request: " + req.URL.Path)
-		// TODO: check if necessary to add content-type
-		w.Header().Add("Content-Type", "application/json; charset=UTF-8")
+
 		captureWriter := newCaptureResponseWriter(w)
+
+		// Start logging start time
+		ctx := context.WithValue(req.Context(), constant.CONTEXT_START_TIME, time.Now())
+		ctx = context.WithValue(ctx, constant.CONTEXT_CAPTURE_WRITER, captureWriter)
+		req = req.WithContext(ctx)
+
+		// TODO: support other content-types
+		w.Header().Add("Content-Type", "application/json; charset=UTF-8")
 
 		// Register plugins from global, service and routes using the plugin manager.
 		pluginManager, err := NewPluginManagerFromConfig(req)
@@ -65,9 +79,13 @@ func (proxy *SushiProxy) RouteRequest() http.HandlerFunc {
 			return
 		}
 
-		// We execute the plugins in different phases.
-		// Access phase > Log Phase
+		// Add the compulsory response handler plugin...
+		pluginManager.RegisterPlugin(NewResponseHandlerPlugin(map[string]interface{}{
+			"capture_writer": captureWriter,
+		}))
 
+		// We execute the plugins in different phases.
+		// Access phase > Response Phase > Log Phase
 		// Chain the plugins with the final handler where the request is forwarded.
 		finalHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// After executing all the plugins, handle the end result here.
@@ -75,11 +93,12 @@ func (proxy *SushiProxy) RouteRequest() http.HandlerFunc {
 			if err != nil {
 				slog.Info(err.Error())
 				err.WriteJSONResponse(w)
-				return
 			}
 		})
 
+		// Execute the plugins in different phases.
 		chainedHandler := pluginManager.ExecutePlugins(AccessPhase, finalHandler)
+		chainedHandler = pluginManager.ExecutePlugins(ResponsePhase, chainedHandler)
 		chainedHandler = pluginManager.ExecutePlugins(LogPhase, chainedHandler)
 
 		// Execute the request (plugins + proxying).
@@ -124,6 +143,7 @@ func (s *SushiProxy) HandleProxyPass(w http.ResponseWriter, req *http.Request) *
 		req.Host = target.Host
 	}
 	proxy.ServeHTTP(w, req)
+
 	return nil
 }
 
