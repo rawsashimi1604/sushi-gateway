@@ -11,7 +11,7 @@ var jsonParser = bodyParser.json();
 
 // Receive http logs
 app.post("/v1/log", jsonParser, (req, res) => {
-  console.log(req.body);
+  console.dir(req.body, { depth: null })
   res.json({ log_received: req.body });
 });
 
