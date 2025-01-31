@@ -48,7 +48,7 @@ Use route-level plugins for the highest level of specificity and ensure priority
 
 Plugins are executed in seperate phases, this is to ensure that certain plugins have guaranteed execution - like logging regardless of whether the request was successful or not.
 
-::: tip
+::: info
 Phases occur in the following order:
 
 1. Access Phase
