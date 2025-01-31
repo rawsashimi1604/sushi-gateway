@@ -1,13 +1,16 @@
 package gateway
 
 import (
+	"context"
 	"encoding/json"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
@@ -210,6 +213,42 @@ func TestHttpLogExecution(t *testing.T) {
 			}
 		}
 
+		// Verify response data
+		response, ok := logData["response"].(map[string]interface{})
+		if !ok {
+			t.Error("response field is not a map")
+			return
+		}
+		if response["status"].(float64) != float64(http.StatusOK) {
+			t.Errorf("expected status %d, got %v", http.StatusOK, response["status"])
+		}
+		if response["size"].(float64) != float64(0) {
+			t.Errorf("expected size 0, got %v", response["size"])
+		}
+
+		// Verify timestamps and latency
+		startedAt, ok := logData["started_at"].(float64)
+		if !ok {
+			t.Error("started_at is not a number")
+			return
+		}
+		endedAt, ok := logData["ended_at"].(float64)
+		if !ok {
+			t.Error("ended_at is not a number")
+			return
+		}
+		latency, ok := logData["latency"].(string)
+		if !ok {
+			t.Error("latency is not a string")
+			return
+		}
+
+		// Verify latency calculation
+		expectedLatency := endedAt - startedAt
+		if latency != strconv.Itoa(int(expectedLatency))+"ms" {
+			t.Errorf("expected latency %v, got %v", expectedLatency, latency)
+		}
+
 		w.WriteHeader(http.StatusOK)
 	}))
 	defer logServer.Close()
@@ -229,9 +268,21 @@ func TestHttpLogExecution(t *testing.T) {
 	// Create plugin
 	plugin := NewHttpLogPlugin(pluginConfig)
 
-	// Create test request
+	// Create test request with mock context values
 	req := httptest.NewRequest("GET", "/test/test-path", nil)
 	req.RemoteAddr = "127.0.0.1:1234"
+
+	// Add mock context values
+	startTime := time.Now()
+	endTime := startTime.Add(100 * time.Millisecond)
+	mockHeaders := map[string][]string{"Content-Type": {"application/json"}}
+
+	ctx := context.WithValue(req.Context(), constant.CONTEXT_START_TIME, startTime)
+	ctx = context.WithValue(ctx, constant.CONTEXT_END_TIME, endTime)
+	ctx = context.WithValue(ctx, constant.CONTEXT_RESPONSE_STATUS, http.StatusOK)
+	ctx = context.WithValue(ctx, constant.CONTEXT_RESPONSE_SIZE, 0)
+	ctx = context.WithValue(ctx, constant.CONTEXT_RESPONSE_HEADERS, mockHeaders)
+	req = req.WithContext(ctx)
 
 	// Execute plugin
 	rr := httptest.NewRecorder()

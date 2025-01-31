@@ -1,11 +1,12 @@
 package gateway
 
 import (
+	"net/http"
+	"sort"
+
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
-	"net/http"
-	"sort"
 )
 
 type PluginManager struct {
@@ -110,9 +111,11 @@ func (pm *PluginManager) RegisterPlugin(plugin *Plugin) {
 
 // ExecutePlugins chains the plugins and returns a single http.Handler
 // finalHandler is the application's main handler that should execute after all plugins
-func (pm *PluginManager) ExecutePlugins(finalHandler http.Handler) http.Handler {
+func (pm *PluginManager) ExecutePlugins(phase PluginPhase, finalHandler http.Handler) http.Handler {
 	for _, plugin := range pm.plugins {
-		finalHandler = plugin.Handler.Execute(finalHandler)
+		if plugin.Phase == phase {
+			finalHandler = plugin.Handler.Execute(finalHandler)
+		}
 	}
 	return finalHandler
 }

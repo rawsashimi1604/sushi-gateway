@@ -22,26 +22,44 @@ Plugins in Sushi Gateway operate in a defined middleware chain:
 2. **Service-Level Plugins**: Applied to all routes within a specific service.
 3. **Route-Level Plugins**: Applied to individual routes, overriding service and global plugins if applicable.
 
-### Plugin Priority
+### Plugin Priority and Phases
 
-The table below illustrates the priority of specific plugins in Sushi Gateway. Plugins with higher priority values are executed earlier in the middleware chain.
+The table below illustrates the priority and phases of specific plugins in Sushi Gateway. Plugins with higher priority values are executed earlier in the middleware chain.
 
-| Priority | Plugin                                     |
-| -------- | ------------------------------------------ |
-| 2500     | Bot Protection                             |
-| 2000     | Cross Origin Resource Sharing (RFC 6454)   |
-| 1600     | Mutual Transport Layer Security (RFC 8705) |
-| 1450     | JSON Web Token (RFC 7519)                  |
-| 1250     | API Key Authentication                     |
-| 1100     | Basic Authentication (RFC 7617)            |
-| 951      | Request Size Limit                         |
-| 950      | Access Control List                        |
-| 910      | Rate Limit                                 |
-| 12       | HTTP Log                                   |
+| Priority | Phase    | Plugin                                     |
+| -------- | -------- | ------------------------------------------ |
+| 10000    | Response | Response Handler (logs request metadata)   |
+| 2500     | Access   | Bot Protection                             |
+| 2000     | Access   | Cross Origin Resource Sharing (RFC 6454)   |
+| 1600     | Access   | Mutual Transport Layer Security (RFC 8705) |
+| 1450     | Access   | JSON Web Token (RFC 7519)                  |
+| 1250     | Access   | API Key Authentication                     |
+| 1100     | Access   | Basic Authentication (RFC 7617)            |
+| 951      | Access   | Request Size Limit                         |
+| 950      | Access   | Access Control List                        |
+| 910      | Access   | Rate Limit                                 |
+| 12       | Log      | HTTP Log                                   |
 
 ::: tip
 Use route-level plugins for the highest level of specificity and ensure priority alignment with your gateway logic.
 :::
+
+#### Plugin Phases
+
+Plugins are executed in seperate phases, this is to ensure that certain plugins have guaranteed execution - like logging regardless of whether the request was successful or not.
+
+::: info
+Phases occur in the following order:
+
+1. Access Phase
+2. Response Phase
+3. Log Phase
+
+:::
+
+- **Access Phase**: Plugins that are executed during the access phase handle authentication, authorization, and other security-related tasks.
+- **Response Phase**: Plugins that are executed during the response phase handle response processing tasks like recording metadata.
+- **Log Phase**: Plugins that are executed during the log phase handle logging and monitoring tasks.
 
 ## Available Plugins
 

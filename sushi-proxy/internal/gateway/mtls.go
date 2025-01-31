@@ -18,6 +18,7 @@ func NewMtlsPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_MTLS,
 		Priority: 1600,
+		Phase:    AccessPhase,
 		Handler: MtlsPlugin{
 			config: config,
 		},

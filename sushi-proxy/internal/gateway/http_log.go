@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -30,6 +31,7 @@ func NewHttpLogPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_HTTP_LOG,
 		Priority: 12,
+		Phase:    LogPhase,
 		Handler: HttpLogPlugin{
 			config: config,
 		},
@@ -135,8 +137,15 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 			"size":     util.GetContentLength(r.Header.Get("Content-Length")),
 			"headers":  r.Header,
 		},
+		"response": map[string]interface{}{
+			"status":  r.Context().Value(constant.CONTEXT_RESPONSE_STATUS),
+			"size":    r.Context().Value(constant.CONTEXT_RESPONSE_SIZE),
+			"headers": r.Context().Value(constant.CONTEXT_RESPONSE_HEADERS),
+		},
+		"latency":    plugin.calculateResponseTime(r),
 		"client_ip":  clientIp,
-		"started_at": time.Now(),
+		"started_at": r.Context().Value(constant.CONTEXT_START_TIME).(time.Time).UnixMilli(),
+		"ended_at":   r.Context().Value(constant.CONTEXT_END_TIME).(time.Time).UnixMilli(),
 	}
 	return log, nil
 }
@@ -169,4 +178,11 @@ func (plugin HttpLogPlugin) sendLog(log map[string]interface{}, config *HttpLogC
 	slog.Info("Successfully sent log to " + config.method + " " + config.httpEndpoint)
 
 	return nil
+}
+
+func (plugin HttpLogPlugin) calculateResponseTime(r *http.Request) string {
+	start := r.Context().Value(constant.CONTEXT_START_TIME).(time.Time)
+	end := r.Context().Value(constant.CONTEXT_END_TIME).(time.Time)
+	timeTaken := int(end.Sub(start).Milliseconds())
+	return strconv.Itoa(timeTaken) + "ms"
 }

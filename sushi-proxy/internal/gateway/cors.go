@@ -30,6 +30,7 @@ func NewCorsPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_CORS,
 		Priority: 2000,
+		Phase:    AccessPhase,
 		Handler: CorsPlugin{
 			config: config,
 		},
