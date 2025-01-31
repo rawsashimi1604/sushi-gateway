@@ -5,6 +5,13 @@ import (
 	"net/http"
 )
 
+type PluginPhase string
+
+const (
+	AccessPhase PluginPhase = "access"
+	LogPhase    PluginPhase = "log"
+)
+
 type PluginExecutor interface {
 	Execute(next http.Handler) http.Handler
 }
@@ -16,6 +23,7 @@ type PluginValidation interface {
 type Plugin struct {
 	Name      string
 	Priority  uint
+	Phase     PluginPhase
 	Handler   PluginExecutor
 	Validator PluginValidation
 }
