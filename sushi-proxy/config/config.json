@@ -21,7 +21,7 @@
       {
         "id": "plugin_3",
         "name": "key_auth",
-        "enabled": true,
+        "enabled": false,
         "config": {
           "key": "123456"
         }
