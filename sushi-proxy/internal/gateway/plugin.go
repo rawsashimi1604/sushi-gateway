@@ -11,6 +11,8 @@ import (
 		- Plugins that need to ensure access to the upstream API such as authentication and authorization can be included here.
 	The log phase is executed after the request is proxied to the upstream API.
 		- Plugins that need to be executed regardless of the request outcome can be included here. This is useful for logging or metrics plugins.
+	The response phase is executed after the response is received from the upstream API.
+		- It is mainly used for logging the response metadata.
 */
 
 type PluginPhase string
