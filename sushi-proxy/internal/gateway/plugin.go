@@ -5,6 +5,14 @@ import (
 	"net/http"
 )
 
+/*
+	We execute plugins in different phases.
+	The access phase is executed before the request is proxied to the upstream API.
+		- Plugins that need to ensure access to the upstream API such as authentication and authorization can be included here.
+	The log phase is executed after the request is proxied to the upstream API.
+		- Plugins that need to be executed regardless of the request outcome can be included here. This is useful for logging or metrics plugins.
+*/
+
 type PluginPhase string
 
 const (
