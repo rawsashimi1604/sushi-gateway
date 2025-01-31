@@ -65,8 +65,11 @@ func (proxy *SushiProxy) RouteRequest() http.HandlerFunc {
 			return
 		}
 
+		// We execute the plugins in different phases.
+		// Access phase > Log Phase
+
 		// Chain the plugins with the final handler where the request is forwarded.
-		chainedHandler := pluginManager.ExecutePlugins(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		finalHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// After executing all the plugins, handle the end result here.
 			err := proxy.HandleProxyPass(w, r)
 			if err != nil {
@@ -74,7 +77,10 @@ func (proxy *SushiProxy) RouteRequest() http.HandlerFunc {
 				err.WriteJSONResponse(w)
 				return
 			}
-		}))
+		})
+
+		chainedHandler := pluginManager.ExecutePlugins(AccessPhase, finalHandler)
+		chainedHandler = pluginManager.ExecutePlugins(LogPhase, chainedHandler)
 
 		// Execute the request (plugins + proxying).
 		chainedHandler.ServeHTTP(captureWriter, req)

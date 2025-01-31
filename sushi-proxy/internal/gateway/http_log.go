@@ -30,6 +30,7 @@ func NewHttpLogPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_HTTP_LOG,
 		Priority: 12,
+		Phase:    LogPhase,
 		Handler: HttpLogPlugin{
 			config: config,
 		},

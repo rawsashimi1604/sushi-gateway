@@ -17,6 +17,7 @@ func NewKeyAuthPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_KEY_AUTH,
 		Priority: 1250,
+		Phase:    AccessPhase,
 		Handler: KeyAuthPlugin{
 			config: config,
 		},

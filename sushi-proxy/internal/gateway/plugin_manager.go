@@ -111,9 +111,11 @@ func (pm *PluginManager) RegisterPlugin(plugin *Plugin) {
 
 // ExecutePlugins chains the plugins and returns a single http.Handler
 // finalHandler is the application's main handler that should execute after all plugins
-func (pm *PluginManager) ExecutePlugins(finalHandler http.Handler) http.Handler {
+func (pm *PluginManager) ExecutePlugins(phase PluginPhase, finalHandler http.Handler) http.Handler {
 	for _, plugin := range pm.plugins {
-		finalHandler = plugin.Handler.Execute(finalHandler)
+		if plugin.Phase == phase {
+			finalHandler = plugin.Handler.Execute(finalHandler)
+		}
 	}
 	return finalHandler
 }
