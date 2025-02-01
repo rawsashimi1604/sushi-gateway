@@ -63,11 +63,8 @@ func main() {
 	// Initialize Admin API server
 	var adminApiRouter http.Handler
 
-	if gateway.GlobalAppConfig.PersistenceConfig == constant.DBLESS_MODE {
-		// Init Dbless mode gateway
-		slog.Info("PersistenceConfig:: Starting gateway in DB-less mode.")
-		adminApiRouter = api.NewAdminApiRouter(nil)
-	}
+	// Create router for admin API
+	adminApiRouter = api.NewAdminApiRouter()
 
 	adminServer := &http.Server{
 		Addr:    ":" + constant.PORT_ADMIN_API,
@@ -75,7 +72,7 @@ func main() {
 	}
 
 	// Initialize config file watcher
-	// Do this on gateway startup, load the config from config file
+	// Do this on gateway startup, load the config from config
 	if err := gateway.LoadProxyConfigFromConfigFile(gateway.GlobalAppConfig.ConfigFilePath); err != nil {
 		slog.Error("Failed to load initial config file", "error", err)
 		os.Exit(1)

@@ -10,7 +10,7 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
-// Reads from declarative config file or database...
+// Reads from declarative config file
 var GlobalProxyConfig model.ProxyConfig
 var configLock = &sync.RWMutex{}
 
