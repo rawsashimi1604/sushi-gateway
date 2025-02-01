@@ -17,7 +17,6 @@ func NewPluginValidator() *PluginValidator {
 
 func (pv *PluginValidator) ValidatePlugin(plugin model.PluginConfig) error {
 
-	// TODO: validate each plugin data/gateway schema
 	if err := pv.validateNameExists(plugin); err != nil {
 		return err
 	}
