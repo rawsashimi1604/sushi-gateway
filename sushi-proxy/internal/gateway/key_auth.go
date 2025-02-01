@@ -51,6 +51,9 @@ func (plugin KeyAuthPlugin) Execute(next http.Handler) http.Handler {
 			return
 		}
 
+		// Strip header
+		r.Header.Del("apiKey")
+
 		next.ServeHTTP(w, r)
 	})
 }
