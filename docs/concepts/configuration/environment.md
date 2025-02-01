@@ -8,13 +8,6 @@ The following table lists the key environment variables supported by Sushi Gatew
 
 | Variable                    | Description                                                                                                         | Required | Example Value       | Default Value      |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------- | ------------------- | ------------------ |
-| `PERSISTENCE_CONFIG`        | Defines the persistence mode (`dbless` for stateless, `db` for stateful).                                           | Yes      | `dbless`            | `dbless`           |
-| `PERSISTENCE_SYNC_INTERVAL` | The interval (in seconds) for syncing in-memory configurations to the database.                                     | No       | `5`                 | `5`                |
-| `DB_CONNECTION_HOST`        | Hostname or IP address of the database server.                                                                      | Yes      | `localhost`         | -                  |
-| `DB_CONNECTION_PORT`        | Port number of the database server.                                                                                 | Yes      | `5432`              | -                  |
-| `DB_CONNECTION_NAME`        | Name of the database.                                                                                               | Yes      | `sushi`             | -                  |
-| `DB_CONNECTION_USER`        | Username for the database.                                                                                          | Yes      | `postgres`          | -                  |
-| `DB_CONNECTION_PASS`        | Password for the database user.                                                                                     | Yes      | `mysecretpassword`  | -                  |
 | `CONFIG_FILE_PATH`          | Path to the `config.json` file for declarative configurations.                                                      | No       | `/app/config.json`  | `/app/config.json` |
 | `ADMIN_USER`                | Username for the Admin API.                                                                                         | Yes      | `admin`             | `admin`            |
 | `ADMIN_PASSWORD`            | Password for the Admin API user.                                                                                    | Yes      | `changeme`          | `changeme`         |
@@ -29,13 +22,6 @@ Here’s an example of using environment variables to configure Sushi Gateway in
 ```bash
 docker run \
   --rm \
-  -e PERSISTENCE_CONFIG=db \
-  -e PERSISTENCE_SYNC_INTERVAL=5 \
-  -e DB_CONNECTION_HOST=localhost \
-  -e DB_CONNECTION_PORT=5432 \
-  -e DB_CONNECTION_NAME=sushi \
-  -e DB_CONNECTION_USER=postgres \
-  -e DB_CONNECTION_PASS=mysecretpassword \
   -e ADMIN_USER=admin \
   -e ADMIN_PASSWORD=securepassword \
   -p 8008:8008 \
@@ -49,7 +35,7 @@ For a deeper understanding of declarative configurations, visit the **[Declarati
 :::
 
 ::: tip
-Ensure sensitive variables, such as database credentials, are stored securely using secret management tools (e.g., AWS Secrets Manager, HashiCorp Vault).
+Ensure sensitive variables are stored securely using secret management tools (e.g., AWS Secrets Manager, HashiCorp Vault).
 :::
 
 ::: tip

@@ -29,7 +29,7 @@ By providing functionality such as routing, load balancing, authentication, and 
 - **Dynamic Routing**: Route traffic efficiently with support for dynamic paths and advanced match criteria.
 - **Plugin System**: Extend functionality with modular plugins for security, rate limiting, logging, and more.
 - **Load Balancing**: Built-in strategies like round robin, weighted (in progress), and IP hash.
-- **Stateless and Stateful Modes**: Choose between declarative JSON configurations or database-backed persistence.
+- **Declarative Configuration**: Use declarative JSON configurations to configure the gateway.
 - **Secure API Management**: Features such as Mutual TLS, API key authentication, and JWT support.
 - **Lightweight & Efficient**: Optimized for speed and scalability with a minimal footprint.
 
@@ -71,21 +71,5 @@ We ❤️ contributions! Check out the [Contributing Guide](CONTRIBUTING.md) to 
   - `go run cmd/main.go`
 - To run tests use the following command:
   - `go test ./...`
-  - Some tests require a database to be running, if you wish to skip the tests that require a database to be running, use the following command:
-    - `SKIP_INTEGRATION_TESTS=true go test ./...`
 - Use the `docker-compose.yml` file to quickly start up dev servers to test proxy
   - `docker compose up -d`
-
-## Start a database
-
-create a postgres database.
-
-- `docker run --name postgres-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres`
-- `docker exec -it postgres-db psql -U postgres -d sushi`
-- `CREATE DATABASE sushi;`
-- `\c sushi`
-- `docker cp init.sql postgres-db:/init.sql`
-- `docker exec -it postgres-db psql -U postgres -d sushi -f /init.sql`
-- `docker cp mock.sql postgres-db:/mock.sql`
-- `docker exec -it postgres-db psql -U postgres -d sushi -f /mock.sql`
-- `\c`

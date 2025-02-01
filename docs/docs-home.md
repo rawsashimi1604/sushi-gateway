@@ -33,8 +33,8 @@ Sushi Gateway addresses these challenges with:
   - Configure API plugins/policies at the global, service, or route scope for fine grained tuning.
 - **High Performance**
   - Built in **Golang**, optimized for concurrency and low latency.
-- **Flexible Data Persistence Options**
-  - Supports **stateful (database)** and **stateless (declarative)** modes.
+- **Declarative Configuration**
+  - Stateless in-memory configuration makes for easy configuration and startup, reducing dependencies on a database.
 - **Comprehensive Security**
   - Includes authentication (JWT, Basic Auth, API Keys), rate limiting, and CORS policies.
 - **Developer-Friendly**
