@@ -17,10 +17,7 @@ export default defineConfig({
       { text: "Docs", link: "/docs-home" },
       {
         text: "Get Started",
-        items: [
-          { text: "Docker", link: "/getting-started/docker" },
-          { text: "Postgres", link: "/getting-started/postgres" },
-        ],
+        items: [{ text: "Docker", link: "/getting-started/docker" }],
       },
       {
         text: "Plugins",
@@ -49,10 +46,6 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: "Quick Start with Docker", link: "/getting-started/docker" },
-          {
-            text: "Install Sushi Gateway with Postgres",
-            link: "/getting-started/postgres",
-          },
         ],
       },
       {
