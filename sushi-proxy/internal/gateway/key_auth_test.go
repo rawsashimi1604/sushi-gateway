@@ -91,6 +91,11 @@ func TestKeyAuthSuccess(t *testing.T) {
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
+
+	if apiKeyHeader := rr.Header().Get("apiKey"); apiKeyHeader != "" {
+		t.Errorf("apiKey header not stripped: got %v want %v", apiKeyHeader, "")
+	}
+
 }
 
 func TestKeyAuthFailure(t *testing.T) {
