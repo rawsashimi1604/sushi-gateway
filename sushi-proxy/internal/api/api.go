@@ -2,14 +2,14 @@ package api
 
 import (
 	"database/sql"
+	"log/slog"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"github.com/rs/cors"
-	"log/slog"
-	"net/http"
 )
 
 func NewAdminApiRouter(database *sql.DB) http.Handler {
@@ -21,35 +21,6 @@ func NewAdminApiRouter(database *sql.DB) http.Handler {
 
 	authController := NewAuthController()
 	authController.RegisterRoutes(router)
-
-	// Admin API only add routes if hosted in db mode.
-	// Service Resource
-	var serviceController *ServiceController
-	if database == nil {
-		serviceController = NewServiceController(nil)
-	} else {
-		serviceController = NewServiceController(db.NewServiceRepository(database))
-	}
-	serviceController.RegisterRoutes(router)
-
-	// Route Resource
-	var routeController *RouteController
-	if database == nil {
-		routeController = NewRouteController(nil, nil)
-	} else {
-		routeController = NewRouteController(db.NewRouteRepository(database),
-			db.NewServiceRepository(database))
-	}
-	routeController.RegisterRoutes(router)
-
-	// Plugin Resource
-	var pluginController *PluginController
-	if database == nil {
-		pluginController = NewPluginController(nil)
-	} else {
-		pluginController = NewPluginController(db.NewPluginRepository(database))
-	}
-	pluginController.RegisterRoutes(router)
 
 	corsRouter := cors.New(cors.Options{
 		// TODO: externalize manager url

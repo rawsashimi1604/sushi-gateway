@@ -4,14 +4,15 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/gorilla/mux"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 	"log/slog"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/gorilla/mux"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/gateway"
+	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
 // TODO: externalise this
