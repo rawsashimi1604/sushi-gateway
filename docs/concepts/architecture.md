@@ -1,6 +1,6 @@
 # Sushi Gateway Architecture
 
-Sushi Gateway’s architecture is designed for flexibility, modularity, and scalability. It provides a robust API gateway solution that can handle diverse workloads and use cases. Below, we explore the core components, deployment modes, and networking of Sushi Gateway.
+Sushi Gateway’s architecture is designed for flexibility, modularity, and scalability. It provides a robust API gateway solution that can handle diverse workloads and use cases. Below, we explore the core components and networking of Sushi Gateway.
 
 ## Core Components
 
@@ -20,25 +20,6 @@ Sushi Manager is a web-based user interface that simplifies:
 - **Monitoring**: Track API usage and inspect logs in real-time.
 - **Testing**: Quickly test routes and plugins through the interactive UI.
 
-## Deployment Modes
-
-### Stateless Mode (dbless)
-
-Stateless mode uses declarative configuration files and does not require a database. It is ideal for:
-
-- **Testing and Development**: Quickly prototype and validate configurations.
-- **GitOps Workflows**: Manage configurations using version-controlled files.
-
-### Stateful Mode (db)
-
-Stateful mode persists configurations in a database and is suited for:
-
-- **Production Deployments**: Handle large-scale systems with dynamic configurations.
-- **High Availability**: Ensure data consistency and resilience.
-
-::: tip
-Learn more about the differences between Stateless and Stateful modes in the **[Data Persistence Guide](../concepts/data-persistence.md)**.
-:::
 
 ## Plugins and Extensibility
 

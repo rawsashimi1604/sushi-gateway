@@ -1,6 +1,6 @@
 # Declarative Configuration File
 
-The declarative configuration method in Sushi Gateway uses a JSON file to define services, routes, upstreams, and plugins in a single, centralized document. This approach is ideal for environments that benefit from a version-controlled, GitOps-friendly setup.
+The declarative configuration uses a JSON file to define services, routes, upstreams, and plugins in a single, centralized document. This approach is ideal for environments that benefit from a version-controlled, GitOps-friendly setup.
 
 ## Structure of Config File
 
