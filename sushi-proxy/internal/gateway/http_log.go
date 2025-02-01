@@ -20,7 +20,6 @@ type HttpLogPlugin struct {
 }
 
 // TODO: send logs in batches (batch processing).
-// TODO: log the response as well.
 type HttpLogConfig struct {
 	httpEndpoint string
 	method       string
@@ -111,7 +110,7 @@ func (plugin HttpLogPlugin) createLogBody(r *http.Request) (map[string]interface
 	clientIp, err := util.GetHostIp(r.RemoteAddr)
 	if err != nil {
 		slog.Error("Error getting client ip", "error", err)
-		err.WriteLogMessage()
+		return nil, err
 	}
 
 	upstreamIndexToRoute := lb.GetCurrentUpstream(*service, clientIp)
