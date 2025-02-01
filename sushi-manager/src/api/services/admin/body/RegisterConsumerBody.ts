@@ -1,6 +1,6 @@
-export type RegisterConsumerBody = {
-  username: string;
-  services: number[];
-  enableJwtAuth: boolean;
-  jwtCredentialsName: string;
-};
+// export type RegisterConsumerBody = {
+//   username: string;
+//   services: number[];
+//   enableJwtAuth: boolean;
+//   jwtCredentialsName: string;
+// };
