@@ -9,7 +9,3 @@ Sushi Gateway is designed with a stateless, declarative configuration approach, 
 ::: info
 For more in depth information about the configuration file, see the **[Configuration Reference](../concepts/configuration/files.md)**
 :::
-
-::: tip
-For step-by-step instructions on setting up Sushi Gateway with PostgreSQL, see the **[Installation Guide](../getting-started/postgres.md)**.
-:::
