@@ -27,7 +27,7 @@ docker run \
   -p 8008:8008 \
   -p 8443:8443 \
   -p 8081:8081 \
-  rawsashimi/sushi-proxy:0.3.0
+  rawsashimi/sushi-proxy:0.4.0
 ```
 
 ::: tip
