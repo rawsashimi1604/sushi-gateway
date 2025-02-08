@@ -24,6 +24,10 @@ By providing functionality such as routing, load balancing, authentication, and 
 
 ---
 
+## Roadmap
+
+See the [Roadmap](ROADMAP.md) for more information on the project's future direction.
+
 ## Features
 
 - **Dynamic Routing**: Route traffic efficiently with support for dynamic paths and advanced match criteria.
