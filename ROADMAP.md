@@ -19,7 +19,20 @@
 - [ ] Implement OpenTelemetry integration
 - [ ] Add Prometheus metrics
 
+### Circuit Breaker
+
+- [ ] Implement circuit breaker pattern
+
+### Load Testing
+
+- [ ] Implement load testing with k6
+
 ## Medium-term Goals (3-6 months)
+
+### Proper asset designs
+
+- [ ] Create a proper asset design for the project (logo, favicon, etc.)
+- [ ] Enhance landing page
 
 ### Load Balancing
 
