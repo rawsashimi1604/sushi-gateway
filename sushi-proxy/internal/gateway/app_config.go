@@ -69,7 +69,7 @@ func LoadGlobalConfig() (*AppConfig, error) {
 	}
 
 	// Optional, we only need CA Certs for MTLS communications
-	caCertPath := os.Getenv("CA_CERT_PATH")
+	// caCertPath := os.Getenv("CA_CERT_PATH")
 
 	// Admin User and Password is used for ADMIN API credentials
 	adminUser := os.Getenv("ADMIN_USER")
@@ -148,9 +148,9 @@ func LoadGlobalConfig() (*AppConfig, error) {
 	}
 
 	config := &AppConfig{
-		ServerCertPath:          serverCertPath,
-		ServerKeyPath:           serverKeyPath,
-		CACertPath:              caCertPath,
+		ServerCertPath: serverCertPath,
+		ServerKeyPath:  serverKeyPath,
+		// CACertPath:              caCertPath,
 		AdminUser:               adminUser,
 		AdminPassword:           adminPassword,
 		PersistenceConfig:       persistenceConfig,

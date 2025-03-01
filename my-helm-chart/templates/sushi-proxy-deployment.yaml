@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ .Values.global.name }}-proxy-deployment
+    labels:
+      name: {{ .Values.global.name }}-proxy
+spec:
+    replicas: {{ .Values.proxy.replicaCount }}
+    selector:
+      matchLabels:
+        name: {{ .Values.global.name }}-proxy
+    template:
+      metadata:
+        name: {{ .Values.global.name }}-proxy
+        labels:
+            name: {{ .Values.global.name }}-proxy
+      spec:
+        containers:
+          - name: {{ .Values.global.name }}-proxy
+            image: {{ .Values.image.sushi_proxy.repository }}:{{ .Values.image.sushi_proxy.tag }}
+            ports:
+            - containerPort: 8008
+            - containerPort: 8081
+            - containerPort: 8443
+            envFrom:
+              - configMapRef:
+                  name: {{ .Values.configMap.configFile }}
+              - secretRef:
+                   name: sushi-secret
+            volumeMounts:
+              - mountPath: {{ .Values.volumes.mountPath }}
+                name: {{ .Values.volumes.configVolumeName }}
+                subPath: {{ .Values.volumes.subPath }}
+        volumes:
+        - name: {{ .Values.volumes.configVolumeName }}
+          configMap:
+            name: {{ .Values.configMap.configFile }}

@@ -7,16 +7,10 @@
         "name": "http_log",
         "enabled": true,
         "config": {
-          "http_endpoint": "http://localhost:3000/v1/log",
+          "http_endpoint": "http://sushi-http-log-consumer:3000/v1/log",
           "method": "POST",
           "content_type": "application/json"
         }
-      },
-      {
-        "id": "plugin_2",
-        "name": "mtls",
-        "enabled": false,
-        "config": {}
       },
       {
         "id": "plugin_3",
@@ -103,9 +97,9 @@
       "protocol": "http",
       "load_balancing_strategy": "ip_hash",
       "upstreams": [
-        { "id": "upstream_1", "host": "localhost", "port": 8001 },
-        { "id": "upstream_2", "host": "localhost", "port": 8002 },
-        { "id": "upstream_3", "host": "localhost", "port": 8003 }
+        { "id": "upstream_1", "host": "sushi-svc-1", "port": 3000 },
+        { "id": "upstream_2", "host": "sushi-svc-2", "port": 3000 },
+        { "id": "upstream_3", "host": "sushi-svc-3", "port": 3000 }
       ],
       "plugins": [],
       "health": {

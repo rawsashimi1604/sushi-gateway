@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.name }}-manager-deployment
+  labels:
+    name: {{ .Values.global.name }}-manager
+spec:
+  replicas: {{ .Values.image.sushi_manager.replicaCount }}
+  selector:
+      matchLabels:
+        name: {{ .Values.global.name }}-manager
+  template:
+    metadata:
+      name: {{ .Values.global.name }}-manager
+      labels:
+        name: {{ .Values.global.name }}-manager
+    spec:
+      containers:
+        - name: {{ .Values.global.name }}-manager
+          image: {{ .Values.image.sushi_manager.repository }}:{{ .Values.image.sushi_proxy.tag }}
+          ports:
+          - containerPort: {{ .Values.sushi_manager.containers.ports.containerPort }}
+          envFrom:
+            - configMapRef: 
+                name: {{ .Values.configMap.configFile }}
+            - secretRef:
+                name: sushi-secret

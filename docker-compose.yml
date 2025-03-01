@@ -134,3 +134,21 @@ services:
     image: rawsashimi/express-sushi-http-consumer
     ports:
       - "3000:3000"
+  
+  sushi-gateway-proxy:
+    networks:
+      - sushi-net
+    container_name: example-proxy
+    image: rawsashimi/sushi-proxy:0.3.0
+    ports:
+      - "8008:8008"
+      - "8081:8081"
+      - "8443:8443"
+    environment:
+      CONFIG_FILE_PATH: "/app/config.json"
+      ADMIN_USER: "admin"
+      ADMIN_PASSWORD: "changeme"
+      PERSISTENCE_CONFIG: "dbless"
+    volumes:
+      - ./sushi-proxy/config/config.json:/app/config.json
+      
