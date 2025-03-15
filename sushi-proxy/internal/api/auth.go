@@ -37,6 +37,7 @@ func (c *AuthController) RegisterRoutes(router *mux.Router) {
 
 func (c *AuthController) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		slog.Info("AuthController:: Admin API - Logging in")
 		authHeader := req.Header.Get("Authorization")
 		if authHeader == "" {
 			model.NewHttpError(http.StatusUnauthorized, "UNAUTHORIZED_AUTH",
@@ -97,6 +98,7 @@ func (c *AuthController) Login() http.HandlerFunc {
 
 func (c *AuthController) Logout() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		slog.Info("AuthController:: Admin API - Logging out")
 		// To log out, we invalidate the token by setting a past expiration date
 		http.SetCookie(w, &http.Cookie{
 			Name:     "token",
