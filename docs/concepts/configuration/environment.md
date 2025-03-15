@@ -6,14 +6,15 @@ Environment variables in Sushi Gateway allow for dynamic configuration of the ga
 
 The following table lists the key environment variables supported by Sushi Gateway:
 
-| Variable                    | Description                                                                                                         | Required | Example Value       | Default Value      |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------- | ------------------- | ------------------ |
-| `CONFIG_FILE_PATH`          | Path to the `config.json` file for declarative configurations.                                                      | No       | `/app/config.json`  | `/app/config.json` |
-| `ADMIN_USER`                | Username for the Admin API.                                                                                         | Yes      | `admin`             | `admin`            |
-| `ADMIN_PASSWORD`            | Password for the Admin API user.                                                                                    | Yes      | `changeme`          | `changeme`         |
-| `SERVER_CERT_PATH`          | Path to the server certificate for HTTPS. Server certs will be self generated when not provided.                    | No       | `/path/to/cert.crt` | -                  |
-| `SERVER_KEY_PATH`           | Path to the server private key for HTTPS. Server certs will be self generated when not provided                     | No       | `/path/to/key.pem`  | -                  |
-| `CA_CERT_PATH`              | Path to the Certificate Authority (CA) file for mutual TLS (mTLS). Required for MTLS plugin related configurations. | No       | `/path/to/ca.crt`   | -                  |
+| Variable            | Description                                                                                                         | Required | Example Value         | Default Value      |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------- | -------- | --------------------- | ------------------ |
+| `CONFIG_FILE_PATH`  | Path to the `config.json` file for declarative configurations.                                                      | No       | `/app/config.json`    | `/app/config.json` |
+| `ADMIN_USER`        | Username for the Admin API.                                                                                         | Yes      | `admin`               | `admin`            |
+| `ADMIN_PASSWORD`    | Password for the Admin API user.                                                                                    | Yes      | `changeme`            | `changeme`         |
+| `ADMIN_CORS_ORIGIN` | CORS origin for the Admin API.                                                                                      | No       | `my.admin.api.domain` | `localhost:5173`   |
+| `SERVER_CERT_PATH`  | Path to the server certificate for HTTPS. Server certs will be self generated when not provided.                    | No       | `/path/to/cert.crt`   | -                  |
+| `SERVER_KEY_PATH`   | Path to the server private key for HTTPS. Server certs will be self generated when not provided                     | No       | `/path/to/key.pem`    | -                  |
+| `CA_CERT_PATH`      | Path to the Certificate Authority (CA) file for mutual TLS (mTLS). Required for MTLS plugin related configurations. | No       | `/path/to/ca.crt`     | -                  |
 
 ## Example Configuration
 
