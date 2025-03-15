@@ -10,12 +10,13 @@ import (
 )
 
 type AppConfig struct {
-	ServerCertPath string
-	ServerKeyPath  string
-	CACertPath     string
-	AdminUser      string
-	AdminPassword  string
-	ConfigFilePath string
+	ServerCertPath  string
+	ServerKeyPath   string
+	CACertPath      string
+	AdminUser       string
+	AdminPassword   string
+	AdminCorsOrigin string
+	ConfigFilePath  string
 }
 
 var GlobalAppConfig *AppConfig
@@ -71,6 +72,9 @@ func LoadGlobalConfig() (*AppConfig, error) {
 		errors = append(errors, "ADMIN_PASSWORD is required.")
 	}
 
+	// Admin API Cors configurations, optional, if not provided, set to default localhost sushi manager (localhost:5173)
+	adminCorsOrigin := os.Getenv("ADMIN_CORS_ORIGIN")
+
 	// Defines the path to our declarative configuration file to load configurations for the gateway.
 	configFilePath := os.Getenv("CONFIG_FILE_PATH")
 	if configFilePath == "" {
@@ -86,12 +90,13 @@ func LoadGlobalConfig() (*AppConfig, error) {
 	}
 
 	config := &AppConfig{
-		ServerCertPath: serverCertPath,
-		ServerKeyPath:  serverKeyPath,
-		CACertPath:     caCertPath,
-		AdminUser:      adminUser,
-		AdminPassword:  adminPassword,
-		ConfigFilePath: configFilePath,
+		ServerCertPath:  serverCertPath,
+		ServerKeyPath:   serverKeyPath,
+		CACertPath:      caCertPath,
+		AdminUser:       adminUser,
+		AdminPassword:   adminPassword,
+		AdminCorsOrigin: adminCorsOrigin,
+		ConfigFilePath:  configFilePath,
 	}
 
 	return config, nil
