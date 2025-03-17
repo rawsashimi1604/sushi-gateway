@@ -17,6 +17,7 @@ func setupTestEnv(t *testing.T) func() {
 		"CA_CERT_PATH",
 		"ADMIN_USER",
 		"ADMIN_PASSWORD",
+		"ADMIN_CORS_ORIGIN",
 		"CONFIG_FILE_PATH",
 	}
 
