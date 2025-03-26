@@ -71,6 +71,8 @@ func LoadGlobalConfig() (*AppConfig, error) {
 	// Optional, we only need CA Certs for MTLS communications
 	// caCertPath := os.Getenv("CA_CERT_PATH")
 
+	// CORS configurations
+
 	// Admin User and Password is used for ADMIN API credentials
 	adminUser := os.Getenv("ADMIN_USER")
 	if adminUser == "" {

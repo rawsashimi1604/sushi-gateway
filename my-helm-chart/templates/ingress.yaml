@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sushi-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: sushi-gateway.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sushi-gateway-svc
+                port:
+                  number: 8081
+
+          - path: /manager
+            pathType: Prefix
+            backend:
+              service:
+                name: sushi-manager-svc
+                port:
+                  number: 5173

@@ -36,4 +36,4 @@ volumes:
   mountPath: /app/config.json
   subPath: config.json
 
-
+minikubeIp: 192.168.49.2

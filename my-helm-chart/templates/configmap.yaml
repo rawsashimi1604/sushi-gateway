@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   CONFIG_FILE_PATH: "/app/config.json"
-  SUSHI_MANAGER_BACKEND_API_URL: "http://sushi-gateway-svc.default.svc.cluster.local:8081"
+  SUSHI_MANAGER_BACKEND_API_URL: "http://127.0.0.1:65046"
   config.json: "{\r\n  \"global\": {\r\n    \"name\": \"sushi-gateway-1\",\r\n    \"plugins\":
     [\r\n      {\r\n        \"id\": \"plugin_1\",\r\n        \"name\": \"http_log\",\r\n
     \       \"enabled\": true,\r\n        \"config\": {\r\n          \"http_endpoint\":

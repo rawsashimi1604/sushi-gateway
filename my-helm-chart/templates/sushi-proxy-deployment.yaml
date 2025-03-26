@@ -2,8 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: {{ .Values.global.name }}-proxy-deployment
+    namespace: default
     labels:
       name: {{ .Values.global.name }}-proxy
+    annotations: 
+      checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 spec:
     replicas: {{ .Values.proxy.replicaCount }}
     selector:
