@@ -2,44 +2,17 @@ package gateway
 
 import (
 	"context"
-	"database/sql"
 	"log/slog"
 	"os"
 	"sync"
-	"time"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/db"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
 )
 
-// Reads from declarative config file or database...
+// Reads from declarative config file
 var GlobalProxyConfig model.ProxyConfig
 var configLock = &sync.RWMutex{}
-
-func LoadProxyConfigFromDb(database *sql.DB) {
-
-	slog.Info("Refreshing global proxy gateway configurations from database.")
-	serviceRepo := db.NewServiceRepository(database)
-	services, err := serviceRepo.GetAllServices()
-	if err != nil {
-		slog.Info("Error reading services from database during proxy config sync", "error", err)
-		// We don't terminate here as we can still run with the existing cached config.
-	}
-
-	gatewayRepo := db.NewGatewayRepository(database)
-	gatewayGlobalConfig, err := gatewayRepo.GetGatewayInfo()
-	if err != nil {
-		slog.Info("Error reading gateway global config from database during proxy config sync", "error", err)
-		// We don't terminate here as we can still run with the existing cached config.
-	}
-
-	// Update the global proxy config
-	GlobalProxyConfig = model.ProxyConfig{
-		Global:   gatewayGlobalConfig,
-		Services: services,
-	}
-}
 
 func LoadProxyConfigFromConfigFile(filePath string) error {
 	slog.Info("Loading proxy_pass gateway from config file.")
@@ -73,22 +46,6 @@ func LoadProxyConfigFromConfigFile(filePath string) error {
 	ResetLoadBalancers()
 
 	return nil
-}
-
-func StartProxyConfigCronJob(database *sql.DB, interval int) {
-	ticker := time.NewTicker(time.Duration(interval) * time.Second)
-	quit := make(chan struct{})
-	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				LoadProxyConfigFromDb(database)
-			case <-quit:
-				ticker.Stop()
-				return
-			}
-		}
-	}()
 }
 
 func WatchConfigFile(ctx context.Context, filePath string) error {

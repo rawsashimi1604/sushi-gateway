@@ -1,9 +1,5 @@
 package constant
 
-// DB CONFIG
-const DB_MODE = "db"
-const DBLESS_MODE = "dbless"
-
 // PORTS
 const PORT_ADMIN_API = "8081"
 const PORT_HTTP = "8008"
@@ -33,6 +29,7 @@ var AVAILABLE_PLUGINS = []string{
 	PLUGIN_CORS,
 }
 
+const PLUGIN_RESPONSE_HANDLER = "response_handler"
 const PLUGIN_BASIC_AUTH = "basic_auth"
 const PLUGIN_ACL = "acl"
 const PLUGIN_CORS = "cors"

@@ -95,7 +95,7 @@
       "name": "sushi-svc",
       "base_path": "/sushi-service",
       "protocol": "http",
-      "load_balancing_strategy": "ip_hash",
+      "load_balancing_strategy": "round_robin",
       "upstreams": [
         { "id": "upstream_1", "host": "sushi-svc-1", "port": 3000 },
         { "id": "upstream_2", "host": "sushi-svc-2", "port": 3000 },

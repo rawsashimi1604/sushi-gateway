@@ -33,8 +33,8 @@ Sushi Gateway addresses these challenges with:
   - Configure API plugins/policies at the global, service, or route scope for fine grained tuning.
 - **High Performance**
   - Built in **Golang**, optimized for concurrency and low latency.
-- **Flexible Data Persistence Options**
-  - Supports **stateful (database)** and **stateless (declarative)** modes.
+- **Declarative Configuration**
+  - Stateless in-memory configuration makes for easy configuration and startup, reducing dependencies on a database.
 - **Comprehensive Security**
   - Includes authentication (JWT, Basic Auth, API Keys), rate limiting, and CORS policies.
 - **Developer-Friendly**
@@ -51,15 +51,11 @@ Sushi Gateway comprises two primary components:
 2. **Sushi Manager**
    - Web-based UI for monitoring and managing gateway configurations.
 
-## Deployment Modes
 
 ::: tip
-Try Sushi Gateway in stateless (without a database) mode for an easy and fast setup. Stateless mode uses declarative configuration files, making it perfect for testing or quick deployment scenarios.
+Try Sushi Gateway witt docker for an easy and fast setup. It uses declarative configuration files, making it perfect for testing or quick deployment scenarios.
 [Get started with our Quick Start Guide now](./getting-started/docker.md)!
 :::
-
-- **Stateless Mode**: Uses declarative configuration files, ideal for GitOps workflows.
-- **Stateful Mode**: Leverages PostgreSQL for persistent storage of configurations.
 
 ## Supported Platforms
 

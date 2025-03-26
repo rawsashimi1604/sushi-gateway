@@ -8,8 +8,6 @@ import (
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/util"
 )
 
-// TODO: move validation logic to model.
-
 type PluginValidator struct {
 }
 
@@ -19,7 +17,6 @@ func NewPluginValidator() *PluginValidator {
 
 func (pv *PluginValidator) ValidatePlugin(plugin model.PluginConfig) error {
 
-	// TODO: validate each plugin data/gateway schema
 	if err := pv.validateNameExists(plugin); err != nil {
 		return err
 	}

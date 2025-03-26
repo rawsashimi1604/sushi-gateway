@@ -32,14 +32,14 @@ Pull the latest Docker images for Sushi Proxy and Sushi Manager from Docker Hub 
 :::
 
 ```bash
-docker pull rawsashimi/sushi-proxy:0.3.0
-docker pull rawsashimi/sushi-manager:0.3.0
+docker pull rawsashimi/sushi-proxy:0.4.0
+docker pull rawsashimi/sushi-manager:0.4.0
 ```
 
 ## Step 2: Create a Configuration File
 
-::: info Stateless Mode
-This guide uses the stateless version of Sushi Gateway for simplicity. In this mode, configuration is managed using a declarative JSON file. For understanding the various persistence configuration modes, refer to our [Data Persistence Guide](../concepts/data-persistence.md).
+::: info Declarative Configuration
+Sushi Gateway's configuration is managed using a declarative JSON file. For more information, refer to our [Declarative Configuration Concepts](../concepts/declarative-config.md).
 :::
 
 Create a `config.json` file with the following example configuration:
@@ -163,11 +163,10 @@ docker run \
 -e CONFIG_FILE_PATH="/app/config.json" \
 -e ADMIN_USER=admin \
 -e ADMIN_PASSWORD=changeme \
--e PERSISTENCE_CONFIG=dbless \
 -p 8008:8008 \
 -p 8081:8081 \
 -p 8443:8443 \
-rawsashimi/sushi-proxy:0.3.0
+rawsashimi/sushi-proxy:0.4.0
 ```
 
 ## Step 8: Test the Proxy
@@ -213,7 +212,7 @@ Use the credentials specified above - `ADMIN_USER` and `ADMIN_PASSWORD` to login
 ```bash
 docker run --rm -p 5173:5173 \
 -e SUSHI_MANAGER_BACKEND_API_URL=http://localhost:8081 \
-rawsashimi/sushi-manager:0.3.0
+rawsashimi/sushi-manager:0.4.0
 ```
 
 ## Next Steps

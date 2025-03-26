@@ -27,6 +27,7 @@ func NewJwtPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_JWT,
 		Priority: 1450,
+		Phase:    AccessPhase,
 		Handler: JwtPlugin{
 			config: config,
 		},
@@ -182,7 +183,6 @@ func (plugin JwtPlugin) validateHS256(credentials JwtCredentials, token string) 
 	tokenInvalidErr := model.NewHttpError(http.StatusUnauthorized, "INVALID_TOKEN", "The token is not valid.")
 
 	jwtToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
-		// TODO: do for other alg types (RSA 256)
 		if credentials.alg == constant.HS_256 {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

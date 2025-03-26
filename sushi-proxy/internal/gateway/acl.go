@@ -18,6 +18,7 @@ func NewAclPlugin(config map[string]interface{}) *Plugin {
 	return &Plugin{
 		Name:     constant.PLUGIN_ACL,
 		Priority: 950,
+		Phase:    AccessPhase,
 		Handler: AclPlugin{
 			config: config,
 		},

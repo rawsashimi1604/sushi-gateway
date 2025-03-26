@@ -22,7 +22,7 @@ To learn more about declarative configurations, visit the **[Declarative Configu
 
 Environment variable configurations allow you to dynamically adjust gateway behavior on startup. Simply specify it at docker runtime as an environment variable to utilize them.
 
-- Define database connections, persistence modes, and other runtime options.
+- Define configuration file paths and other runtime options.
 
 ::: tip
 For a detailed list of supported environment variables, see the **[Environment Variable Configuration Guide](../configuration/environment.md)**.

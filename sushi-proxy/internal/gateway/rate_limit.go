@@ -59,6 +59,7 @@ func NewRateLimitPlugin(config map[string]interface{}, proxyConfig *model.ProxyC
 	return &Plugin{
 		Name:     constant.PLUGIN_RATE_LIMIT,
 		Priority: 910,
+		Phase:    AccessPhase,
 		Handler: RateLimitPlugin{
 			config:      config,
 			proxyConfig: proxyConfig,

@@ -22,7 +22,7 @@ Modern applications rely on multiple services and APIs that need to work togethe
 
 Sushi Gateway is a lightweight and modular API Gateway that includes:
 
-- Deployment options for both stateless and stateful modes.
+- Load configurations from a declarative configuration file.
 - Configurable plugins for dynamic request processing.
 - Support for authentication methods like JWT, API keys, and MTLS.
 
