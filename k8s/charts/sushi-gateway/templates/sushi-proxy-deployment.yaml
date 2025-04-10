@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: {{ .Values.global.name }}-proxy-deployment
+    name: {{ .Values.global.name }}-proxy
     namespace: default
     labels:
       name: {{ .Values.global.name }}-proxy
@@ -16,28 +16,28 @@ spec:
       metadata:
         name: {{ .Values.global.name }}-proxy
         labels:
-            name: {{ .Values.global.name }}-proxy
+          name: {{ .Values.global.name }}-proxy
       spec:
         containers:
           - name: {{ .Values.global.name }}-proxy
             image: {{ .Values.image.sushi_proxy.repository }}:{{ .Values.image.sushi_proxy.tag }}
             ports:
-            - containerPort: 8008
-            - containerPort: 8081
-            - containerPort: 8443
-            envFrom:
-              - configMapRef:
-                  name: {{ .Values.configMap.configFile }}
-              - secretRef:
-                   name: sushi-secret
+              - containerPort: 8008
+              - containerPort: 8081
+              - containerPort: 8443
             env:
+              - name: CONFIG_FILE_PATH
+                value: "/mnt/proxy/config.json"
+              - name: ADMIN_USER
+                value: admin
+              - name: ADMIN_PASSWORD
+                value: password
               - name: ADMIN_CORS_ORIGIN
-                value: "http://127.0.0.1:55363"
+                value: "http://127.0.0.1:5173"
             volumeMounts:
-              - mountPath: {{ .Values.volumes.mountPath }}
-                name: {{ .Values.volumes.configVolumeName }}
-                subPath: {{ .Values.volumes.subPath }}
+              - name: proxy-config
+                mountPath: /mnt/proxy
         volumes:
-        - name: {{ .Values.volumes.configVolumeName }}
-          configMap:
-            name: {{ .Values.configMap.configFile }}
+          - name: proxy-config
+            configMap:
+              name: sushi-config

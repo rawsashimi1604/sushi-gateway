@@ -4,9 +4,10 @@ metadata:
   name: sushi-manager-svc
   namespace: default
 spec:
+  type: LoadBalancer
   selector:
     name: sushi-gateway-manager
   ports:
-  - name: manager-ui
-    port: 5173       
-    targetPort: 5173
+    - name: manager-ui
+      port: 5173
+      targetPort: 5173

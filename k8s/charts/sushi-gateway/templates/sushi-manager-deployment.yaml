@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.global.name }}-manager-deployment
+  name: {{ .Values.global.name }}-manager
   namespace: default
   labels:
     name: {{ .Values.global.name }}-manager
@@ -22,7 +22,7 @@ spec:
         - name: {{ .Values.global.name }}-manager
           image: {{ .Values.image.sushi_manager.repository }}:{{ .Values.image.sushi_proxy.tag }}
           ports:
-          - containerPort: {{ .Values.sushi_manager.containers.ports.containerPort }}
+          - containerPort: 5173
           env:
           - name: SUSHI_MANAGER_BACKEND_API_URL
-            value: http://127.0.0.1:55240
+            value: http://127.0.0.1:8081

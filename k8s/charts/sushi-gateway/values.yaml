@@ -1,7 +1,6 @@
 global:
   name: sushi-gateway
 
-
 image:
   sushi_proxy: 
     repository: rawsashimi/sushi-proxy
@@ -10,37 +9,8 @@ image:
     repository: rawsashimi/sushi-manager
     tag: "0.4.1"
 
-
 proxy:
   replicaCount: 1
-  containers:
-    ports:
-      - containerPort: 8008
-      - containerPort: 8081
-      - containerPort: 8443
-
+  
 sushi_manager:
   replicaCount: 1
-  containers:
-    ports:
-      containerPort: 5173
-
-
-configMap:
-  envName: sushi-env
-  configFile: sushi-config
-
-
-volumes:
-  configVolumeName: config-volume
-  mountPath: /app/config.json
-  subPath: config.json
-
-minikubeIp: 192.168.49.2
-
-
-cors:
-  ADMIN_CORS_ORIGIN: "http://127.0.0.1:54715"
-
-
-SUSHI_MANAGER_BACKEND_API_URL: "http://127.0.0.1:54862"

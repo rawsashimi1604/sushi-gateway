@@ -4,7 +4,7 @@ metadata:
   name: sushi-gateway-svc
   namespace: default
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     name: sushi-gateway-proxy
   ports:
@@ -14,7 +14,6 @@ spec:
     - name: http
       port: 8081
       targetPort: 8081
-      nodePort: 30001
     - name: proxy
       port: 8008
       targetPort: 8008
