@@ -30,6 +30,9 @@ spec:
                   name: {{ .Values.configMap.configFile }}
               - secretRef:
                    name: sushi-secret
+            env:
+              - name: ADMIN_CORS_ORIGIN
+                value: "http://127.0.0.1:55363"
             volumeMounts:
               - mountPath: {{ .Values.volumes.mountPath }}
                 name: {{ .Values.volumes.configVolumeName }}

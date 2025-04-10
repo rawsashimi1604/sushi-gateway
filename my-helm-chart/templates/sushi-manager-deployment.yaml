@@ -25,4 +25,4 @@ spec:
           - containerPort: {{ .Values.sushi_manager.containers.ports.containerPort }}
           env:
           - name: SUSHI_MANAGER_BACKEND_API_URL
-            value: "http://127.0.0.1:65268"
+            value: http://127.0.0.1:55240

@@ -5,10 +5,10 @@ global:
 image:
   sushi_proxy: 
     repository: rawsashimi/sushi-proxy
-    tag: "0.4.0"
+    tag: "0.4.1"
   sushi_manager: 
     repository: rawsashimi/sushi-manager
-    tag: "0.4.0"
+    tag: "0.4.1"
 
 
 proxy:
@@ -37,3 +37,10 @@ volumes:
   subPath: config.json
 
 minikubeIp: 192.168.49.2
+
+
+cors:
+  ADMIN_CORS_ORIGIN: "http://127.0.0.1:54715"
+
+
+SUSHI_MANAGER_BACKEND_API_URL: "http://127.0.0.1:54862"

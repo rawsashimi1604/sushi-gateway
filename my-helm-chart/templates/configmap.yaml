@@ -1,58 +1,7 @@
 apiVersion: v1
 data:
-  CONFIG_FILE_PATH: "/app/config.json"
-  SUSHI_MANAGER_BACKEND_API_URL: "http://127.0.0.1:65046"
-  config.json: "{\r\n  \"global\": {\r\n    \"name\": \"sushi-gateway-1\",\r\n    \"plugins\":
-    [\r\n      {\r\n        \"id\": \"plugin_1\",\r\n        \"name\": \"http_log\",\r\n
-    \       \"enabled\": true,\r\n        \"config\": {\r\n          \"http_endpoint\":
-    \"http://sushi-http-log-consumer:3000/v1/log\",\r\n          \"method\": \"POST\",\r\n
-    \         \"content_type\": \"application/json\"\r\n        }\r\n      },\r\n
-    \     {\r\n        \"id\": \"plugin_3\",\r\n        \"name\": \"key_auth\",\r\n
-    \       \"enabled\": false,\r\n        \"config\": {\r\n          \"key\": \"123456\"\r\n
-    \       }\r\n      },\r\n      {\r\n        \"id\": \"plugin_4\",\r\n        \"name\":
-    \"rate_limit\",\r\n        \"enabled\": true,\r\n        \"config\": {\r\n          \"limit_second\":
-    10,\r\n          \"limit_min\": 10,\r\n          \"limit_hour\": 10\r\n        }\r\n
-    \     },\r\n      {\r\n        \"id\": \"plugin_5\",\r\n        \"name\": \"basic_auth\",\r\n
-    \       \"enabled\": false,\r\n        \"config\": {\r\n          \"username\":
-    \"admin\",\r\n          \"password\": \"changeme\"\r\n        }\r\n      },\r\n
-    \     {\r\n        \"id\": \"plugin_6\",\r\n        \"name\": \"jwt\",\r\n        \"enabled\":
-    false,\r\n        \"config\": {\r\n          \"alg\": \"RS256\",\r\n          \"iss\":
-    \"someIssuerKey\",\r\n          \"publicKey\": \"-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxiKfOSgDAdCMaUS27Ume\\nVVeWUvbXZIbJ+qPesmOWfilz2dNfBk4NE+Do7rfIezZNCXoNLHJxo6Ayjz1SzidT\\nNLSkFrHOlKazg4dqW9DTYWMe4DczheAPnNymrpvK3rFKIF6LD23Vq530zfnsjUmw\\nWmNaXFqwbQkYkjrRxFcHGzhqPN/KmcZRpXcEkDydafTpcblfbhBn9Xmap7IzX+aX\\nFa6JA5cI7M6w0Do7JWHseXYBBA4SxwYH424LqTuKMueivvhEhb+TTggriNpyIVKy\\nJhdj41jUycqVRK95TKJgf5TmQYfATpeLBy9kGxoEhazl1dOpPezw12xSPT3H3giR\\nUwIDAQAB\\n-----END
-    PUBLIC KEY-----\"\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"plugin_7\",\r\n
-    \       \"name\": \"acl\",\r\n        \"enabled\": false,\r\n        \"config\":
-    {\r\n          \"whitelist\": [\"127.0.0.1\", \"127.0.0.2\"]\r\n        }\r\n
-    \     },\r\n      {\r\n        \"id\": \"plugin_8\",\r\n        \"name\": \"bot_protection\",\r\n
-    \       \"enabled\": false,\r\n        \"config\": {\r\n          \"blacklist\":
-    [\"googlebot\", \"bingbot\", \"yahoobot\"]\r\n        }\r\n      },\r\n      {\r\n
-    \       \"id\": \"plugin_9\",\r\n        \"name\": \"request_size_limit\",\r\n
-    \       \"enabled\": false,\r\n        \"config\": {\r\n          \"max_payload_size\":
-    10\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"plugin_10\",\r\n        \"name\":
-    \"cors\",\r\n        \"enabled\": false,\r\n        \"config\": {\r\n          \"allow_origins\":
-    [\"*\"],\r\n          \"allow_methods\": [\"GET\", \"POST\"],\r\n          \"allow_headers\":
-    [\"Authorization\", \"Content-Type\"],\r\n          \"expose_headers\": [\"Authorization\"],\r\n
-    \         \"allow_credentials\": true,\r\n          \"allow_private_network\":
-    false,\r\n          \"preflight_continue\": false,\r\n          \"max_age\": 3600\r\n
-    \       }\r\n      }\r\n    ]\r\n  },\r\n  \"services\": [\r\n    {\r\n      \"name\":
-    \"sushi-svc\",\r\n      \"base_path\": \"/sushi-service\",\r\n      \"protocol\":
-    \"http\",\r\n      \"load_balancing_strategy\": \"ip_hash\",\r\n      \"upstreams\":
-    [\r\n        { \"id\": \"upstream_1\", \"host\": \"sushi-svc-1\", \"port\": 3000
-    },\r\n        { \"id\": \"upstream_2\", \"host\": \"sushi-svc-2\", \"port\": 3000
-    },\r\n        { \"id\": \"upstream_3\", \"host\": \"sushi-svc-3\", \"port\": 3000
-    }\r\n      ],\r\n      \"plugins\": [],\r\n      \"health\": {\r\n        \"enabled\":
-    true,\r\n        \"path\": \"/health\"\r\n      },\r\n      \"routes\": [\r\n
-    \       {\r\n          \"name\": \"get-sushi\",\r\n          \"path\": \"/v1/sushi\",\r\n
-    \         \"methods\": [\"GET\"],\r\n          \"plugins\": [\r\n            {\r\n
-    \             \"id\": \"plugin_11\",\r\n              \"name\": \"rate_limit\",\r\n
-    \             \"enabled\": true,\r\n              \"config\": {\r\n                \"limit_second\":
-    10,\r\n                \"limit_min\": 10,\r\n                \"limit_hour\": 100\r\n
-    \             }\r\n            }\r\n          ]\r\n        },\r\n        {\r\n
-    \         \"name\": \"get-sushi-by-id\",\r\n          \"path\": \"/v1/sushi/{id}\",\r\n
-    \         \"methods\": [\"GET\"],\r\n          \"plugins\": []\r\n        },\r\n
-    \       {\r\n          \"name\": \"get-sushi-restaurants\",\r\n          \"path\":
-    \"/v1/sushi/restaurant\",\r\n          \"methods\": [\"GET\"],\r\n          \"plugins\":
-    []\r\n        },\r\n        {\r\n          \"name\": \"sushi-provision-jwt\",\r\n
-    \         \"path\": \"/v1/token\",\r\n          \"methods\": [\"GET\"],\r\n          \"plugins\":
-    []\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n"
+  config.json: |-
+{{ .Files.Get "config.json" | indent 4}}
 kind: ConfigMap
 metadata:
   name: sushi-config
