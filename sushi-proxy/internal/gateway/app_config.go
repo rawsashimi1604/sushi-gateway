@@ -59,7 +59,7 @@ func LoadGlobalConfig() (*AppConfig, error) {
 	}
 
 	// Optional, we only need CA Certs for MTLS communications
-	// caCertPath := os.Getenv("CA_CERT_PATH")
+	caCertPath := os.Getenv("CA_CERT_PATH")
 
 	// CORS configurations
 
