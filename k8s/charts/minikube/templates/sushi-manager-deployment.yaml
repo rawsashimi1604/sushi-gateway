@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.name }}-manager
+  namespace: default
+  labels:
+    name: {{ .Values.global.name }}-manager
+spec:
+  replicas: {{ .Values.manager.replicaCount }}
+  selector:
+      matchLabels:
+        name: {{ .Values.global.name }}-manager
+  template:
+    metadata:
+      name: {{ .Values.global.name }}-manager
+      labels:
+        name: {{ .Values.global.name }}-manager
+    spec:
+      containers:
+        - name: {{ .Values.global.name }}-manager
+          image: {{ .Values.manager.image.repository }}:{{ .Values.manager.image.tag }}
+          imagePullPolicy: {{ .Values.manager.image.pullPolicy }}
+          ports:
+          - containerPort: 5173
+          env:
+          - name: SUSHI_MANAGER_BACKEND_API_URL
+            value: http://127.0.0.1:8081

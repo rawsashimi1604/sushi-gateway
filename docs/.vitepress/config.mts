@@ -17,7 +17,10 @@ export default defineConfig({
       { text: "Docs", link: "/docs-home" },
       {
         text: "Get Started",
-        items: [{ text: "Docker", link: "/getting-started/docker" }],
+        items: [
+          { text: "Docker", link: "/getting-started/docker" },
+          { text: "Minikube", link: "/getting-started/minikube" },
+        ],
       },
       {
         text: "Plugins",
@@ -46,6 +49,10 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: "Quick Start with Docker", link: "/getting-started/docker" },
+          {
+            text: "Minikube Helm (Kubernetes)",
+            link: "/getting-started/minikube",
+          },
         ],
       },
       {

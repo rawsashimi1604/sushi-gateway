@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ .Values.global.name }}-proxy
+    namespace: default
+    labels:
+      name: {{ .Values.global.name }}-proxy
+    annotations: 
+      checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+spec:
+    replicas: {{ .Values.proxy.replicaCount }}
+    selector:
+      matchLabels:
+        name: {{ .Values.global.name }}-proxy
+    template:
+      metadata:
+        name: {{ .Values.global.name }}-proxy
+        labels:
+          name: {{ .Values.global.name }}-proxy
+      spec:
+        containers:
+          - name: {{ .Values.global.name }}-proxy
+            image: {{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}
+            imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
+            ports:
+              - containerPort: 8008
+              - containerPort: 8081
+              - containerPort: 8443
+            env:
+              - name: CONFIG_FILE_PATH
+                value: "/mnt/proxy/config.json"
+              - name: ADMIN_USER
+                value: {{ .Values.proxy.adminApi.credentials.username }}
+              - name: ADMIN_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.global.name }}-secret
+                    key: ADMIN_PASSWORD
+              - name: ADMIN_CORS_ORIGIN
+                value: "http://127.0.0.1:5173"
+            volumeMounts:
+              - name: proxy-config
+                mountPath: /mnt/proxy
+        volumes:
+          - name: proxy-config
+            configMap:
+              name: {{ .Values.global.name }}-config
