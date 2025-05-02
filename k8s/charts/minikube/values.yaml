@@ -12,7 +12,7 @@ proxy:
   image:
     repository: rawsashimi/sushi-proxy
     tag: "latest"
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
 
   ## Number of replicas to deploy
   replicaCount: 1
@@ -33,7 +33,7 @@ manager:
   image:
     repository: rawsashimi/sushi-manager
     tag: "latest"
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   
   ## Number of replicas to deploy
   replicaCount: 1
