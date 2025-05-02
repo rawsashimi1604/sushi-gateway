@@ -5,10 +5,8 @@ metadata:
   namespace: default
   labels:
     name: {{ .Values.global.name }}-manager
-  annotations: 
-      checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 spec:
-  replicas: {{ .Values.image.sushi_manager.replicaCount }}
+  replicas: {{ .Values.manager.replicaCount }}
   selector:
       matchLabels:
         name: {{ .Values.global.name }}-manager
@@ -20,7 +18,8 @@ spec:
     spec:
       containers:
         - name: {{ .Values.global.name }}-manager
-          image: {{ .Values.image.sushi_manager.repository }}:{{ .Values.image.sushi_proxy.tag }}
+          image: {{ .Values.manager.image.repository }}:{{ .Values.manager.image.tag }}
+          imagePullPolicy: {{ .Values.manager.image.pullPolicy }}
           ports:
           - containerPort: 5173
           env:

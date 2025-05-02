@@ -1,0 +1,39 @@
+################################################################################################
+# Minikube chart for configuring a simple sushi-gateway cluster running as a pod.
+################################################################################################
+
+## Configures global settings
+global:
+  name: sushi-gateway
+
+## Configures sushi-proxy settings
+proxy:
+
+  image:
+    repository: rawsashimi/sushi-proxy
+    tag: "0.4.1"
+    pullPolicy: IfNotPresent
+
+  ## Number of replicas to deploy
+  replicaCount: 1
+
+  ## Configures settings for the Admin API
+  adminApi:
+
+    ## Configures the authentication details for the admin API
+    ## The API uses Basic Authentication.
+    credentials:
+      username: admin
+      password: changeme
+
+
+## Configures sushi-manager (UI) settings
+manager:
+
+  image:
+    repository: rawsashimi/sushi-manager
+    tag: "0.4.1"
+    pullPolicy: IfNotPresent
+  
+  ## Number of replicas to deploy
+  replicaCount: 1

@@ -1,9 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: sushi-config
+  name: {{ .Values.global.name }}-config
   namespace: default
 data:
   config.json: |-
 {{ .Files.Get "files/config.json" | indent 4}}
-  mock: value

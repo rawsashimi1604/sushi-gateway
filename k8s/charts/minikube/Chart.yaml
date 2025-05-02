@@ -1,0 +1,16 @@
+apiVersion: v2
+description: Sushi Gateway is a Layer 7 API Gateway. This helm chart is the standard way to deploy Sushi Gateway on a Kubernetes Minikube cluster using Helm.
+name: sushi-gateway
+type: application
+version: 1.0.0
+appVersion: "0.4.1"
+maintainers:
+  - name: rawsashimi1604
+    url: https://github.com/rawsashimi1604
+sources:
+  - https://github.com/rawsashimi1604/sushi-gateway
+keywords:
+  - API Gateway
+  - Gateway
+  - http
+  - sushi-gateway
