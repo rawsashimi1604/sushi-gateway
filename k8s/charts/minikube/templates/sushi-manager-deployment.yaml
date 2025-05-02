@@ -22,6 +22,22 @@ spec:
           imagePullPolicy: {{ .Values.manager.image.pullPolicy }}
           ports:
           - containerPort: 5173
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
           env:
           - name: SUSHI_MANAGER_BACKEND_API_URL
             value: http://127.0.0.1:8081

@@ -1,4 +1,4 @@
-# Health Check
+# Health Checks for Upstream Services
 
 Health checking is a feature in Sushi Gateway that helps ensure traffic is only routed to healthy upstream services. When enabled, the gateway periodically checks the health of each upstream service and automatically removes unhealthy instances from the load balancing pools.
 
