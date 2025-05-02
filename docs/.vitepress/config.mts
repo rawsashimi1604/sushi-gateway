@@ -84,8 +84,12 @@ export default defineConfig({
             link: "/concepts/declarative-config",
           },
           {
-            text: "Health Checks",
+            text: "Health Checks for Upstream Services",
             link: "/concepts/health",
+          },
+          {
+            text: "Gateway Health Checks",
+            link: "/concepts/gateway-health-checks",
           },
           {
             text: "TLS",

@@ -21,6 +21,9 @@ func NewAdminApiRouter() http.Handler {
 	authController := NewAuthController()
 	authController.RegisterRoutes(router)
 
+	healthController := NewHealthController()
+	healthController.RegisterRoutes(router)
+
 	corsOrigin := gateway.GlobalAppConfig.AdminCorsOrigin
 	if corsOrigin == "" {
 		corsOrigin = DEFAULT_CORS_ORIGIN

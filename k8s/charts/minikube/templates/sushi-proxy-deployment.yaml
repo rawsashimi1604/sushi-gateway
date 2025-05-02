@@ -41,6 +41,22 @@ spec:
             volumeMounts:
               - name: proxy-config
                 mountPath: /mnt/proxy
+            livenessProbe:
+              httpGet:
+                path: /healthz
+                port: 8081
+              initialDelaySeconds: 20
+              periodSeconds: 10
+              timeoutSeconds: 5
+              failureThreshold: 3
+            readinessProbe:
+              httpGet:
+                path: /healthz
+                port: 8081
+              initialDelaySeconds: 5
+              periodSeconds: 10
+              timeoutSeconds: 5
+              failureThreshold: 3
         volumes:
           - name: proxy-config
             configMap:
