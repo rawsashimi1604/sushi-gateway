@@ -16,6 +16,7 @@
 
 # Vitepress docs
 docs/.vitepress/cache/
+docs/.vitepress/dist
 
 # VS_STORE
 .VS_Store/
