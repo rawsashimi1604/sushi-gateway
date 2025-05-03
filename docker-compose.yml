@@ -134,21 +134,32 @@ services:
     image: rawsashimi/express-sushi-http-consumer
     ports:
       - "3000:3000"
-  
-  sushi-gateway-proxy:
+
+  # sushi-gateway-proxy:
+  #   networks:
+  #     - sushi-net
+  #   container_name: example-proxy
+  #   image: rawsashimi/sushi-proxy:0.3.0
+  #   ports:
+  #     - "8008:8008"
+  #     - "8081:8081"
+  #     - "8443:8443"
+  #   environment:
+  #     CONFIG_FILE_PATH: "/app/config.json"
+  #     ADMIN_USER: "admin"
+  #     ADMIN_PASSWORD: "changeme"
+  #     PERSISTENCE_CONFIG: "dbless"
+  #   volumes:
+  #     - ./sushi-proxy/config/config.json:/app/config.json
+
+  keycloak:
     networks:
       - sushi-net
-    container_name: example-proxy
-    image: rawsashimi/sushi-proxy:0.3.0
+    container_name: auth-server
+    image: quay.io/keycloak/keycloak:26.2.2
     ports:
-      - "8008:8008"
-      - "8081:8081"
-      - "8443:8443"
+      - 8090:8090
     environment:
-      CONFIG_FILE_PATH: "/app/config.json"
-      ADMIN_USER: "admin"
-      ADMIN_PASSWORD: "changeme"
-      PERSISTENCE_CONFIG: "dbless"
-    volumes:
-      - ./sushi-proxy/config/config.json:/app/config.json
-      
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: password
+    command: start-dev
