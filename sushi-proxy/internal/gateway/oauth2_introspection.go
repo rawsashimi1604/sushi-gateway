@@ -33,7 +33,7 @@ func NewOAuth2IntrospectionPlugin(config map[string]interface{}) *Plugin {
 
 // TODO: add different token types like JWT and Opaque for the oauth access token
 // TODO: add caching support to reduce api calls to authorization server (ttl)
-// TODO: add support to strip the the token from the request after succeeding
+// TODO: add support to strip the the token from the request after succeeding (default to true for now)
 func (plugin OAuth2IntrospectionPlugin) Validate() error {
 
 	// Introspection URL is required and must be a valid URL
