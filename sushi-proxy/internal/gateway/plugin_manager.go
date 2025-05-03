@@ -84,6 +84,8 @@ func (pm *PluginManager) loadConfig(pc model.PluginConfig) *model.HttpError {
 		pm.RegisterPlugin(NewHttpLogPlugin(pc.Config))
 	case constant.PLUGIN_CORS:
 		pm.RegisterPlugin(NewCorsPlugin(pc.Config))
+	case constant.PLUGIN_OAUTH2_INTROSPECTION:
+		pm.RegisterPlugin(NewOAuth2IntrospectionPlugin(pc.Config))
 	}
 	return nil
 }

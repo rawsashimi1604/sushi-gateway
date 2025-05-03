@@ -93,7 +93,7 @@
         "name": "oauth2_introspection",
         "enabled": true,
         "config": {
-          "introspection_url": "http://localhost:8090/realms/sushi-realm/protocol/openid-connect/token",
+          "introspection_url": "http://localhost:8090/realms/sushi-realm/protocol/openid-connect/token/introspect",
           "client_id": "myclient",
           "client_secret": "i4zHbFORfZG6JA0xfaqBaRb6jkRsZQ7d"
         }
