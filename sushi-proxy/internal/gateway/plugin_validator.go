@@ -60,6 +60,8 @@ func (pv *PluginValidator) createPluginFromConfig(plugin model.PluginConfig) *Pl
 		return NewHttpLogPlugin(plugin.Config)
 	case constant.PLUGIN_CORS:
 		return NewCorsPlugin(plugin.Config)
+	case constant.PLUGIN_OAUTH2_INTROSPECTION:
+		return NewOAuth2IntrospectionPlugin(plugin.Config)
 	default:
 		// Default to basic auth plugin for now
 		return NewBasicAuthPlugin(plugin.Config)

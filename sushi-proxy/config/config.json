@@ -7,7 +7,7 @@
         "name": "http_log",
         "enabled": true,
         "config": {
-          "http_endpoint": "http://sushi-http-log-consumer:3000/v1/log",
+          "http_endpoint": "http://localhost:3000/v1/log",
           "method": "POST",
           "content_type": "application/json"
         }
@@ -87,6 +87,16 @@
           "preflight_continue": false,
           "max_age": 3600
         }
+      },
+      {
+        "id": "plugin_12",
+        "name": "oauth2_introspection",
+        "enabled": true,
+        "config": {
+          "introspection_url": "http://localhost:8090/realms/sushi-realm/protocol/openid-connect/token",
+          "client_id": "myclient",
+          "client_secret": "i4zHbFORfZG6JA0xfaqBaRb6jkRsZQ7d"
+        }
       }
     ]
   },
@@ -97,9 +107,9 @@
       "protocol": "http",
       "load_balancing_strategy": "round_robin",
       "upstreams": [
-        { "id": "upstream_1", "host": "sushi-svc-1", "port": 3000 },
-        { "id": "upstream_2", "host": "sushi-svc-2", "port": 3000 },
-        { "id": "upstream_3", "host": "sushi-svc-3", "port": 3000 }
+        { "id": "upstream_1", "host": "localhost", "port": 8001 },
+        { "id": "upstream_2", "host": "localhost", "port": 8002 },
+        { "id": "upstream_3", "host": "localhost", "port": 8003 }
       ],
       "plugins": [],
       "health": {
