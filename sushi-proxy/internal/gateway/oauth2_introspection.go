@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/constant"
 	"github.com/rawsashimi1604/sushi-gateway/sushi-proxy/internal/model"
@@ -30,7 +31,9 @@ func NewOAuth2IntrospectionPlugin(config map[string]interface{}) *Plugin {
 	}
 }
 
-// TODO: add different auth types like Basic and Bearer
+// TODO: add different token types like JWT and Opaque for the oauth access token
+// TODO: add caching support to reduce api calls to authorization server (ttl)
+// TODO: add support to strip the the token from the request after succeeding
 func (plugin OAuth2IntrospectionPlugin) Validate() error {
 
 	// Introspection URL is required and must be a valid URL
@@ -107,7 +110,9 @@ func introspectToken(tokenString string, introspectionURL string, clientID strin
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	// Make the request
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		slog.Error("Introspection request failed", "error", err)

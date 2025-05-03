@@ -162,4 +162,4 @@ services:
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: password
-    command: start-dev
+    command: ["start-dev", "--http-port=8090"]

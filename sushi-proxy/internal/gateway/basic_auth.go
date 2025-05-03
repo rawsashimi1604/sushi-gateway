@@ -47,7 +47,7 @@ func (plugin BasicAuthPlugin) Execute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Executing basic auth function...")
 
-		username, password, err := verifyAndParseAuthHeader(r)
+		username, password, err := verifyAndParseAuthHeaderBasic(r)
 		if err != nil {
 			writeWWWAuthenticateHeader(w)
 			err.WriteJSONResponse(w)
@@ -73,7 +73,7 @@ func writeWWWAuthenticateHeader(w http.ResponseWriter) {
 		fmt.Sprintf("Basic realm=\"%s\", charset=%s", "Access to sushi gateway", constant.UTF_8))
 }
 
-func verifyAndParseAuthHeader(r *http.Request) (username string, password string, error *model.HttpError) {
+func verifyAndParseAuthHeaderBasic(r *http.Request) (username string, password string, error *model.HttpError) {
 	authHeader := r.Header.Get("Authorization")
 	bits := strings.Split(authHeader, " ")
 
