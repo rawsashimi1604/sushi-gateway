@@ -43,8 +43,10 @@ func (plugin OAuth2IntrospectionPlugin) Validate() error {
 		return fmt.Errorf("introspection_url must be a string")
 	}
 
-	if _, err := url.Parse(introspectionURL); err != nil {
-		return fmt.Errorf("introspection_url must be a valid URL")
+	parsedURL, err := url.Parse(introspectionURL)
+	// checks for valid url and scheme.
+	if err != nil || !parsedURL.IsAbs() || (parsedURL.Scheme != "http" && parsedURL.Scheme != "https") {
+		return fmt.Errorf("introspection_url must be a valid absolute URL starting with http:// or https://")
 	}
 
 	if plugin.config["client_id"] == nil {
